@@ -16,10 +16,10 @@ def noquotes(s: str) -> str:
 
 
 def asboolean(s: str) -> bool:
-    if s.lower() in {'yes', 'y', 'true', 't', '1'}:
+    """Convert SimaPro strings to actual booleans"""
+    if s.lower() in {"yes", "y", "true", "t", "1"}:
         return True
-    elif s.lower() in {'no', 'n', 'false', 'f', '0'}:
+    if s.lower() in {"no", "n", "false", "f", "0"}:
         return False
-    else:
-        # Better raise an error then assume we understand SimaPro
-        raise ValueError(f"Can't convert '{s}' to boolean")
+    # Better raise an error then assume we understand SimaPro
+    raise ValueError(f"Can't convert '{s}' to boolean")

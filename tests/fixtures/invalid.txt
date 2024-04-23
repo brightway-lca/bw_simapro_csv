@@ -8,7 +8,7 @@ Category type	material
 Process identifier	InsertSomethingCleverHere
 Type	Unit process
 Process name	bikes rule, cars drool
-Status	
+Status
 Time period	Unspecified
 Geography	Unspecified
 Technology	Unspecified
@@ -20,19 +20,19 @@ Capital goods	Unspecified
 Boundary with nature	Unspecified
 Infrastructure	No
 Date	09.08.2013
-Record	
-Generator	
+Record
+Generator
 Literature references
-Collection method	
-Data treatment	
-Verification	
-Comment	
-Allocation rules	
-System description	
-	
+Collection method
+Data treatment
+Verification
+Comment
+Allocation rules
+System description
+
 
 Products
-Fish food	1	p	100	not defined	Agricultural\Animal production\Animal foods	
+Fish food	1	p	100	not defined	Agricultural\Animal production\Animal foods
 
 Avoided products
 
