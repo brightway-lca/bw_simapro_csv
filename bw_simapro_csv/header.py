@@ -45,11 +45,11 @@ class SimaProCSVHeader(BaseModel):
     selection: Optional[str] = ""
     open_project: Optional[str] = ""
     date_separator: Optional[str] = "/"
-    export_platform_ids: Optional[bool | None] = None
-    skip_empty_fields: Optional[bool | None] = None
-    convert_expressions: Optional[bool | None] = None
-    related_objects: Optional[bool | None] = None
-    include_stages: Optional[bool | None] = None
+    export_platform_ids: Optional[bool] = None
+    skip_empty_fields: Optional[bool] = None
+    convert_expressions: Optional[bool] = None
+    related_objects: Optional[bool] = None
+    include_stages: Optional[bool] = None
     decimal_separator: Optional[str] = "."
     created: Optional[datetime] = datetime.now()
 

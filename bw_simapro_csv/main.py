@@ -1,13 +1,14 @@
 import os
 from io import StringIO
 from pathlib import Path
+from typing import Union
 
 from .header import parse_header
 from .utils import clean
 
 
 class SimaProCSV:
-    def __init__(self, path_or_stream: Path | StringIO, encoding: str = "cp1252"):
+    def __init__(self, path_or_stream: Union[Path, StringIO], encoding: str = "cp1252"):
         """Read a SimaPro CSV file object, and parse the contents.
 
         We start with the header, as this defines how the rest of the file is to be parsed.
