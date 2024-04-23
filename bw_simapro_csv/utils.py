@@ -5,7 +5,7 @@ def clean(s: str) -> str:
 
 def nobraces(s: str) -> str:
     """Remove braces from header section elements"""
-    return s[2:-2] if s.startswith('"{') else s[1:-1]
+    return s[s.find("{") + 1 : s.rfind("}")]
 
 
 def noquotes(s: str) -> str:

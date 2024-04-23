@@ -23,6 +23,7 @@ STRING_LABELS = {
     "Decimal separator:": "decimal_separator",
     "Selection:": "selection",
     "Open project:": "open_project",
+    "Open library:": "open_library",
     "Project:": "project",
     "Projet:": "project",  # French for extra flavor!?
     "Date separator:": "date_separator",
@@ -39,11 +40,12 @@ class SimaProCSVHeader(BaseModel):
     simapro_version: str
     kind: SimaProCSVType
     delimiter: str
-    project: str
+    project: Optional[str] = None
     csv_version: str
     libraries: List[str] = []
-    selection: Optional[str] = ""
-    open_project: Optional[str] = ""
+    selection: Optional[str] = None
+    open_project: Optional[str] = None
+    open_library: Optional[str] = None
     date_separator: Optional[str] = "/"
     export_platform_ids: Optional[bool] = None
     skip_empty_fields: Optional[bool] = None

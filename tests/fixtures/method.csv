@@ -1,0 +1,287 @@
+{SimaPro 8.5.0.0};;;;;
+{methods};;;;;
+{Date: 2019-05-15};;;;;
+{Time: 11:33:01};;;;;
+{Project: Methods};;;;;
+{CSV Format version: 8.0.5};;;;;
+{CSV separator: Semicolon};;;;;
+{Decimal separator: .};;;;;
+{Date separator: -};;;;;
+{Short date format: yyyy-MM-dd};;;;;
+{Selection: Selection (1)};;;;;
+{Related objects (system descriptions, substances, units, etc.): Yes};;;;;
+{Include sub product stages and processes: No};;;;;
+{Open library: 'Methods'};;;;;
+;;;;;
+Method;;;;;
+;;;;;
+Name;;;;;
+IMPACTWorld+ (Continental Latin America_Damage 1.431)  ;;;;;
+;;;;;
+Version;;;;;
+1;431;;;;
+;;;;;
+Comment;;;;;
+"this is not the original method; but just a stripped example for testing
+
+you can get the original data from here: https://github.com/laurepatou/IMPACT-World-in-Simapro
+Release: May 2019
+
+More info: http://www.impactworldplus.org/en/";;;;;
+;;;;;
+Category;;;;;
+Others;;;;;
+;;;;;
+Use Damage Assessment;;;;;
+Yes;;;;;
+;;;;;
+Use Normalization;;;;;
+Yes;;;;;
+;;;;;
+Use Weighting;;;;;
+Yes;;;;;
+;;;;;
+Use Addition;;;;;
+Yes;;;;;
+;;;;;
+Weighting unit;;;;;
+EUR2003;;;;;
+;;;;;
+Impact category;;;;;
+Climate change, ecosystem quality, short term;PDF.m2.yr;;;;
+;;;;;
+Substances;;;;;
+Air;(unspecified);(E)-HFC-1225ye;10/8/5595;0;kg
+Air;(unspecified);(E)-HFC-1234ze;1645-83-6;0.177;kg
+;;;;;
+Impact category;;;;;
+Climate change, ecosystem quality, long term;PDF.m2.yr;;;;
+;;;;;
+Substances;;;;;
+Air;(unspecified);(E)-HFC-1225ye;10/8/5595;0.0181;kg
+Air;(unspecified);(E)-HFC-1234ze;1645-83-6;0.0421;kg
+;;;;;
+Impact category;;;;;
+Climate change, human health, short term;DALY;;;;
+;;;;;
+Substances;;;;;
+Air;(unspecified);(E)-HFC-1225ye;10/8/5595;0;kg
+Air;(unspecified);(E)-HFC-1234ze;1645-83-6;0.000000818;kg
+;;;;;
+Impact category;;;;;
+Climate change, human health, long term;DALY;;;;
+;;;;;
+Substances;;;;;
+Air;(unspecified);(E)-HFC-1225ye;10/8/5595;0.000000083;kg
+Air;(unspecified);(E)-HFC-1234ze;1645-83-6;0.000000182;kg
+;;;;;
+Impact category;;;;;
+Marine acidification, short term;PDF.m2.yr;;;;
+;;;;;
+Substances;;;;;
+Air;(unspecified);Carbon dioxide;000124-38-9;0.0165;kg
+Air;(unspecified);Carbon dioxide, biogenic;000124-38-9;0;kg
+;;;;;
+Impact category;;;;;
+Marine acidification, long term;PDF.m2.yr;;;;
+;;;;;
+Substances;;;;;
+Air;(unspecified);Carbon dioxide;000124-38-9;0.152;kg
+Air;(unspecified);Carbon dioxide, biogenic;000124-38-9;0;kg
+;;;;;
+Impact category;;;;;
+Land occupation, biodiversity;PDF.m2.yr;;;;
+;;;;;
+Substances;;;;;
+Raw;land;Occupation, annual crop;;0.577277826;m2a
+Raw;land;Occupation, annual crop, (Sub)trop coniferous forest;;0;m2a
+;;;;;
+Impact category;;;;;
+Land transformation, biodiversity;PDF.m2.yr;;;;
+;;;;;
+Substances;;;;;
+Raw;land;Transformation, to  permanent crop, irrigated, GLO;;13;m2
+Raw;land;Transformation, to  permanent crop, non-irrigated, GLO;;13;m2
+;;;;;
+Impact category;;;;;
+Water availability, human health;DALY;;;;
+;;;;;
+Substances;;;;;
+Water;(unspecified);Water,  Europe without Switzerland;;-6.70E-05;m3
+Water;groundwater;Water,  Europe without Switzerland;;-3.20E-05;m3
+;;;;;
+Impact category;;;;;
+Water availability, freshwater ecosystem;PDF.m2.yr;;;;
+;;;;;
+Substances;;;;;
+Water;(unspecified);Water,  Europe without Switzerland;;-0.0003062;m3
+Water;lake;Water,  Europe without Switzerland;;-0.0003062;m3
+;;;;;
+Impact category;;;;;
+Water availability, terrestrial ecosystem;PDF.m2.yr;;;;
+;;;;;
+Substances;;;;;
+Raw;in water;Water, shallow well, in ground;;0.21;m3
+Raw;in water;Water, shallow well, in ground, AD;;0.21;m3
+;;;;;
+Impact category;;;;;
+Thermally polluted water;PDF.m2.yr;;;;
+;;;;;
+Substances;;;;;
+Raw;in water;Water, cooling, unspecified natural origin, AD;007732-18-5;0.0000411;m3
+Raw;in water;Water, cooling, unspecified natural origin, AF;007732-18-5;0.0000411;m3
+;;;;;
+Impact category;;;;;
+Freshwater acidification;PDF.m2.yr;;;;
+;;;;;
+Substances;;;;;
+Air;(unspecified);Ammonia, AW;007664-41-7;0.371654107;kg
+Air;(unspecified);Ammonia, AF;007664-41-7;2.865021803;kg
+;;;;;
+Impact category;;;;;
+Terrestrial acidification;PDF.m2.yr;;;;
+;;;;;
+Substances;;;;;
+Air;(unspecified);Ammonia, AW;007664-41-7;11.3852467;kg
+Air;(unspecified);Ammonia, AF;007664-41-7;37.64135408;kg
+;;;;;
+Impact category;;;;;
+Freshwater eutrophication;PDF.m2.yr;;;;
+;;;;;
+Substances;;;;;
+Water;(unspecified);BOD5, Biological Oxygen Demand, AF;0;0.047162408;kg
+Water;(unspecified);BOD5, Biological Oxygen Demand, AO;0;0.011081255;kg
+;;;;;
+Impact category;;;;;
+Marine eutrophication;PDF.m2.yr;;;;
+;;;;;
+Substances;;;;;
+Air;(unspecified);Ammonia, AW;007664-41-7;0.797931059;kg
+Air;(unspecified);Ammonia, AF;007664-41-7;0.166963973;kg
+;;;;;
+Impact category;;;;;
+Freshwater ecotoxicity, short term;PDF.m2.yr;;;;
+;;;;;
+Substances;;;;;
+Air;(unspecified);(+-)-Citronellol;026489-01-0;0.000336986;kg
+Air;low. pop.;(+-)-Citronellol;026489-01-0;0.000274521;kg
+;;;;;
+Impact category;;;;;
+Freshwater ecotoxicity, long term;PDF.m2.yr;;;;
+;;;;;
+Substances;;;;;
+Air;low. pop., long-term;(+-)-Citronellol;026489-01-0;0.000274521;kg
+Air;low. pop., long-term;(1r,4r)-(+)-Camphor;000464-49-3;0.000196164;kg
+;;;;;
+Impact category;;;;;
+Particulate matter formation;DALY;;;;
+;;;;;
+Substances;;;;;
+Air;(unspecified);Ammonia;007664-41-7;0.00013;kg
+Air;low. pop.;Ammonia;007664-41-7;0.00013;kg
+;;;;;
+Impact category;;;;;
+Photochemical oxidant formation;DALY;;;;
+;;;;;
+Substances;;;;;
+Air;(unspecified);1-Butanol;000071-36-3;0.000000041;kg
+Air;(unspecified);1-Butene;000106-98-9;0.000000071;kg
+;;;;;
+Impact category;;;;;
+Human toxicity cancer, short term;DALY;;;;
+;;;;;
+Substances;;;;;
+Air;(unspecified);1-(4-chlorophenyl)-1-phenyl-2-propynyl carbamate;010473-70-8;0.0001196;kg
+Air;low. pop.;1-(4-chlorophenyl)-1-phenyl-2-propynyl carbamate;010473-70-8;0.00010833;kg
+;;;;;
+Impact category;;;;;
+Human toxicity cancer, long term;DALY;;;;
+;;;;;
+Substances;;;;;
+Air;low. pop., long-term;1-(4-chlorophenyl)-1-phenyl-2-propynyl carbamate;010473-70-8;0.00010833;kg
+Air;low. pop., long-term;1,1'-Biphenyl, nonabromo-;027753-52-2;0.003151;kg
+;;;;;
+Impact category;;;;;
+Human toxicity non-cancer, short term;DALY;;;;
+;;;;;
+Substances;;;;;
+Air;(unspecified);1-Butanol;000071-36-3;7.78E-08;kg
+Air;low. pop.;1-Butanol;000071-36-3;1.34E-08;kg
+;;;;;
+Impact category;;;;;
+Human toxicity non-cancer, long term;DALY;;;;
+;;;;;
+Substances;;;;;
+Air;low. pop., long-term;1-Butanol;000071-36-3;1.34E-08;kg
+Air;low. pop., long-term;1,4-Dithiane;000505-29-3;1.42E-08;kg
+;;;;;
+Impact category;;;;;
+Ionizing radiation, human health;DALY;;;;
+;;;;;
+Substances;;;;;
+Water;(unspecified);Antimony-124;014683-10-4;8.19E-13;Bq
+Water;ocean;Antimony-124;014683-10-4;0.00E+00;Bq
+;;;;;
+Impact category;;;;;
+Ionizing radiation, ecosystem quality;PDF.m2.yr;;;;
+;;;;;
+Substances;;;;;
+Air;(unspecified);Antimony-124;014683-10-4;5.09E-11;Bq
+Air;low. pop.;Antimony-124;014683-10-4;5.11E-11;Bq
+;;;;;
+Impact category;;;;;
+Ozone layer depletion;DALY;;;;
+;;;;;
+Substances;;;;;
+Air;(unspecified);Ethane, 1-chloro-1,1-difluoro-, HCFC-142b;000075-68-3;0.000255;kg
+Air;(unspecified);Ethane, 1,1-dichloro-1-fluoro-, HCFC-141b;001717-00-6;0.000438;kg
+;;;;;
+Damage category;;;;;
+Human health;DALY;;;;
+;;;;;
+Impact categories;;;;;
+Climate change, human health, long term;1.00E+00;;;;
+Climate change, human health, short term;1.00E+00;;;;
+Human toxicity cancer, long term;1.00E+00;;;;
+Human toxicity cancer, short term;1.00E+00;;;;
+Human toxicity non-cancer, long term;1.00E+00;;;;
+Human toxicity non-cancer, short term;1.00E+00;;;;
+Ionizing radiation, human health;1.00E+00;;;;
+Ozone layer depletion;1.00E+00;;;;
+Particulate matter formation;1.00E+00;;;;
+Photochemical oxidant formation;1.00E+00;;;;
+Water availability, human health;1.00E+00;;;;
+;;;;;
+Damage category;;;;;
+Ecosystem quality;PDF.m2.yr;;;;
+;;;;;
+Impact categories;;;;;
+Climate change, ecosystem quality, long term;1.00E+00;;;;
+Climate change, ecosystem quality, short term;1.00E+00;;;;
+Freshwater acidification;1.00E+00;;;;
+Freshwater ecotoxicity, long term;1.00E+00;;;;
+Freshwater ecotoxicity, short term;1.00E+00;;;;
+Freshwater eutrophication;1.00E+00;;;;
+Ionizing radiation, ecosystem quality;1.00E+00;;;;
+Land occupation, biodiversity;1.00E+00;;;;
+Land transformation, biodiversity;1.00E+00;;;;
+Marine acidification, long term;1.00E+00;;;;
+Marine acidification, short term;1.00E+00;;;;
+Marine eutrophication;1.00E+00;;;;
+Terrestrial acidification;1.00E+00;;;;
+Thermally polluted water;1.00E+00;;;;
+Water availability, freshwater ecosystem;1.00E+00;;;;
+Water availability, terrestrial ecosystem;1.00E+00;;;;
+;;;;;
+Normalization-Weighting set;;;;;
+IMPACT World+ (Stepwise 2006 values);;;;;
+;;;;;
+Normalization;;;;;
+Human health;1.37E+01;;;;
+Ecosystem quality;1.01E-04;;;;
+;;;;;
+Weighting;;;;;
+Human health;5401.459854;;;;
+Ecosystem quality;1386.138614;;;;
+;;;;;
+End;;;;;

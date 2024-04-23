@@ -1,0 +1,85 @@
+{SimaPro 9.1.0.7}
+{methods}
+{Date: 13.04.2022}
+{Time: 10:37:26}
+{CSV Format version: 9.0.0}
+{CSV separator: Semicolon}
+{Decimal separator: .}
+{Date separator: .}
+{Short date format: dd.MM.yyyy}
+
+Method
+
+Name
+some method
+
+Version
+1;04
+
+Category
+European
+
+Use Damage Assessment
+No
+
+Use Normalization
+No
+
+Use Weighting
+Yes
+
+Use Addition
+Yes
+
+Weighting unit
+Pt
+
+Impact category
+Noise;UBP
+
+Substances
+Non mat.;(unspecified);Noise, aircraft, freight;;1;tkm
+Non mat.;(unspecified);Noise, aircraft, passenger;;2;personkm
+Non mat.;(unspecified);Noise, rail, freight train;;3;tkm
+Non mat.;(unspecified);Noise, rail, passenger train, average;;4;personkm
+Non mat.;(unspecified);Noise, road, lorry, average;;5;km
+Non mat.;(unspecified);Noise, road, passenger car, average;;6;km
+
+Normalization-Weighting set
+ws 1
+
+Weighting
+Noise;1
+
+Normalization-Weighting set
+ws 2
+
+Weighting
+Noise;1
+
+End
+
+Quantities
+Transport;Yes
+Person.Distance;Yes
+
+End
+
+
+Units
+tkm;Transport;1;tkm
+pkm;Person.Distance;1;personkm
+personkm;Person.Distance;1;personkm
+
+End
+
+
+Non material emissions
+Noise, aircraft, freight;tkm;;
+Noise, aircraft, passenger;personkm;;
+Noise, rail, freight train;tkm;;
+Noise, rail, passenger train, average;personkm;;
+Noise, road, lorry, average;km;;
+Noise, road, passenger car, average;km;;
+
+End

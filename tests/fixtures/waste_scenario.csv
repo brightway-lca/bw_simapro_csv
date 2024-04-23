@@ -1,0 +1,267 @@
+{SimaPro 9.1.0.7}
+{processes}
+{Date: 11/18/2021}
+{Time: 1:49:13 PM}
+{Project: AP9 pilot}
+{CSV Format version: 9.0.0}
+{CSV separator: Semicolon}
+{Decimal separator: .}
+{Date separator: /}
+{Short date format: M/d/yyyy}
+{Export platform IDs: Yes}
+{Skip empty fields: Yes}
+{Convert expressions to constants: No}
+{Selection: Selection (1)}
+{Related objects (system descriptions, substances, units, etc.): Yes}
+{Include sub product stages and processes: Yes}
+{Open project: 'AP9 pilot'}
+{Library 'Ecoinvent 3 - allocation at point of substitution - system'}
+{Library 'Ecoinvent 3 - allocation at point of substitution - unit'}
+{Library 'ELCD'}
+
+Process
+
+PlatformId
+
+
+Category type
+waste scenario
+
+Process identifier
+Dev99229000009369600014
+
+Type
+
+
+Status
+
+
+Time period
+Unspecified
+
+Geography
+Unspecified
+
+Technology
+Unspecified
+
+Representativeness
+Unspecified
+
+Cut off rules
+Unspecified
+
+Capital goods
+Unspecified
+
+Boundary with nature
+Unspecified
+
+Infrastructure
+No
+
+Date
+11/18/2021
+
+Waste scenario
+test waste scenario;kg;1;All waste types;Others
+
+Materials/fuels
+
+Electricity/heat
+
+Separated waste
+test waste treatment 1;All waste types;90
+
+Remaining waste
+test waste treatment 2;;100
+
+End
+
+Process
+
+PlatformId
+
+
+Category type
+waste treatment
+
+Process identifier
+Dev99229000009369600013
+
+Type
+
+
+Status
+
+
+Time period
+Unspecified
+
+Geography
+Unspecified
+
+Technology
+Unspecified
+
+Representativeness
+Unspecified
+
+Waste treatment allocation
+Unspecified
+
+Cut off rules
+Unspecified
+
+Capital goods
+Unspecified
+
+Boundary with nature
+Unspecified
+
+Infrastructure
+No
+
+Date
+11/18/2021
+
+Waste treatment
+test waste treatment 1;kg;1;All waste types;Others
+
+Avoided products
+
+Resources
+
+Materials/fuels
+
+Electricity/heat
+
+Emissions to air
+Carbon dioxide;;kg;1.5;Undefined;0;0;0;;DBE27C73-9DF4-4F21-B2EB-A0CE1FE87A4B
+
+Emissions to water
+
+Emissions to soil
+
+Final waste flows
+
+Non material emissions
+
+Social issues
+
+Economic issues
+
+Waste to treatment
+
+End
+
+Process
+
+PlatformId
+
+
+Category type
+waste treatment
+
+Process identifier
+Dev99229000009369600016
+
+Type
+
+
+Status
+
+
+Time period
+Unspecified
+
+Geography
+Unspecified
+
+Technology
+Unspecified
+
+Representativeness
+Unspecified
+
+Waste treatment allocation
+Unspecified
+
+Cut off rules
+Unspecified
+
+Capital goods
+Unspecified
+
+Boundary with nature
+Unspecified
+
+Infrastructure
+No
+
+Date
+11/18/2021
+
+Waste treatment
+test waste treatment 2;kg;1;All waste types;Others
+
+Avoided products
+
+Resources
+
+Materials/fuels
+
+Electricity/heat
+
+Emissions to air
+Carbon dioxide;;kg;-0.8;Undefined;0;0;0;;DBE27C73-9DF4-4F21-B2EB-A0CE1FE87A4B
+
+Emissions to water
+
+Emissions to soil
+
+Final waste flows
+
+Non material emissions
+
+Social issues
+
+Economic issues
+
+Waste to treatment
+
+End
+
+Quantities
+Mass;Yes
+
+End
+
+
+Units
+kg;Mass;1;kg
+g;Mass;1;kg
+ton;Mass;1000;kg
+µg;Mass;0.000000001;kg
+mg;Mass;0.000001;kg
+Mtn;Mass;1000000000;kg
+kton;Mass;1000000;kg
+ng;Mass;1.0E-12;kg
+pg;Mass;1.0E-15;kg
+lb;Mass;0.4535924;kg
+oz;Mass;0.02834952;kg
+tn.sh;Mass;907.1848;kg
+tn.lg;Mass;1016.047;kg
+
+End
+
+
+Airborne emissions
+Carbon dioxide;kg;000124-38-9;Formula: CO2;DBE27C73-9DF4-4F21-B2EB-A0CE1FE87A4B
+
+End
+
+
+End
+
+End
