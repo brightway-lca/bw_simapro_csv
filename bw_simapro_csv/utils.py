@@ -1,6 +1,9 @@
 import itertools
 from collections.abc import Iterator
+from datetime import date
 from typing import List
+
+from dateutil.parser import parse as dtparse
 
 
 def clean(s: str) -> str:
@@ -20,12 +23,14 @@ def noquotes(s: str) -> str:
     return s
 
 
-def asboolean(s: str) -> bool:
+def asboolean(s: str, allow_nonboolean: bool = False) -> bool:
     """Convert SimaPro strings to actual booleans"""
     if s.lower() in {"yes", "y", "true", "t", "1"}:
         return True
     if s.lower() in {"no", "n", "false", "f", "0"}:
         return False
+    if allow_nonboolean:
+        return s
     # Better raise an error then assume we understand SimaPro
     raise ValueError(f"Can't convert '{s}' to boolean")
 
@@ -63,3 +68,8 @@ def asnumber(value: str, decimal_separator: str = ".") -> float:
         value = value.repalce("%", "")
         conversion = 0.01
     return float(value) * conversion
+
+
+def asdate(value: str, dayfirst: bool = True) -> date:
+    """Parse a string to a `datetime.date`"""
+    return dtparse(value, dayfirst=dayfirst).date()
