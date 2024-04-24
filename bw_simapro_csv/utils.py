@@ -42,11 +42,24 @@ class BeKindRewind(Iterator):
         self.current = next(self.g)
         if self.strip:
             return [elem.strip() for elem in self.current]
-        else:
-            return self.current
+        return self.current
 
     def rewind(self) -> None:
         if self.current is None:
             return
         self.g = itertools.chain((self.current,), self.g)
         self.current = None
+
+
+def asnumber(value: str, decimal_separator: str = ".") -> float:
+    """Take a number stored as a string and convert to a float.
+
+    Tries hard to handle different formats."""
+    conversion = 1
+    if decimal_separator != "." and "." in value:
+        value = value.replace(".", "")
+    value = value.replace(decimal_separator, ".").replace("_", "").replace(" ", "")
+    if value.endswith("%"):
+        value = value.repalce("%", "")
+        conversion = 0.01
+    return float(value) * conversion

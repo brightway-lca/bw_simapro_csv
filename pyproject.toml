@@ -33,6 +33,7 @@ dependencies = [
     # You can add version requirements like "foo>2.0"
     "python-dateutil",
     "pydantic",
+    "stats_arrays",
     "loguru",
 ]
 
@@ -75,7 +76,7 @@ norecursedirs = [
     "build",
     ".tox"
 ]
-testpaths = ["tests/*.py"]
+testpaths = ["tests/*.py", "tests/blocks/*.py"]
 
 [tool.flake8]
 # Some sane defaults for the code style checker flake8
