@@ -6,7 +6,7 @@ from typing import List, Union
 
 from loguru import logger
 
-from .blocks import DatabaseInputParameters, SimaProCSVBlock
+from .blocks import DatabaseInputParameters, SimaProCSVBlock, ProjectInputParameters
 from .errors import IndeterminateBlockEnd
 from .header import parse_header
 from .utils import BeKindRewind, clean
@@ -20,7 +20,7 @@ CONTROL_BLOCK_MAPPING = {
     "Database Calculated parameters": dummy,
     "Database Input parameters": DatabaseInputParameters,
     "Literature reference": dummy,
-    "Project Input parameters": dummy,
+    "Project Input parameters": ProjectInputParameters,
     "Project Calculated parameters": dummy,
     "Quantities": dummy,
     "Product stage": dummy,

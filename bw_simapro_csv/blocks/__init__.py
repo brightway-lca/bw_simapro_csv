@@ -1,8 +1,9 @@
 __all__ = (
-    "SimaProCSVBlock",
     "DatabaseInputParameters",
+    "ProjectInputParameters",
+    "SimaProCSVBlock",
 )
 
 
 from .base import SimaProCSVBlock
-from .parameters import DatabaseInputParameters
+from .parameters import DatabaseInputParameters, ProjectInputParameters

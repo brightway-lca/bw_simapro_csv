@@ -4,7 +4,7 @@ from ..utils import asboolean
 from .base import SimaProCSVBlock
 
 
-class DatabaseInputParameters(SimaProCSVBlock):
+class GlobalInputParameters(SimaProCSVBlock):
     def __init__(self, block: List[list], header: dict):
         """Parse a `Database Input Parameters` block.
 
@@ -33,3 +33,11 @@ class DatabaseInputParameters(SimaProCSVBlock):
                     "comment": "\n".join([elem for elem in line[7:] if elem]),
                 }
             )
+
+
+class DatabaseInputParameters(GlobalInputParameters):
+    pass
+
+
+class ProjectInputParameters(GlobalInputParameters):
+    pass
