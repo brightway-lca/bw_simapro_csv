@@ -1,0 +1,2 @@
+class IndeterminateBlockEnd(Exception):
+    pass

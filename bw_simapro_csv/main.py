@@ -3,27 +3,54 @@ import os
 import warnings
 from io import StringIO
 from pathlib import Path
-from typing import Union, Iterator
+from typing import List, Union
 
 from .blocks import SimaProCSVBlock
+from .errors import IndeterminateBlockEnd
 from .header import parse_header
 from .utils import BeKindRewind, clean
 
+
+def dummy(data, *args):
+    return data
+
+
 CONTROL_BLOCK_MAPPING = {
-    "Database Calculated parameters": None,
-    "Database Input parameters": None,
-    "Literature reference": None,
-    "Project Input parameters": None,
-    "Project Calculated parameters": None,
-    "Quantities": None,
-    "Product stage": None,
-    "Units": None,
-    "Process": None,
-    "Method": None,
-    "Impact category": None,
-    "Normalization-Weighting set": None,
-    "Damage category": None,
+    "Database Calculated parameters": dummy,
+    "Database Input parameters": DatabaseInputParameters,
+    "Literature reference": dummy,
+    "Project Input parameters": dummy,
+    "Project Calculated parameters": dummy,
+    "Quantities": dummy,
+    "Product stage": dummy,
+    "Units": dummy,
+    "Process": dummy,
+    "Method": dummy,
+    "Impact category": dummy,
+    "Normalization-Weighting set": dummy,
+    "Damage category": dummy,
 }
+
+# These are lists of flows at the end of the file
+INDETERMINATE_SECTION_HEADERS = {
+    "Non material emissions": dummy,
+    "Airborne emissions": dummy,
+    "Waterborne emissions": dummy,
+    "Raw materials": dummy,
+    "Final waste flows": dummy,
+    "Emissions to soil": dummy,
+    "Social issues": dummy,
+    "Economic issues": dummy,
+    "System description": dummy,
+}
+
+INDETERMINE_SECTION_ERROR = """
+    Flow lists are given at the end of this file, but the section headings for
+    flow lists are also used in inventory process descriptions. We can normally
+    use the text 'End' to show when a process block stops, but this file doesn't
+    seem to uses 'End' sections. We therefore can't tell if '{}' is a new block
+    or not, and can't parse this file.
+"""
 
 
 class SimaProCSV:
@@ -50,54 +77,62 @@ class SimaProCSV:
             data = (clean(line) for line in path_or_stream)
         # Converting Pydantic back to dict to release memory
         self.header = parse_header(data).model_dump()
+        self.uses_end_text = False
         if self.header["delimiter"] not in {";", ".", "\t", "|", " "}:
             warnings.warn(f"SimaPro CSV file uses unusual delimiter '{self.header['delimiter']}'")
 
         rewindable_csv_reader = BeKindRewind(
-            csv.reader(data, delimiter=self.header["delimiter"], strict=True),
-            strip=True
+            csv.reader(data, delimiter=self.header["delimiter"], strict=True), strip=True
         )
-        self.blocks = list(self.generate_blocks(rewindable_csv_reader))
+        self.blocks = self.generate_blocks(rewindable_csv_reader)
 
-    def generate_blocks(self, rewindable_csv_reader: BeKindRewind) -> Iterator[SimaProCSVBlock]:
+    def generate_blocks(self, rewindable_csv_reader: BeKindRewind) -> List[SimaProCSVBlock]:
+        data = []
+
         while True:
-            data = []
-
-            # Get first non-empty line in this block
             try:
-                line = next(rewindable_csv_reader)
-                while not any([elem.strip() for elem in line]):
-                    # Skip empty lines
-                    line = next(rewindable_csv_reader)
+                block = self.get_next_block(rewindable_csv_reader)
+                if block:
+                    data.append(block)
             except StopIteration:
+                break
+
+        return data
+
+    def get_next_block(self, rewindable_csv_reader: BeKindRewind) -> Union[None, SimaProCSVBlock]:
+        # At beginning of block - it could be empty
+        data = []
+
+        for line in rewindable_csv_reader:
+            if not any(line):
+                # Skip empty lines at beginning of block
+                continue
+            if len(line) == 1 and line[0] == "End":
+                # Empty block
+                self.uses_end_text = True
                 return
+            break
+        else:
+            raise StopIteration
 
-            try:
-                block_class = CONTROL_BLOCK_MAPPING[line[0]]
-            except KeyError:
-                raise KeyError(f"Can't process unknown block type {line[0]}")
+        block_type = line[0]
+        if block_type in CONTROL_BLOCK_MAPPING:
+            block_class = CONTROL_BLOCK_MAPPING[block_type]
+        elif block_type in INDETERMINATE_SECTION_HEADERS:
+            if not self.uses_end_text:
+                raise IndeterminateBlockEnd(INDETERMINE_SECTION_ERROR.format(block_type))
+            block_class = INDETERMINATE_SECTION_HEADERS[block_type]
+        else:
+            raise ValueError(f"Can't process unknown block type {block_type}")
 
-            # Skip to next line past block label
-            line = next(rewindable_csv_reader)
-            while not any([elem.strip() for elem in line]):
-                # Skip empty lines
-                line = next(rewindable_csv_reader)
-
-            # Seach for end of block; sometimes there is an 'End', but sometimes not
-            # Some lines can be empty, but these are still necessary to understand the layout
-            while not line or line[0] != "End" or line[0] not in CONTROL_BLOCK_MAPPING:
-                data.append(line)
-                print(line)
-                try:
-                    line = next(rewindable_csv_reader)
-                except StopIteration:
-                    # EOF
-                    yield data
-                    return
-
-            # End of block, but missing 'End' element, so rewind to get correct label
-            # for next block
-            if line[0] in CONTROL_BLOCK_MAPPING:
+        for line in rewindable_csv_reader:
+            if line and line[0] == "End":
+                self.uses_end_text = True
+                return block_class(data, self.header) if data else None
+            if line and line[0] in CONTROL_BLOCK_MAPPING:
                 rewindable_csv_reader.rewind()
+                return block_class(data, self.header) if data else None
+            data.append(line)
 
-            yield data
+        # EOF
+        return block_class(data, self.header) if data else None
