@@ -14,7 +14,7 @@ class SimaProCSV:
         We start with the header, as this defines how the rest of the file is to be parsed.
         It gives the CSV delimiter and decimal separator.
 
-        We then break the file into logical chunks, such as processes or LCIA methods."""
+        We then break the file into logical chunks, such as processes or LCIA impact categories."""
         if isinstance(path_or_stream, Path):
             if not path_or_stream.is_file():
                 raise ValueError(f"Given `Path` {path_or_stream} is not a file")
@@ -30,4 +30,4 @@ class SimaProCSV:
             # some reasonable newline definition.
             data = [clean(line) for line in path_or_stream]
         # Converting Pydantic back to dict to release memory
-        self.header = parse_header(data).dict()
+        self.header = parse_header(data).model_dump()

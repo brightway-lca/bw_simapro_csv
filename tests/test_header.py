@@ -1,7 +1,7 @@
 from datetime import datetime
 
 from bw_simapro_csv import SimaProCSV
-from bw_simapro_csv.header import SimaProCSVHeader, SimaProCSVType
+from bw_simapro_csv.header import SimaProCSVType
 
 
 def test_basic_header_extraction(fixtures_dir):
@@ -13,6 +13,7 @@ def test_basic_header_extraction(fixtures_dir):
         "project": "Bobs_burgers",
         "csv_version": "8.0.5",
         "libraries": ["Methods"],
+        "dayfirst": False,
         "selection": "Selection (2)",
         "open_project": "Bobs_burgers",
         "open_library": None,
@@ -23,7 +24,7 @@ def test_basic_header_extraction(fixtures_dir):
         "related_objects": True,
         "include_stages": True,
         "decimal_separator": ".",
-        "created": datetime(2016, 12, 10, 22, 54, 47),
+        "created": datetime(2016, 10, 12, 22, 54, 47),
     }
 
     obj = SimaProCSV(fixtures_dir / "damagecategory.txt")
@@ -34,6 +35,7 @@ def test_basic_header_extraction(fixtures_dir):
         "project": "DC Test",
         "csv_version": "8.0.5",
         "libraries": [],
+        "dayfirst": True,
         "selection": "Current (1)",
         "open_project": None,
         "open_library": None,
@@ -55,6 +57,7 @@ def test_basic_header_extraction(fixtures_dir):
         "project": "Dummy project",
         "csv_version": "9.0.0",
         "libraries": ["AGRIBALYSE 3", "Methods", "World Food LCA Database"],
+        "dayfirst": True,
         "selection": "Current (1)",
         "open_project": "Dummy project",
         "open_library": None,
@@ -77,6 +80,7 @@ def test_basic_header_extraction(fixtures_dir):
         "project": "Methods",
         "csv_version": "8.0.5",
         "libraries": [],
+        "dayfirst": False,
         "selection": "Selection (1)",
         "open_project": None,
         "open_library": "Methods",
@@ -98,6 +102,7 @@ def test_basic_header_extraction(fixtures_dir):
         "project": None,
         "csv_version": "9.0.0",
         "libraries": [],
+        "dayfirst": True,
         "selection": None,
         "open_project": None,
         "open_library": None,
@@ -119,6 +124,7 @@ def test_basic_header_extraction(fixtures_dir):
         "project": "all stages",
         "csv_version": "9.0.0",
         "libraries": [],
+        "dayfirst": True,
         "selection": "Selection (5)",
         "open_project": "all stages",
         "open_library": None,
@@ -144,6 +150,7 @@ def test_basic_header_extraction(fixtures_dir):
             "Ecoinvent 3 - allocation at point of substitution - unit",
             "ELCD",
         ],
+        "dayfirst": False,
         "selection": "Selection (1)",
         "open_project": "AP9 pilot",
         "open_library": None,

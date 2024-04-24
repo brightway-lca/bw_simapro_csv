@@ -47,6 +47,7 @@ class SimaProCSVHeader(BaseModel):
     open_project: Optional[str] = None
     open_library: Optional[str] = None
     date_separator: Optional[str] = "/"
+    dayfirst: Optional[bool] = False
     export_platform_ids: Optional[bool] = None
     skip_empty_fields: Optional[bool] = None
     convert_expressions: Optional[bool] = None
@@ -73,7 +74,8 @@ def parse_header(data: List[str]) -> SimaProCSVHeader:
 
         SimaPro version
         File export type
-        key: value dictionary
+        Key: value dictionary
+        Optional library list
 
     We parse this into a header dictionary, doing type conversion when necessary.
 
@@ -112,10 +114,12 @@ def parse_header(data: List[str]) -> SimaProCSVHeader:
         date
         and time
         and dtformat
-        and "MM" in dtformat
-        and "dd" in dtformat
-        and dtformat.index("MM") < dtformat.index("dd")
+        # Can be 'MM' or 'M'
+        and "M" in dtformat
+        and "d" in dtformat
+        and dtformat.index("M") < dtformat.index("d")
     )
+    parsed["dayfirst"] = dayfirst
 
     try:
         parsed["created"] = parser.parse(f"{date} {time}", dayfirst=dayfirst)
