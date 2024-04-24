@@ -3,7 +3,7 @@ import os
 import warnings
 from io import StringIO
 from pathlib import Path
-from typing import Union
+from typing import Union, Iterator
 
 from .blocks import SimaProCSVBlock
 from .header import parse_header
@@ -16,6 +16,7 @@ CONTROL_BLOCK_MAPPING = {
     "Project Input parameters": None,
     "Project Calculated parameters": None,
     "Quantities": None,
+    "Product stage": None,
     "Units": None,
     "Process": None,
     "Method": None,
@@ -52,33 +53,51 @@ class SimaProCSV:
         if self.header["delimiter"] not in {";", ".", "\t", "|", " "}:
             warnings.warn(f"SimaPro CSV file uses unusual delimiter '{self.header['delimiter']}'")
 
-        data_generator = BeKindRewind(
+        rewindable_csv_reader = BeKindRewind(
             csv.reader(data, delimiter=self.header["delimiter"], strict=True),
             strip=True
         )
-        self.blocks = [self.pull_block(data_generator)]
+        self.blocks = list(self.generate_blocks(rewindable_csv_reader))
 
-    def pull_block(self, data_generator: BeKindRewind) -> SimaProCSVBlock:
-        line = next(data_generator)
+    def generate_blocks(self, rewindable_csv_reader: BeKindRewind) -> Iterator[SimaProCSVBlock]:
+        while True:
+            data = []
 
-        while not any([elem.strip() for elem in line]):
-            # Skip empty lines
-            line = next(data_generator)
+            # Get first non-empty line in this block
+            try:
+                line = next(rewindable_csv_reader)
+                while not any([elem.strip() for elem in line]):
+                    # Skip empty lines
+                    line = next(rewindable_csv_reader)
+            except StopIteration:
+                return
 
-        try:
-            block_class = CONTROL_BLOCK_MAPPING[line[0]]
-        except KeyError:
-            raise KeyError(f"Can't understand unknown block type {line[0]}")
+            try:
+                block_class = CONTROL_BLOCK_MAPPING[line[0]]
+            except KeyError:
+                raise KeyError(f"Can't process unknown block type {line[0]}")
 
-        data = []
-        line = next(data_generator)
+            # Skip to next line past block label
+            line = next(rewindable_csv_reader)
+            while not any([elem.strip() for elem in line]):
+                # Skip empty lines
+                line = next(rewindable_csv_reader)
 
-        while line[0] != "End" and line[0] not in CONTROL_BLOCK_MAPPING:
-            data.append(line)
-            line = next(data_generator)
+            # Seach for end of block; sometimes there is an 'End', but sometimes not
+            # Some lines can be empty, but these are still necessary to understand the layout
+            while not line or line[0] != "End" or line[0] not in CONTROL_BLOCK_MAPPING:
+                data.append(line)
+                print(line)
+                try:
+                    line = next(rewindable_csv_reader)
+                except StopIteration:
+                    # EOF
+                    yield data
+                    return
 
-        # Missing 'End' element
-        if line[0] in CONTROL_BLOCK_MAPPING:
-            data_generator.rewind()
+            # End of block, but missing 'End' element, so rewind to get correct label
+            # for next block
+            if line[0] in CONTROL_BLOCK_MAPPING:
+                rewindable_csv_reader.rewind()
 
-        return data
+            yield data

@@ -41,7 +41,6 @@ class BeKindRewind(Iterator):
     def __next__(self) -> List[str]:
         self.current = next(self.g)
         if self.strip:
-            print(self.current)
             return [elem.strip() for elem in self.current]
         else:
             return self.current
