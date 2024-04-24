@@ -29,4 +29,5 @@ class SimaProCSV:
             # We have to assume that the StringIO object was created with
             # some reasonable newline definition.
             data = [clean(line) for line in path_or_stream]
-        self.header = parse_header(data)
+        # Converting Pydantic back to dict to release memory
+        self.header = parse_header(data).dict()
