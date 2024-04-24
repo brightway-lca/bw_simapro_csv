@@ -1,11 +1,12 @@
 import csv
 import os
-import warnings
 from io import StringIO
 from pathlib import Path
 from typing import List, Union
 
-from .blocks import SimaProCSVBlock
+from loguru import logger
+
+from .blocks import DatabaseInputParameters, SimaProCSVBlock
 from .errors import IndeterminateBlockEnd
 from .header import parse_header
 from .utils import BeKindRewind, clean
@@ -78,8 +79,16 @@ class SimaProCSV:
         # Converting Pydantic back to dict to release memory
         self.header = parse_header(data).model_dump()
         self.uses_end_text = False
+
+        logger.info(
+            "SimaPro CSV import started.\n\tFile: {file}\n\tDelimiter: {delimiter}\n\tName: {name}",
+            file=path_or_stream if isinstance(path_or_stream, Path) else "StringIO",
+            delimiter=self.header["delimiter"],
+            name=self.header["project"] or "(Not given)",
+        )
+
         if self.header["delimiter"] not in {";", ".", "\t", "|", " "}:
-            warnings.warn(f"SimaPro CSV file uses unusual delimiter '{self.header['delimiter']}'")
+            logger.warning(f"SimaPro CSV file uses unusual delimiter '{self.header['delimiter']}'")
 
         rewindable_csv_reader = BeKindRewind(
             csv.reader(data, delimiter=self.header["delimiter"], strict=True), strip=True

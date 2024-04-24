@@ -1,9 +1,9 @@
-import warnings
 from datetime import datetime
 from enum import Enum
 from typing import List, Optional
 
 from dateutil import parser
+from loguru import logger
 from pydantic import BaseModel
 
 from .utils import asboolean, nobraces, noquotes
@@ -108,7 +108,7 @@ def parse_header(data: List[str]) -> SimaProCSVHeader:
         elif line.startswith("Library '"):
             parsed["libraries"].append(noquotes(line[len("Library") :].strip()))
         else:
-            warnings.warn(f"Can't understand header line (skipping):\n\t{line}")
+            logger.warning(f"Can't understand header line (skipping):\n\t{line}")
 
     dayfirst = not (
         date
