@@ -30,12 +30,6 @@ repos:
 #       --remove-unused-variables,
 #     ]
 
-# https://github.com/PyCQA/flake8/issues/234
-- repo: https://github.com/john-hen/Flake8-pyproject
-  rev: 1.2.3
-  hooks:
-    - id: Flake8-pyproject
-
 - repo: https://github.com/pycqa/isort
   rev: 5.13.2
   hooks:
