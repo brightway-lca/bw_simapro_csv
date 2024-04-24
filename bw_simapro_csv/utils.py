@@ -1,3 +1,8 @@
+import itertools
+from collections.abc import Iterator
+from typing import List
+
+
 def clean(s: str) -> str:
     """Strip string and remove ASCII delete character"""
     return s.replace("\x7f", "").strip()
@@ -23,3 +28,26 @@ def asboolean(s: str) -> bool:
         return False
     # Better raise an error then assume we understand SimaPro
     raise ValueError(f"Can't convert '{s}' to boolean")
+
+
+class BeKindRewind(Iterator):
+    """CSV generator which allows for one step backwards"""
+
+    def __init__(self, g: Iterator, strip: bool = False):
+        self.g = g
+        self.current = None
+        self.strip = strip
+
+    def __next__(self) -> List[str]:
+        self.current = next(self.g)
+        if self.strip:
+            print(self.current)
+            return [elem.strip() for elem in self.current]
+        else:
+            return self.current
+
+    def rewind(self) -> None:
+        if self.current is None:
+            return
+        self.g = itertools.chain((self.current,), self.g)
+        self.current = None

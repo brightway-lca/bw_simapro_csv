@@ -1,0 +1,2 @@
+class SimaProCSVBlock:
+    pass
