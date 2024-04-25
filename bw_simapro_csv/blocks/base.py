@@ -21,7 +21,7 @@ class SimaProCSVBlock:
         }
 
     def distribution(
-        self, amount: str, kind: str, field1: str, field2: str, field3: str, header: dict
+        self, amount: str, kind: str, field1: str, field2: str, field3: str, header: dict, **kwargs
     ) -> dict:
         decimal_separator = header.get("decimal_separator", ".")
 

@@ -1,3 +1,4 @@
+from copy import copy
 import itertools
 from collections.abc import Iterator
 from datetime import date
@@ -56,10 +57,12 @@ class BeKindRewind(Iterator):
         self.current = None
 
 
-def asnumber(value: str, decimal_separator: str = ".") -> float:
+def asnumber(value: str, decimal_separator: str = ".", allow_nonnumber: bool = False) -> float:
     """Take a number stored as a string and convert to a float.
 
     Tries hard to handle different formats."""
+    original = copy(value)
+
     conversion = 1
     if decimal_separator != "." and "." in value:
         value = value.replace(".", "")
@@ -67,7 +70,13 @@ def asnumber(value: str, decimal_separator: str = ".") -> float:
     if value.endswith("%"):
         value = value.repalce("%", "")
         conversion = 0.01
-    return float(value) * conversion
+    try:
+        return float(value) * conversion
+    except ValueError as exc:
+        if allow_nonnumber:
+            return original
+        else:
+            raise ValueError from exc
 
 
 def asdate(value: str, dayfirst: bool = True) -> date:
