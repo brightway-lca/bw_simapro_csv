@@ -49,7 +49,7 @@ INDETERMINE_SECTION_ERROR = """
     Flow lists are given at the end of this file, but the section headings for
     flow lists are also used in inventory process descriptions. We can normally
     use the text 'End' to show when a process block stops, but this file doesn't
-    seem to uses 'End' sections. We therefore can't tell if '{}' is a new block
+    seem to use 'End' sections. We therefore can't tell if '{}' is a new block
     or not, and can't parse this file.
 """
 
@@ -109,7 +109,6 @@ class SimaProCSV:
         return data
 
     def get_next_block(self, rewindable_csv_reader: BeKindRewind) -> Union[None, SimaProCSVBlock]:
-        # At beginning of block - it could be empty
         data = []
 
         for line in rewindable_csv_reader:
@@ -122,6 +121,7 @@ class SimaProCSV:
                 return
             break
         else:
+            # Already at end of file
             raise StopIteration
 
         block_type = line[0]

@@ -34,6 +34,7 @@ class SimaProCSVBlock:
             raise ValueError(
                 f"""
 Can't convert uncertainty data to numbers:
+    Uncertainty type: {kind}
     Amount: {amount}
     Field1: {field1}
     Field2: {field2}
