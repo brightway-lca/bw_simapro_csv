@@ -55,6 +55,8 @@ INDETERMINATE_SECTION_ERROR = """
 
 
 class SimaProCSV:
+    EMPTY_BLOCK = "A block with a starting header but no content"
+
     def __init__(self, path_or_stream: Union[Path, StringIO], encoding: str = "cp1252"):
         """Read a SimaPro CSV file object, and parse the contents.
 
@@ -93,9 +95,11 @@ class SimaProCSV:
         rewindable_csv_reader = BeKindRewind(
             csv.reader(data, delimiter=self.header["delimiter"], strict=True), strip_elements=True
         )
+        
         self.blocks = []
-        for block in self.get_next_block(rewindable_csv_reader, self.header):
-            if block:
+
+        while (block := self.get_next_block(rewindable_csv_reader, self.header)):
+            if block != self.EMPTY_BLOCK:
                 self.blocks.append(block)
 
     def get_next_block(self, rewindable_csv_reader: BeKindRewind, header: dict) -> Union[None, SimaProCSVBlock]:
@@ -108,18 +112,19 @@ class SimaProCSV:
             if len(line) == 1 and line[0] == "End":
                 # Empty block
                 self.uses_end_text = True
-                return
+                return self.EMPTY_BLOCK
+            # File object exhausted
             break
         else:
-            # Already at end of file
-            raise StopIteration
+            # Already at end of file; return false-y result to break `while`
+            return
 
         block_type = line[0]
         if block_type in CONTROL_BLOCK_MAPPING:
             block_class = CONTROL_BLOCK_MAPPING[block_type]
         elif block_type in INDETERMINATE_SECTION_HEADERS:
             if not self.uses_end_text:
-                raise IndeterminateBlockEnd(INDETERMINE_SECTION_ERROR.format(block_type))
+                raise IndeterminateBlockEnd(INDETERMINATE_SECTION_ERROR.format(block_type))
             block_class = INDETERMINATE_SECTION_HEADERS[block_type]
         else:
             raise ValueError(f"Can't process unknown block type {block_type}")
