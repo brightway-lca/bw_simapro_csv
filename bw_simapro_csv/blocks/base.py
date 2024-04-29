@@ -46,7 +46,7 @@ Can't convert uncertainty data to numbers:
             return self.undefined_distribution(amount)
         if kind == "Lognormal":
             if not amount or field1 <= 0:
-                logger.info("Invalid lognormal distribution: {amount}|{field1}")
+                logger.warning("Invalid lognormal distribution: {amount}|{field1}")
                 return self.undefined_distribution(amount)
             return {
                 "uncertainty type": LognormalUncertainty.id,
