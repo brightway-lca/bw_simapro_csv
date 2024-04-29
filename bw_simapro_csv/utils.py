@@ -51,6 +51,10 @@ class BeKindRewind(Iterator):
         return self.current
 
     def rewind(self) -> None:
+    """
+    Rewinds the iterator by one step, retrieving the element that was
+    just returned by the previous call to `__next__`. 
+    """
         if self.current is None:
             return
         self.g = itertools.chain((self.current,), self.g)
