@@ -54,8 +54,7 @@ def asnumber(value: str, decimal_separator: str = ".", allow_nonnumber: bool = F
     except ValueError as exc:
         if allow_nonnumber:
             return original
-        else:
-            raise ValueError from exc
+        raise ValueError from exc
 
 
 def asdate(value: str, dayfirst: bool = True) -> date:

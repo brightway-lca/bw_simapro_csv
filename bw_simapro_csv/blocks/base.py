@@ -1,3 +1,4 @@
+# pylint: disable=too-many-arguments,unused-argument,too-many-return-statements
 import math
 
 from loguru import logger
@@ -15,7 +16,9 @@ from ..utils import asnumber
 class SimaProCSVBlock:
     """Base class for parsing and cleaning logical blocks in a SimaPro CSV file"""
 
-    pass
+
+class EmptyBlock(SimaProCSVBlock):
+    """An empty block without content."""
 
 
 class SimaProCSVUncertainBlock(SimaProCSVBlock):

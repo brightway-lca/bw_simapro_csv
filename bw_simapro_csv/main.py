@@ -2,11 +2,17 @@ import csv
 import os
 from io import StringIO
 from pathlib import Path
-from typing import List, Union
+from typing import Union
 
 from loguru import logger
 
-from .blocks import DatabaseInputParameters, Process, ProjectInputParameters, SimaProCSVBlock
+from .blocks import (
+    DatabaseInputParameters,
+    EmptyBlock,
+    Process,
+    ProjectInputParameters,
+    SimaProCSVBlock,
+)
 from .errors import IndeterminateBlockEnd
 from .header import parse_header
 from .utils import BeKindRewind, clean
@@ -55,8 +61,6 @@ INDETERMINATE_SECTION_ERROR = """
 
 
 class SimaProCSV:
-    EMPTY_BLOCK = "A block with a starting header but no content"
-
     def __init__(self, path_or_stream: Union[Path, StringIO], encoding: str = "cp1252"):
         """Read a SimaPro CSV file object, and parse the contents.
 
@@ -95,14 +99,16 @@ class SimaProCSV:
         rewindable_csv_reader = BeKindRewind(
             csv.reader(data, delimiter=self.header["delimiter"], strict=True), strip_elements=True
         )
-        
+
         self.blocks = []
 
-        while (block := self.get_next_block(rewindable_csv_reader, self.header)):
-            if block != self.EMPTY_BLOCK:
+        while block := self.get_next_block(rewindable_csv_reader, self.header):
+            if block is not EmptyBlock:
                 self.blocks.append(block)
 
-    def get_next_block(self, rewindable_csv_reader: BeKindRewind, header: dict) -> Union[None, SimaProCSVBlock]:
+    def get_next_block(
+        self, rewindable_csv_reader: BeKindRewind, header: dict
+    ) -> Union[None, SimaProCSVBlock]:
         data = []
 
         for line in rewindable_csv_reader:
@@ -112,12 +118,12 @@ class SimaProCSV:
             if len(line) == 1 and line[0] == "End":
                 # Empty block
                 self.uses_end_text = True
-                return self.EMPTY_BLOCK
+                return EmptyBlock
             # File object exhausted
             break
         else:
             # Already at end of file; return false-y result to break `while`
-            return
+            return None
 
         block_type = line[0]
         if block_type in CONTROL_BLOCK_MAPPING:
