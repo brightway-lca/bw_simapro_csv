@@ -13,6 +13,14 @@ from ..utils import asnumber
 
 
 class SimaProCSVBlock:
+    """Base class for parsing and cleaning logical blocks in a SimaPro CSV file"""
+
+    pass
+
+
+class SimaProCSVUncertainBlock(SimaProCSVBlock):
+    """Base class which includes logic for parsing lines with probability distributions"""
+
     def undefined_distribution(self, amount: float) -> dict:
         return {
             "uncertainty type": UndefinedUncertainty.id,
@@ -57,7 +65,7 @@ Can't convert uncertainty data to numbers:
             }
         if kind == "Normal":
             if not amount or field1 <= 0:
-                logger.info("Invalid normal distribution: {amount}|{field1}")
+                logger.warning("Invalid normal distribution: {amount}|{field1}")
                 return self.undefined_distribution(amount)
             return {
                 "uncertainty type": NormalUncertainty.id,
@@ -68,7 +76,7 @@ Can't convert uncertainty data to numbers:
             }
         if kind == "Triangle":
             if not field2 <= amount <= field3:
-                logger.info("Invalid triangular distribution: {amount}|{field2}|{field3}")
+                logger.warning("Invalid triangular distribution: {amount}|{field2}|{field3}")
                 return self.undefined_distribution(amount)
             return {
                 "uncertainty type": TriangularUncertainty.id,
@@ -80,7 +88,7 @@ Can't convert uncertainty data to numbers:
             }
         if kind == "Uniform":
             if not field2 <= amount <= field3:
-                logger.info("Invalid uniform distribution: {amount}|{field2}|{field3}")
+                logger.warning("Invalid uniform distribution: {amount}|{field2}|{field3}")
                 return self.undefined_distribution(amount)
             return {
                 "uncertainty type": UniformUncertainty.id,

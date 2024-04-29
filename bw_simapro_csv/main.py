@@ -91,24 +91,14 @@ class SimaProCSV:
             logger.warning(f"SimaPro CSV file uses unusual delimiter '{self.header['delimiter']}'")
 
         rewindable_csv_reader = BeKindRewind(
-            csv.reader(data, delimiter=self.header["delimiter"], strict=True), strip=True
+            csv.reader(data, delimiter=self.header["delimiter"], strict=True), strip_elements=True
         )
-        self.blocks = self.generate_blocks(rewindable_csv_reader)
+        self.blocks = []
+        for block in self.get_next_block(rewindable_csv_reader, self.header):
+            if block:
+                self.blocks.append(block)
 
-    def generate_blocks(self, rewindable_csv_reader: BeKindRewind) -> List[SimaProCSVBlock]:
-        data = []
-
-        while True:
-            try:
-                block = self.get_next_block(rewindable_csv_reader)
-                if block:
-                    data.append(block)
-            except StopIteration:
-                break
-
-        return data
-
-    def get_next_block(self, rewindable_csv_reader: BeKindRewind) -> Union[None, SimaProCSVBlock]:
+    def get_next_block(self, rewindable_csv_reader: BeKindRewind, header: dict) -> Union[None, SimaProCSVBlock]:
         data = []
 
         for line in rewindable_csv_reader:
@@ -137,11 +127,11 @@ class SimaProCSV:
         for line in rewindable_csv_reader:
             if line and line[0] == "End":
                 self.uses_end_text = True
-                return block_class(data, self.header) if data else None
+                return block_class(data, header) if data else None
             if line and line[0] in CONTROL_BLOCK_MAPPING:
                 rewindable_csv_reader.rewind()
-                return block_class(data, self.header) if data else None
+                return block_class(data, header) if data else None
             data.append(line)
 
         # EOF
-        return block_class(data, self.header) if data else None
+        return block_class(data, header) if data else None

@@ -1,6 +1,6 @@
-from copy import copy
 import itertools
 from collections.abc import Iterator
+from copy import copy
 from datetime import date
 from typing import List
 
@@ -36,27 +36,6 @@ def asboolean(s: str, allow_nonboolean: bool = False) -> bool:
     raise ValueError(f"Can't convert '{s}' to boolean")
 
 
-class BeKindRewind(Iterator):
-    """CSV generator which allows for one step backwards"""
-
-    def __init__(self, g: Iterator, strip: bool = False):
-        self.g = g
-        self.current = None
-        self.strip = strip
-
-    def __next__(self) -> List[str]:
-        self.current = next(self.g)
-        if self.strip:
-            return [elem.strip() for elem in self.current]
-        return self.current
-
-    def rewind(self) -> None:
-        if self.current is None:
-            return
-        self.g = itertools.chain((self.current,), self.g)
-        self.current = None
-
-
 def asnumber(value: str, decimal_separator: str = ".", allow_nonnumber: bool = False) -> float:
     """Take a number stored as a string and convert to a float.
 
@@ -82,3 +61,41 @@ def asnumber(value: str, decimal_separator: str = ".", allow_nonnumber: bool = F
 def asdate(value: str, dayfirst: bool = True) -> date:
     """Parse a string to a `datetime.date`"""
     return dtparse(value, dayfirst=dayfirst).date()
+
+
+class BeKindRewind(Iterator):
+    """CSV reader which acts as a line by line iterator but which allows for one step backwards.
+
+    Needed because the file we are consuming will sometimes indicate that a logical block is
+    finished by using the control word `End`, but other times won't. In that case, our iterator
+    is already in a new block. To make it simple to pass the iterator to the next function
+    consuming the new block, we rewind it one line.
+
+    Internally this is implemented by caching the last line read, and using `itertools.chain`
+    when needed to prepend the cached line to the iterator.
+
+    Parameters
+    ----------
+    data_iterable : collections.abc.Iterator
+        Iterator which returns lists of strings.
+    strip_elements : bool, optional
+        Do `[obj.strip() for obj in line]` when returning a new line
+
+    """
+
+    def __init__(self, data_iterable: Iterator, strip_elements: bool = False):
+        self.data_iterable = data_iterable
+        self.current = None
+        self.strip_elements = strip_elements
+
+    def __next__(self) -> List[str]:
+        self.current = next(self.data_iterable)
+        if self.strip_elements:
+            return [elem.strip() for elem in self.current]
+        return self.current
+
+    def rewind(self) -> None:
+        if self.current is None:
+            return
+        self.data_iterable = itertools.chain((self.current,), self.data_iterable)
+        self.current = None

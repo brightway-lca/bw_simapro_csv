@@ -38,6 +38,6 @@ def test_rewindable_generator_rewind_before_iteration():
 
 def test_rewindable_generator_strip():
     a = iter([(" a ", "\tb ", "c"), (" 2", "1 ", "3")])
-    r = BeKindRewind(a, strip=True)
+    r = BeKindRewind(a, strip_elements=True)
     assert next(r) == ["a", "b", "c"]
     assert next(r) == ["2", "1", "3"]
