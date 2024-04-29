@@ -45,7 +45,7 @@ INDETERMINATE_SECTION_HEADERS = {
     "System description": dummy,
 }
 
-INDETERMINE_SECTION_ERROR = """
+INDETERMINATE_SECTION_ERROR = """
     Flow lists are given at the end of this file, but the section headings for
     flow lists are also used in inventory process descriptions. We can normally
     use the text 'End' to show when a process block stops, but this file doesn't
