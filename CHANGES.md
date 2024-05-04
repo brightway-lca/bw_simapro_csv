@@ -1,4 +1,4 @@
-# bw_simapro_csv Changelog
+# `bw_simapro_csv` Changelog
 
 All notable changes to this project will be documented in this file.
 
