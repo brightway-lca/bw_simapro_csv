@@ -83,7 +83,7 @@ class SimaProCSV:
         logger.info(
             "SimaPro CSV import started.\n\tFile: {file}\n\tDelimiter: {delimiter}\n\tName: {name}",
             file=path_or_stream if isinstance(path_or_stream, Path) else "StringIO",
-            delimiter=self.header["delimiter"],
+            delimiter="<tab>" if self.header["delimiter"] == "\t" else self.header["delimiter"],
             name=self.header["project"] or "(Not given)",
         )
 
