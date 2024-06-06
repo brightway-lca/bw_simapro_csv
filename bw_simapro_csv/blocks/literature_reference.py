@@ -1,6 +1,7 @@
 from typing import List
 
 from .base import SimaProCSVBlock
+from ..utils import alternating_key_value
 
 
 class LiteratureReference(SimaProCSVBlock):
@@ -33,15 +34,4 @@ class LiteratureReference(SimaProCSVBlock):
         ```
 
         """
-        self.parsed = {}
-
-        key, state = None, None
-
-        for line in block:
-            if state != "key" and not any([elem.strip() for elem in line]):
-                continue
-            elif state == "key":
-                self.parsed[key] = line[0] if line else None
-                state = None
-            else:
-                key, state = line[0], "key"
+        self.parsed = dict(alternating_key_value(block))

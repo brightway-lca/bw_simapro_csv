@@ -102,3 +102,46 @@ def asnumber(value: str, decimal_separator: str = ".", allow_nonnumber: bool = F
 def asdate(value: str, dayfirst: bool = True) -> date:
     """Parse a string to a `datetime.date`"""
     return dtparse(value, dayfirst=dayfirst).date()
+
+
+def alternating_key_value(data: List[list]) -> List[tuple]:
+    """Transform data in alternating key/value/blank rows to tuples with `(key, value)`.
+
+    For example, turn:
+
+    ```
+
+    Foo
+    bar; baz
+
+    ```
+
+    Into:
+
+    ```python
+    [("Foo", ["bar", "baz"])]
+    ```
+
+    """
+    processed = []
+    index = 0
+
+    if not any([elem.strip() for elem in data[index]]):
+        index += 1
+
+    while index < len(data):
+        if not len(data[index]) == 1:
+            raise ValueError(f"Line {data[index]} is supposed to be single-element")
+        key, value = data[index], data[index + 1]
+        if not value:
+            processed.append((data[index][0], None))
+        elif len(value) == 1:
+            processed.append((data[index][0], data[index + 1][0]))
+        else:
+            processed.append((data[index][0], data[index + 1]))
+        index += 2
+
+        if index < len(data) and not any([elem.strip() for elem in data[index]]):
+            index += 1
+
+    return processed
