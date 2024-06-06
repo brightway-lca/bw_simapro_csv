@@ -8,7 +8,7 @@ from typing import List, Union
 import ftfy
 from loguru import logger
 
-from .blocks import DatabaseInputParameters, Process, ProjectInputParameters, SimaProCSVBlock, Units
+from .blocks import DatabaseInputParameters, Process, ProjectInputParameters, SimaProCSVBlock, Units, LiteratureReference
 from .errors import IndeterminateBlockEnd
 from .header import parse_header
 from .utils import BeKindRewind, clean
@@ -21,7 +21,7 @@ def dummy(data, *args):
 CONTROL_BLOCK_MAPPING = {
     "Database Calculated parameters": dummy,
     "Database Input parameters": DatabaseInputParameters,
-    "Literature reference": dummy,
+    "Literature reference": LiteratureReference,
     "Project Input parameters": ProjectInputParameters,
     "Project Calculated parameters": dummy,
     "Quantities": dummy,
