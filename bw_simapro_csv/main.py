@@ -47,7 +47,7 @@ INDETERMINATE_SECTION_HEADERS = {
     "System description": dummy,
 }
 
-INDETERMINE_SECTION_ERROR = """
+INDETERMINATE_SECTION_ERROR = """
     Flow lists are given at the end of this file, but the section headings for
     flow lists are also used in inventory process descriptions. We can normally
     use the text 'End' to show when a process block stops, but this file doesn't
@@ -95,24 +95,18 @@ class SimaProCSV:
             logger.warning(f"SimaPro CSV file uses unusual delimiter '{self.header['delimiter']}'")
 
         rewindable_csv_reader = BeKindRewind(
-            csv.reader(data, delimiter=self.header["delimiter"], strict=True), strip=True
+            csv.reader(data, delimiter=self.header["delimiter"], strict=True), strip_elements=True
         )
-        self.blocks = self.generate_blocks(rewindable_csv_reader)
 
-    def generate_blocks(self, rewindable_csv_reader: BeKindRewind) -> List[SimaProCSVBlock]:
-        data = []
+        self.blocks = []
 
-        while True:
-            try:
-                block = self.get_next_block(rewindable_csv_reader)
-                if block:
-                    data.append(block)
-            except StopIteration:
-                break
+        while block := self.get_next_block(rewindable_csv_reader, self.header):
+            if block is not EmptyBlock:
+                self.blocks.append(block)
 
-        return data
-
-    def get_next_block(self, rewindable_csv_reader: BeKindRewind) -> Union[None, SimaProCSVBlock]:
+    def get_next_block(
+        self, rewindable_csv_reader: BeKindRewind, header: dict
+    ) -> Union[None, SimaProCSVBlock]:
         data = []
 
         for line in rewindable_csv_reader:
@@ -122,18 +116,19 @@ class SimaProCSV:
             if len(line) == 1 and line[0] == "End":
                 # Empty block
                 self.uses_end_text = True
-                return
+                return EmptyBlock
+            # File object exhausted
             break
         else:
-            # Already at end of file
-            raise StopIteration
+            # Already at end of file; return false-y result to break `while`
+            return None
 
         block_type = line[0]
         if block_type in CONTROL_BLOCK_MAPPING:
             block_class = CONTROL_BLOCK_MAPPING[block_type]
         elif block_type in INDETERMINATE_SECTION_HEADERS:
             if not self.uses_end_text:
-                raise IndeterminateBlockEnd(INDETERMINE_SECTION_ERROR.format(block_type))
+                raise IndeterminateBlockEnd(INDETERMINATE_SECTION_ERROR.format(block_type))
             block_class = INDETERMINATE_SECTION_HEADERS[block_type]
         else:
             raise ValueError(f"Can't process unknown block type {block_type}")
@@ -141,11 +136,11 @@ class SimaProCSV:
         for line in rewindable_csv_reader:
             if line and line[0] == "End":
                 self.uses_end_text = True
-                return block_class(data, self.header) if data else None
+                return block_class(data, header) if data else None
             if line and line[0] in CONTROL_BLOCK_MAPPING:
                 rewindable_csv_reader.rewind()
-                return block_class(data, self.header) if data else None
+                return block_class(data, header) if data else None
             data.append(line)
 
         # EOF
-        return block_class(data, self.header) if data else None
+        return block_class(data, header) if data else None

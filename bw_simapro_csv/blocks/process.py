@@ -4,7 +4,7 @@ from typing import List
 from loguru import logger
 
 from ..utils import asboolean, asdate
-from .base import SimaProCSVBlock
+from .base import SimaProCSVUncertainBlock
 
 LIST_ELEMENTS = {
     "Avoided products",
@@ -50,13 +50,14 @@ has_letters = re.compile("[a-df-zA-CF-Z]+")
 has_numbers = re.compile("[0-9]+")
 
 
-class Process(SimaProCSVBlock):
+class Process(SimaProCSVUncertainBlock):
     """A life cycle inventory process, with inputs, products, and elementary exchanges"""
 
     def __init__(self, block: List[list], header: dict):
         self.parsed = {"metadata": {}}
         self.raw = {}
         self.index = 0
+        self.unit_first = None
 
         while not any(block[self.index]):
             self.index += 1
@@ -72,10 +73,10 @@ class Process(SimaProCSVBlock):
         # These sections need access to the global variable store
         # before they can be resolved
         while self.index < len(block):
-            k, v = self.pull_raw_section(block, header)
+            k, v = self.pull_raw_section(block)
             self.raw[k] = v
 
-    def pull_raw_section(self, block: List[list], header: dict) -> (str, list):
+    def pull_raw_section(self, block: List[list]) -> (str, list):
         """
         0. name
         1. subcategory
@@ -87,7 +88,8 @@ class Process(SimaProCSVBlock):
         7. uncert. param.
         8. comment
 
-        However, sometimes the value is in index 2, and the unit in index 3. Because why not! We assume default ordering unless we find a number in index 2.
+        However, sometimes the value is in index 2, and the unit in index 3. Because why not!
+        We assume default ordering unless we find a number in index 2.
         """
         key = block[self.index][0]
         data = []
@@ -128,7 +130,7 @@ class Process(SimaProCSVBlock):
         # The amount could be a formula with only a variable
         # We don't handle this case for now
         else:
-            logger.warning("Ambiguous unit/value pair: '{a}' and '{b}' in section {key}")
+            logger.warning(f"Ambiguous unit/value pair: '{a}' and '{b}' in section {key}")
             unit, amount = a, b
         if has_letters.search(amount):
             return {"unit": unit, "formula": amount}

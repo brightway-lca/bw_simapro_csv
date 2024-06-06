@@ -1,10 +1,10 @@
 from typing import List
 
 from ..utils import asboolean
-from .base import SimaProCSVBlock
+from .base import SimaProCSVUncertainBlock
 
 
-class GlobalInputParameters(SimaProCSVBlock):
+class GlobalInputParameters(SimaProCSVUncertainBlock):
     def __init__(self, block: List[list], header: dict):
         """Parse a `Database Input Parameters` block.
 
@@ -23,7 +23,7 @@ class GlobalInputParameters(SimaProCSVBlock):
         self.parsed = []
 
         for line in block:
-            if not any([elem.strip() for elem in line]):
+            if not any(line):
                 continue
             self.parsed.append(
                 self.distribution(*line[1:6], header=header)
