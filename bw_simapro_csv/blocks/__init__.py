@@ -4,6 +4,7 @@ __all__ = (
     "SimaProCSVBlock",
     "Process",
     "Units",
+    "Method",
 )
 
 
@@ -12,3 +13,4 @@ from .parameters import DatabaseInputParameters, ProjectInputParameters
 from .process import Process
 from .units import Units
 from .literature_reference import LiteratureReference
+from .method import Method

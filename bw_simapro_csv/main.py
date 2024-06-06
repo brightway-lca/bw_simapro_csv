@@ -8,7 +8,7 @@ from typing import List, Union
 import ftfy
 from loguru import logger
 
-from .blocks import DatabaseInputParameters, Process, ProjectInputParameters, SimaProCSVBlock, Units, LiteratureReference
+from .blocks import DatabaseInputParameters, Process, ProjectInputParameters, SimaProCSVBlock, Units, LiteratureReference, Method
 from .errors import IndeterminateBlockEnd
 from .header import parse_header
 from .utils import BeKindRewind, clean
@@ -28,7 +28,7 @@ CONTROL_BLOCK_MAPPING = {
     "Product stage": dummy,
     "Units": Units,
     "Process": Process,
-    "Method": dummy,
+    "Method": Method,
     "Impact category": dummy,
     "Normalization-Weighting set": dummy,
     "Damage category": dummy,
