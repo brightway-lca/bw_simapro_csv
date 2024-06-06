@@ -1,7 +1,7 @@
 import math
 import pytest
 
-from bw_simapro_csv.utils import BeKindRewind, asnumber
+from bw_simapro_csv.utils import BeKindRewind, asnumber, clean
 
 
 def test_rewindable_generator():
@@ -56,9 +56,17 @@ def test_asnumber_percentage():
 
 
 def test_asnumber_allow_nonnumber():
-    assert asnumber("foo", allow_nonnumber=True) == 'foo'
+    assert asnumber("foo", allow_nonnumber=True) == "foo"
 
 
 def test_asnumber_error():
     with pytest.raises(ValueError):
         asnumber("foo")
+
+
+def test_clean():
+    assert clean("Ã¯Â¾Âµg") == "ï¾µg"
+    assert clean("  \t foo") == "foo"
+    assert clean("  \t foo") == "foo"
+    assert clean("Â\x8dg") == "Âg"
+    assert clean("CO2") == "CO2"

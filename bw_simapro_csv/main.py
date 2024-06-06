@@ -4,6 +4,8 @@ from io import StringIO
 from pathlib import Path
 from typing import List, Union
 
+# Makes `sloppy-windows-1252` encoding available
+import ftfy
 from loguru import logger
 
 from .blocks import DatabaseInputParameters, Process, ProjectInputParameters, SimaProCSVBlock
@@ -55,7 +57,9 @@ INDETERMINE_SECTION_ERROR = """
 
 
 class SimaProCSV:
-    def __init__(self, path_or_stream: Union[Path, StringIO], encoding: str = "cp1252"):
+    def __init__(
+        self, path_or_stream: Union[Path, StringIO], encoding: str = "sloppy-windows-1252"
+    ):
         """Read a SimaPro CSV file object, and parse the contents.
 
         We start with the header, as this defines how the rest of the file is to be parsed.

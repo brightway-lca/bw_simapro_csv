@@ -1,15 +1,29 @@
-from copy import copy
 import itertools
+import re
 from collections.abc import Iterator
+from copy import copy
 from datetime import date
 from typing import List
 
+import ftfy
 from dateutil.parser import parse as dtparse
+
+UNDEFINED = re.compile("[\x8d\x81\x8f\x90\x9d]")
+CONTROL_CHARACTERS = re.compile(
+    "[\x7f\x00\x01\x02\x03\x04\x05\x06\x07\x08\x0b\x0c\x0d\x0e\x0f\x10\x11\x12\x13\x14\x15\x16"
+    + "\x17\x18\x19\x1a\x1b\x1c\x1d\x1e\x1f]"
+)
+WARNING_CHARS = "ÃÂ€˜â¿"
 
 
 def clean(s: str) -> str:
-    """Strip string and remove ASCII delete character"""
-    return s.replace("\x7f", "").strip()
+    """Strip string, fix encoding, and remove undefined or control characters"""
+    s = s.strip()
+    s = UNDEFINED.sub("", s)
+    s = CONTROL_CHARACTERS.sub("", s)
+    if any(char in s for char in WARNING_CHARS):
+        s = ftfy.fix_text(s)
+    return s
 
 
 def nobraces(s: str) -> str:
