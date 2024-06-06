@@ -71,7 +71,7 @@ class SimaProCSV:
                 raise ValueError(f"Given `Path` {path_or_stream} is not a file")
             if not os.access(path_or_stream, os.R_OK):
                 raise ValueError(f"File {path_or_stream} exists but lacks read permission")
-            data = (clean(line) for line in open(path_or_stream, encoding=encoding))
+            data = (line for line in open(path_or_stream, encoding=encoding))
         elif not isinstance(path_or_stream, StringIO):
             raise ValueError(
                 f"`path_or_stream` must be `Path` or `StringIO` - got {type(path_or_stream)}"
@@ -79,7 +79,7 @@ class SimaProCSV:
         else:
             # We have to assume that the StringIO object was created with
             # some reasonable newline definition.
-            data = (clean(line) for line in path_or_stream)
+            data = (line for line in path_or_stream)
         # Converting Pydantic back to dict to release memory
         self.header = parse_header(data).model_dump()
         self.uses_end_text = False

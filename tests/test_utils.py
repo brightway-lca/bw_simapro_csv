@@ -69,4 +69,5 @@ def test_clean():
     assert clean("  \t foo") == "foo"
     assert clean("  \t foo") == "foo"
     assert clean("Â\x8dg") == "Âg"
-    assert clean("CO2") == "CO2"
+    assert clean("CO2\x1a") == "CO2"
+    assert clean("CO2") == "CO\n2"
