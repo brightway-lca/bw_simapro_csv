@@ -54,6 +54,8 @@ testing = [
 dev = [
     "build",
     "pre-commit",
+    "black",
+    "isort",
     "pylint",
     "pytest",
     "pytest-cov",
