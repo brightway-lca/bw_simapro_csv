@@ -33,7 +33,7 @@ class ImpactCategory(SimaProCSVBlock):
         self.parsed = {'cfs': []}
 
         line = block.pop(0)
-        while not any([elem.strip() for elem in line]):
+        while not any(line):
             line = block.pop(0)
 
         self.parsed['name'] = line[0]
@@ -43,7 +43,7 @@ class ImpactCategory(SimaProCSVBlock):
         assert block.pop(0) == ['Substances']
 
         for line in block:
-            if not any([elem.strip() for elem in line]):
+            if not any(line):
                 continue
             self.parsed['cfs'].append(
                 {

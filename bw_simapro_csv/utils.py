@@ -60,7 +60,7 @@ def asnumber(value: str, decimal_separator: str = ".", allow_nonnumber: bool = F
     """Take a number stored as a string and convert to a float.
 
     Tries hard to handle different formats."""
-    original = copy(value.strip())
+    original = copy(value)
 
     conversion = 1
     if decimal_separator != "." and "." in value:
@@ -104,7 +104,7 @@ def alternating_key_value(data: List[list]) -> List[tuple]:
     processed = []
     index = 0
 
-    if not any([elem.strip() for elem in data[index]]):
+    if not any(data[index]):
         index += 1
 
     while index < len(data):
@@ -119,7 +119,7 @@ def alternating_key_value(data: List[list]) -> List[tuple]:
             processed.append((data[index][0], data[index + 1]))
         index += 2
 
-        if index < len(data) and not any([elem.strip() for elem in data[index]]):
+        if index < len(data) and not any(data[index]):
             index += 1
 
     return processed
@@ -145,7 +145,7 @@ class BeKindRewind(Iterator):
 
     """
 
-    def __init__(self, data_iterable: Iterator, strip_elements: bool = False):
+    def __init__(self, data_iterable: Iterator, strip_elements: bool = True):
         self.data_iterable = data_iterable
         self.current = None
         self.strip_elements = strip_elements
@@ -153,7 +153,7 @@ class BeKindRewind(Iterator):
     def __next__(self) -> List[str]:
         self.current = next(self.data_iterable)
         if self.strip_elements:
-            return [elem.strip() for elem in self.current]
+            return [clean(elem) for elem in self.current]
         return self.current
 
     def rewind(self) -> None:

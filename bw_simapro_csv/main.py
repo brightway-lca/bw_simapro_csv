@@ -8,10 +8,10 @@ from typing import List, Union
 import ftfy
 from loguru import logger
 
-from .blocks import DatabaseInputParameters, Process, ProjectInputParameters, SimaProCSVBlock, Units, LiteratureReference, Method, ImpactCategory
+from .blocks import DatabaseInputParameters, Process, ProjectInputParameters, SimaProCSVBlock, Units, LiteratureReference, Method, ImpactCategory, EmptyBlock
 from .errors import IndeterminateBlockEnd
 from .header import parse_header
-from .utils import BeKindRewind, clean
+from .utils import BeKindRewind
 
 
 def dummy(data, *args):
