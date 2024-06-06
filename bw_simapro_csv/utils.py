@@ -61,14 +61,14 @@ def asnumber(value: str, decimal_separator: str = ".", allow_nonnumber: bool = F
     """Take a number stored as a string and convert to a float.
 
     Tries hard to handle different formats."""
-    original = copy(value)
+    original = copy(value.strip())
 
     conversion = 1
     if decimal_separator != "." and "." in value:
         value = value.replace(".", "")
     value = value.replace(decimal_separator, ".").replace("_", "").replace(" ", "")
     if value.endswith("%"):
-        value = value.repalce("%", "")
+        value = value.replace("%", "")
         conversion = 0.01
     try:
         return float(value) * conversion

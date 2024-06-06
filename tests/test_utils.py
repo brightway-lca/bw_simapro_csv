@@ -1,6 +1,7 @@
+import math
 import pytest
 
-from bw_simapro_csv.utils import BeKindRewind
+from bw_simapro_csv.utils import BeKindRewind, asnumber
 
 
 def test_rewindable_generator():
@@ -41,3 +42,23 @@ def test_rewindable_generator_strip():
     r = BeKindRewind(a, strip=True)
     assert next(r) == ["a", "b", "c"]
     assert next(r) == ["2", "1", "3"]
+
+
+def test_asnumber():
+    assert asnumber("4.2", ".") == 4.2
+    assert asnumber("400_404.2", ".") == 400404.2
+    assert asnumber("400_404;2", ";") == 400404.2
+    assert asnumber("400.404,2", ",") == 400404.2
+
+
+def test_asnumber_percentage():
+    assert math.isclose(asnumber("400.404,2%", ","), 4004.042)
+
+
+def test_asnumber_allow_nonnumber():
+    assert asnumber("foo", allow_nonnumber=True) == 'foo'
+
+
+def test_asnumber_error():
+    with pytest.raises(ValueError):
+        asnumber("foo")
