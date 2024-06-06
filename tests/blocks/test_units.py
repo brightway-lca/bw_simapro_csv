@@ -1,5 +1,5 @@
 from bw_simapro_csv import SimaProCSV
-from bw_simapro_csv.blocks.units import Units
+from bw_simapro_csv.blocks import Units
 
 
 def test_units_block_missing(fixtures_dir):

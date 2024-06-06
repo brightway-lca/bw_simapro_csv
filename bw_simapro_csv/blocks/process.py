@@ -99,7 +99,7 @@ class Process(SimaProCSVBlock):
                 data.append(
                     {
                         "name": a,
-                        "categories": (key, b),
+                        "context": (key, b),
                         "maybe_unit": c,
                         "maybe_value": d,
                         "kind": e,

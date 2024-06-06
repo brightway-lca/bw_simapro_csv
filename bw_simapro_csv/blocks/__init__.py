@@ -5,6 +5,7 @@ __all__ = (
     "Process",
     "Units",
     "Method",
+    "ImpactCategory",
 )
 
 
@@ -14,3 +15,4 @@ from .process import Process
 from .units import Units
 from .literature_reference import LiteratureReference
 from .method import Method
+from .impact_category import ImpactCategory

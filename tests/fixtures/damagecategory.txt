@@ -43,7 +43,7 @@ NORM - HH - Releases	man.SV
 
 Substances
 Air	(unspecified)	Lead-210	014255-04-0	1.28E-06	kBq
-Water	(unspecified)	Lead-210	014255-04-0	4.03E-09	kBq
+Water	(unspecified)	Lead-210	014255-04-1	4.03E-09	kBq
 
 
 
