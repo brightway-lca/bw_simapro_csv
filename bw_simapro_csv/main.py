@@ -15,6 +15,7 @@ from .blocks import (
     ImpactCategory,
     LiteratureReference,
     Method,
+    NormalizationWeightingSet,
     Process,
     ProjectInputParameters,
     Quantities,
@@ -42,7 +43,7 @@ CONTROL_BLOCK_MAPPING = {
     "Process": Process,
     "Method": Method,
     "Impact category": ImpactCategory,
-    "Normalization-Weighting set": dummy,
+    "Normalization-Weighting set": NormalizationWeightingSet,
     "Damage category": DamageCategory,
 }
 
