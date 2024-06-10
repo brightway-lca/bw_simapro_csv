@@ -140,20 +140,20 @@ class BeKindRewind(Iterator):
     ----------
     data_iterable : collections.abc.Iterator
         Iterator which returns lists of strings.
-    strip_elements : bool, optional
-        Do `[obj.strip() for obj in line]` when returning a new line
+    clean_elements : bool, optional
+        Do `[clean(elem) for elem in line]` when returning a new line
 
     """
 
-    def __init__(self, data_iterable: Iterator, strip_elements: bool = True):
+    def __init__(self, data_iterable: Iterator, clean_elements: bool = True):
         self.data_iterable = data_iterable
         self.current = None
-        self.strip_elements = strip_elements
+        self.clean_elements = clean_elements
 
     def __next__(self) -> List[str]:
         self.current = next(self.data_iterable)
-        if self.strip_elements:
-            self.current = [elem.strip() for elem in self.current]
+        if self.clean_elements:
+            self.current = [clean(elem) for elem in self.current]
         return self.current
 
     def rewind(self) -> None:

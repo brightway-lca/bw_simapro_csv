@@ -105,7 +105,7 @@ class SimaProCSV:
             logger.warning(f"SimaPro CSV file uses unusual delimiter '{self.header['delimiter']}'")
 
         rewindable_csv_reader = BeKindRewind(
-            csv.reader(data, delimiter=self.header["delimiter"], strict=True), strip_elements=True
+            csv.reader(data, delimiter=self.header["delimiter"], strict=True), clean_elements=True
         )
 
         self.blocks = []

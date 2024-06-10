@@ -6,7 +6,7 @@ from bw_simapro_csv.utils import BeKindRewind, asnumber, clean
 
 def test_rewindable_generator():
     a = iter((1, 2, 3, 4, 5))
-    r = BeKindRewind(a, strip_elements=False)
+    r = BeKindRewind(a, clean_elements=False)
     assert next(r) == 1
     assert next(r) == 2
     assert next(r) == 3
@@ -20,7 +20,7 @@ def test_rewindable_generator():
 
 def test_rewindable_generator_idempotent():
     a = iter((1, 2, 3, 4, 5))
-    r = BeKindRewind(a, strip_elements=False)
+    r = BeKindRewind(a, clean_elements=False)
     assert next(r) == 1
     r.rewind()
     r.rewind()
@@ -31,7 +31,7 @@ def test_rewindable_generator_idempotent():
 
 def test_rewindable_generator_rewind_before_iteration():
     a = iter((1, 2, 3, 4, 5))
-    r = BeKindRewind(a, strip_elements=False)
+    r = BeKindRewind(a, clean_elements=False)
     r.rewind()
     assert next(r) == 1
     assert next(r) == 2
