@@ -16,6 +16,7 @@ from .blocks import (
     Method,
     Process,
     ProjectInputParameters,
+    Quantities,
     SimaProCSVBlock,
     Units,
 )
@@ -34,7 +35,7 @@ CONTROL_BLOCK_MAPPING = {
     "Literature reference": LiteratureReference,
     "Project Input parameters": ProjectInputParameters,
     "Project Calculated parameters": dummy,
-    "Quantities": dummy,
+    "Quantities": Quantities,
     "Product stage": dummy,
     "Units": Units,
     "Process": Process,
