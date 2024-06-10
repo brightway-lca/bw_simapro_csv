@@ -28,8 +28,4 @@ class DatabaseCalculatedParameters(SimaProCSVBlock):
         for line in block:
             if not line or not any(line):
                 continue
-            self.parsed.append({
-                'label': line[0],
-                'formula': line[1],
-                'comment': line[2]
-            })
+            self.parsed.append({"label": line[0], "formula": line[1], "comment": line[2]})

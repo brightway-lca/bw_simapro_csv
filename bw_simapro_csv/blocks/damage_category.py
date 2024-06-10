@@ -34,22 +34,22 @@ class DamageCategory(SimaProCSVBlock):
         1. conversion factor
 
         """
-        self.parsed = {'impact_categories': []}
+        self.parsed = {"impact_categories": []}
 
         line = block.pop(0)
         while not any(line):
             line = block.pop(0)
 
-        self.parsed['name'] = line[0]
-        self.parsed['unit'] = line[1]
+        self.parsed["name"] = line[0]
+        self.parsed["unit"] = line[1]
 
         assert not block.pop(0)
-        assert block.pop(0) == ['Impact categories']
+        assert block.pop(0) == ["Impact categories"]
 
         for line in block:
             if not any(line):
                 continue
-            self.parsed['impact_categories'].append(
+            self.parsed["impact_categories"].append(
                 {
                     "name": line[0],
                     "factor": asnumber(line[1]),

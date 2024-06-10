@@ -1,7 +1,7 @@
 from typing import List
 
-from .base import SimaProCSVBlock
 from ..utils import alternating_key_value
+from .base import SimaProCSVBlock
 
 
 class LiteratureReference(SimaProCSVBlock):

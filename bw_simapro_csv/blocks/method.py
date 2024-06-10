@@ -1,7 +1,7 @@
-from typing import List, Any
+from typing import Any, List
 
-from .base import SimaProCSVBlock
 from ..utils import alternating_key_value, asboolean
+from .base import SimaProCSVBlock
 
 
 def reformat(v: list | str) -> Any:

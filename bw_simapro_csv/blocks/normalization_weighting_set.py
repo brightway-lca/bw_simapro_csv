@@ -40,24 +40,24 @@ class NormalizationWeightingSet(SimaProCSVBlock):
         The can be normalization, weighting, or both.
 
         """
-        self.parsed = {'normalization': [], 'weighting': []}
+        self.parsed = {"normalization": [], "weighting": []}
         mode, index = None, 0
 
-        while not(line := block[index]):
+        while not (line := block[index]):
             index += 1
 
-        self.parsed['name'] = line[0]
+        self.parsed["name"] = line[0]
         index += 1
 
-        while not(line := block[index]):
+        while not (line := block[index]):
             index += 1
 
         for line in block[index:]:
             if not line or not any(line):
                 continue
-            elif line[0] == 'Normalization':
-                mode = 'normalization'
-            elif line[0] == 'Weighting':
-                mode = 'weighting'
+            elif line[0] == "Normalization":
+                mode = "normalization"
+            elif line[0] == "Weighting":
+                mode = "weighting"
             else:
-                self.parsed[mode].append({'category': line[0], 'factor': asnumber(line[1])})
+                self.parsed[mode].append({"category": line[0], "factor": asnumber(line[1])})

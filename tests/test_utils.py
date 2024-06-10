@@ -1,4 +1,5 @@
 import math
+
 import pytest
 
 from bw_simapro_csv.utils import BeKindRewind, asnumber, clean

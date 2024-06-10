@@ -1,7 +1,7 @@
-from typing import List, Any
+from typing import Any, List
 
-from .base import SimaProCSVBlock
 from ..utils import asboolean
+from .base import SimaProCSVBlock
 
 
 class Quantities(SimaProCSVBlock):

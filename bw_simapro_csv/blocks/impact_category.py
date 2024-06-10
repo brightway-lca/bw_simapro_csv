@@ -30,22 +30,22 @@ class ImpactCategory(SimaProCSVBlock):
         5. unit
 
         """
-        self.parsed = {'cfs': []}
+        self.parsed = {"cfs": []}
 
         line = block.pop(0)
         while not any(line):
             line = block.pop(0)
 
-        self.parsed['name'] = line[0]
-        self.parsed['unit'] = line[1]
+        self.parsed["name"] = line[0]
+        self.parsed["unit"] = line[1]
 
         assert not block.pop(0)
-        assert block.pop(0) == ['Substances']
+        assert block.pop(0) == ["Substances"]
 
         for line in block:
             if not any(line):
                 continue
-            self.parsed['cfs'].append(
+            self.parsed["cfs"].append(
                 {
                     "context": (line[0], line[1]),
                     "name": line[2],
