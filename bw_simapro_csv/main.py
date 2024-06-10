@@ -9,6 +9,7 @@ import ftfy
 from loguru import logger
 
 from .blocks import (
+    DamageCategory,
     DatabaseInputParameters,
     EmptyBlock,
     ImpactCategory,
@@ -42,7 +43,7 @@ CONTROL_BLOCK_MAPPING = {
     "Method": Method,
     "Impact category": ImpactCategory,
     "Normalization-Weighting set": dummy,
-    "Damage category": dummy,
+    "Damage category": DamageCategory,
 }
 
 # These are lists of flows at the end of the file

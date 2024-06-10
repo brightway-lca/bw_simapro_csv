@@ -1,5 +1,3 @@
-import datetime
-
 from bw_simapro_csv import SimaProCSV
 from bw_simapro_csv.blocks import Quantities
 
