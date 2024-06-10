@@ -18,8 +18,8 @@ __all__ = (
 
 
 from .base import EmptyBlock, SimaProCSVBlock, SimaProCSVUncertainBlock
-from .damage_category import DamageCategory
 from .calculated_parameters import DatabaseCalculatedParameters, ProjectCalculatedParameters
+from .damage_category import DamageCategory
 from .impact_category import ImpactCategory
 from .literature_reference import LiteratureReference
 from .method import Method

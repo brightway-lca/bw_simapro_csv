@@ -14,7 +14,7 @@ def test_impact_category_complete():
         ("Human health", "5401.459854"),
         ("Ecosystem quality", "1386.138614"),
     ]
-    parsed = NormalizationWeightingSet(data, None).parsed
+    parsed = NormalizationWeightingSet(data, None, 0).parsed
     assert parsed == {
         "name": "IMPACT World+ (Stepwise 2006 values)",
         "normalization": [
@@ -48,7 +48,7 @@ def test_impact_category_partial():
         ("Human health", "5401.459854"),
         ("Ecosystem quality", "1386.138614"),
     ]
-    parsed = NormalizationWeightingSet(data, None).parsed
+    parsed = NormalizationWeightingSet(data, None, 0).parsed
     assert parsed == {
         "name": "IMPACT World+ (Stepwise 2006 values)",
         "normalization": [],
@@ -71,7 +71,7 @@ def test_impact_category_partial():
         ("Human health", "1.37E+01"),
         ("Ecosystem quality", "1.01E-04"),
     ]
-    parsed = NormalizationWeightingSet(data, None).parsed
+    parsed = NormalizationWeightingSet(data, None, 0).parsed
     assert parsed == {
         "name": "IMPACT World+ (Stepwise 2006 values)",
         "normalization": [

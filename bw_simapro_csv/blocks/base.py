@@ -32,7 +32,15 @@ class SimaProCSVUncertainBlock(SimaProCSVBlock):
         }
 
     def distribution(
-        self, amount: str, kind: str, field1: str, field2: str, field3: str, header: dict, **kwargs
+        self,
+        amount: str,
+        kind: str,
+        field1: str,
+        field2: str,
+        field3: str,
+        header: dict,
+        line_no: int,
+        **kwargs,
     ) -> dict:
         decimal_separator = header.get("decimal_separator", ".")
 
@@ -50,6 +58,7 @@ Can't convert uncertainty data to numbers:
     Field1: {field1}
     Field2: {field2}
     Field3: {field3}
+    Line number: {line_no}
     """
             ) from exc
 
@@ -57,7 +66,9 @@ Can't convert uncertainty data to numbers:
             return self.undefined_distribution(amount)
         if kind == "Lognormal":
             if not amount or field1 <= 0:
-                logger.warning(f"Invalid lognormal distribution: {amount}|{field1}")
+                logger.warning(
+                    f"Invalid lognormal distribution on line {line_no}: {amount}|{field1}"
+                )
                 return self.undefined_distribution(amount)
             return {
                 "uncertainty type": LognormalUncertainty.id,
@@ -68,7 +79,7 @@ Can't convert uncertainty data to numbers:
             }
         if kind == "Normal":
             if not amount or field1 <= 0:
-                logger.warning(f"Invalid normal distribution: {amount}|{field1}")
+                logger.warning(f"Invalid normal distribution on line {line_no}: {amount}|{field1}")
                 return self.undefined_distribution(amount)
             return {
                 "uncertainty type": NormalUncertainty.id,
@@ -79,7 +90,9 @@ Can't convert uncertainty data to numbers:
             }
         if kind == "Triangle":
             if not field2 <= amount <= field3:
-                logger.warning(f"Invalid triangular distribution: {amount}|{field2}|{field3}")
+                logger.warning(
+                    f"Invalid triangular distribution on line {line_no}: {amount}|{field2}|{field3}"
+                )
                 return self.undefined_distribution(amount)
             return {
                 "uncertainty type": TriangularUncertainty.id,
@@ -91,7 +104,9 @@ Can't convert uncertainty data to numbers:
             }
         if kind == "Uniform":
             if not field2 <= amount <= field3:
-                logger.warning(f"Invalid uniform distribution: {amount}|{field2}|{field3}")
+                logger.warning(
+                    f"Invalid uniform distribution on line {line_no}: {amount}|{field2}|{field3}"
+                )
                 return self.undefined_distribution(amount)
             return {
                 "uncertainty type": UniformUncertainty.id,

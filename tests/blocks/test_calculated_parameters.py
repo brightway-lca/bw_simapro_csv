@@ -9,6 +9,7 @@ def test_database_calculated_parameters():
             ("Conv_STon_MTon", "2/2,20462", "Convert short ton  (U.S. ton) to metric ton (tonne)"),
         ],
         None,
+        0,
     )
     expected = [
         {
@@ -38,6 +39,7 @@ def test_project_calculated_parameters():
             ("Conv_STon_MTon", "2/2,20462", "Convert short ton  (U.S. ton) to metric ton (tonne)"),
         ],
         None,
+        0,
     )
     expected = [
         {

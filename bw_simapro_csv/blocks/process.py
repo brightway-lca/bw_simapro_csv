@@ -53,8 +53,9 @@ has_numbers = re.compile("[0-9]+")
 class Process(SimaProCSVUncertainBlock):
     """A life cycle inventory process, with inputs, products, and elementary exchanges"""
 
-    def __init__(self, block: List[list], header: dict):
+    def __init__(self, block: List[list], header: dict, offset: int):
         self.parsed = {"metadata": {}}
+        self.offset = offset
         self.raw = {}
         self.index = 0
         self.unit_first = None
@@ -73,10 +74,10 @@ class Process(SimaProCSVUncertainBlock):
         # These sections need access to the global variable store
         # before they can be resolved
         while self.index < len(block):
-            k, v = self.pull_raw_section(block)
+            k, v = self.pull_raw_section(block, offset)
             self.raw[k] = v
 
-    def pull_raw_section(self, block: List[list]) -> (str, list):
+    def pull_raw_section(self, block: List[list], offset: int) -> (str, list):
         """
         0. name
         1. subcategory

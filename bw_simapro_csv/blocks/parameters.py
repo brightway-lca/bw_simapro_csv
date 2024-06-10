@@ -5,8 +5,8 @@ from .base import SimaProCSVUncertainBlock
 
 
 class GlobalInputParameters(SimaProCSVUncertainBlock):
-    def __init__(self, block: List[list], header: dict):
-        """Parse a `Database Input Parameters` block.
+    def __init__(self, block: List[list], header: dict, offset: int):
+        """Parse an `Project|Database Input Parameters` block.
 
         Each line has the form:
 
@@ -21,12 +21,13 @@ class GlobalInputParameters(SimaProCSVUncertainBlock):
 
         The block header label is already stripped."""
         self.parsed = []
+        self.offset = offset
 
-        for line in block:
+        for index, line in enumerate(block, start=offset):
             if not any(line):
                 continue
             self.parsed.append(
-                self.distribution(*line[1:6], header=header)
+                self.distribution(*line[1:6], header=header, line_no=index)
                 | {
                     "name": line[0],
                     "hidden": asboolean(line[6]),

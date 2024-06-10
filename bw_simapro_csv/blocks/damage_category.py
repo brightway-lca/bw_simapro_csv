@@ -5,7 +5,7 @@ from .base import SimaProCSVBlock
 
 
 class DamageCategory(SimaProCSVBlock):
-    def __init__(self, block: List[list], header: dict):
+    def __init__(self, block: List[list], header: dict, offset: int):
         """Parse a `Damage category` block.
 
         Damage categories are not normalization or weighting, but an aggregation of impact
@@ -35,6 +35,7 @@ class DamageCategory(SimaProCSVBlock):
 
         """
         self.parsed = {"impact_categories": []}
+        self.offset = offset
 
         line = block.pop(0)
         while not any(line):

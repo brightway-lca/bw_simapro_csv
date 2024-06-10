@@ -4,7 +4,7 @@ from .base import SimaProCSVBlock
 
 
 class DatabaseCalculatedParameters(SimaProCSVBlock):
-    def __init__(self, block: List[list], header: dict):
+    def __init__(self, block: List[list], header: dict, offset: int):
         """Parse an `Database Calculated parameters` block.
 
         Has the form:
@@ -24,8 +24,9 @@ class DatabaseCalculatedParameters(SimaProCSVBlock):
 
         """
         self.parsed = []
+        self.offset = offset
 
-        for line in block:
+        for index, line in enumerate(block, start=offset):
             if not line or not any(line):
                 continue
             self.parsed.append({"label": line[0], "formula": line[1], "comment": line[2]})
@@ -33,4 +34,5 @@ class DatabaseCalculatedParameters(SimaProCSVBlock):
 
 class ProjectCalculatedParameters(DatabaseCalculatedParameters):
     """Same as format and layout as `DatabaseCalculatedParameters`"""
+
     pass

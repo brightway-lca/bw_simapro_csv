@@ -6,7 +6,7 @@ from .base import SimaProCSVBlock
 
 
 class ImpactCategory(SimaProCSVBlock):
-    def __init__(self, block: List[list], header: dict):
+    def __init__(self, block: List[list], header: dict, offset: int):
         """Parse an `Impact category` block.
 
         Has the form:
@@ -31,6 +31,7 @@ class ImpactCategory(SimaProCSVBlock):
 
         """
         self.parsed = {"cfs": []}
+        self.offset = offset
 
         line = block.pop(0)
         while not any(line):

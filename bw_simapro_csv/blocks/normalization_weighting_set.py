@@ -5,7 +5,7 @@ from .base import SimaProCSVBlock
 
 
 class NormalizationWeightingSet(SimaProCSVBlock):
-    def __init__(self, block: List[list], header: dict):
+    def __init__(self, block: List[list], header: dict, offset: int):
         """Parse a `Normalization-Weighting set` block.
 
         Has the form:
@@ -41,6 +41,8 @@ class NormalizationWeightingSet(SimaProCSVBlock):
 
         """
         self.parsed = {"normalization": [], "weighting": []}
+        self.offset = offset
+
         mode, index = None, 0
 
         while not (line := block[index]):

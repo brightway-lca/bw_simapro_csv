@@ -5,7 +5,7 @@ from .base import SimaProCSVBlock
 
 
 class LiteratureReference(SimaProCSVBlock):
-    def __init__(self, block: List[list], header: dict):
+    def __init__(self, block: List[list], header: dict, offset: int):
         """Parse a `Literature reference` block.
 
         Each block as the form:
@@ -35,3 +35,4 @@ class LiteratureReference(SimaProCSVBlock):
 
         """
         self.parsed = dict(alternating_key_value(block))
+        self.offset = offset

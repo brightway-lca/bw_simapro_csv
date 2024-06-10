@@ -141,17 +141,19 @@ class BeKindRewind(Iterator):
     data_iterable : collections.abc.Iterator
         Iterator which returns lists of strings.
     clean_elements : bool, optional
-        Do `[clean(elem) for elem in line]` when returning a new line
+    Do `[clean(elem) for elem in line]` when returning a new line
 
     """
 
-    def __init__(self, data_iterable: Iterator, clean_elements: bool = True):
+    def __init__(self, data_iterable: Iterator, clean_elements: bool = True, offset: int = 0):
         self.data_iterable = data_iterable
         self.current = None
         self.clean_elements = clean_elements
+        self.line_no = offset - 1
 
     def __next__(self) -> List[str]:
         self.current = next(self.data_iterable)
+        self.line_no += 1
         if self.clean_elements:
             self.current = [clean(elem) for elem in self.current]
         return self.current
@@ -159,6 +161,7 @@ class BeKindRewind(Iterator):
     def rewind(self) -> None:
         """Rewinds the iterator by one step, retrieving the element that was
         just returned by the previous call to `__next__`."""
+        self.line_no -= 1
         if self.current is None:
             return
         self.data_iterable = itertools.chain((self.current,), self.data_iterable)

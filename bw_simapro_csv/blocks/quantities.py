@@ -5,7 +5,7 @@ from .base import SimaProCSVBlock
 
 
 class Quantities(SimaProCSVBlock):
-    def __init__(self, block: List[list], header: dict):
+    def __init__(self, block: List[list], header: dict, offset: int):
         """Parse a `Quantities` block.
 
         Each block as the form:
@@ -24,3 +24,4 @@ class Quantities(SimaProCSVBlock):
 
         """
         self.parsed = {line[0]: asboolean(line[1]) for line in block if any(line)}
+        self.offset = offset

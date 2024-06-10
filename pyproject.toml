@@ -28,6 +28,7 @@ classifiers = [
 ]
 requires-python = ">=3.10"
 dependencies = [
+    "bw2parameters",
     "ftfy",
     "loguru",
     "pydantic",

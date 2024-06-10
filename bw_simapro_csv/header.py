@@ -57,7 +57,7 @@ class SimaProCSVHeader(BaseModel):
     created: Optional[datetime] = datetime.now()
 
 
-def parse_header(data: List[str]) -> SimaProCSVHeader:
+def parse_header(data: List[str]) -> (SimaProCSVHeader, int):
     """
     Read the header section and parse its values. A typical header looks like:
 
@@ -82,7 +82,7 @@ def parse_header(data: List[str]) -> SimaProCSVHeader:
     """
     parsed = {"libraries": []}
 
-    for line in data:
+    for index, line in enumerate(data):
         if not (line.startswith('"{') or line.startswith("{")):
             break
 
@@ -126,4 +126,4 @@ def parse_header(data: List[str]) -> SimaProCSVHeader:
     except parser.ParserError:
         pass
 
-    return SimaProCSVHeader(**parsed)
+    return SimaProCSVHeader(**parsed), index

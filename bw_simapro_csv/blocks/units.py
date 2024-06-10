@@ -5,7 +5,7 @@ from .base import SimaProCSVBlock
 
 
 class Units(SimaProCSVBlock):
-    def __init__(self, block: List[list], header: dict):
+    def __init__(self, block: List[list], header: dict, offset: int):
         """Parse a `Units` block.
 
         Each line has the form:
@@ -17,6 +17,7 @@ class Units(SimaProCSVBlock):
 
         The block header label is already stripped."""
         self.parsed = []
+        self.offset = offset
 
         for line in block:
             if not any(line):

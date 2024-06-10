@@ -73,7 +73,10 @@ INDETERMINATE_SECTION_ERROR = """
 
 class SimaProCSV:
     def __init__(
-        self, path_or_stream: Union[Path, StringIO], encoding: str = "sloppy-windows-1252"
+        self,
+        path_or_stream: Union[Path, StringIO],
+        encoding: str = "sloppy-windows-1252",
+        debug: bool = False,
     ):
         """Read a SimaPro CSV file object, and parse the contents.
 
@@ -81,12 +84,15 @@ class SimaProCSV:
         It gives the CSV delimiter and decimal separator.
 
         We then break the file into logical chunks, such as processes or LCIA impact categories."""
+        # Control logging level
+        self.debug = debug
+
         if isinstance(path_or_stream, Path):
             if not path_or_stream.is_file():
                 raise ValueError(f"Given `Path` {path_or_stream} is not a file")
             if not os.access(path_or_stream, os.R_OK):
                 raise ValueError(f"File {path_or_stream} exists but lacks read permission")
-            data = (line for line in open(path_or_stream, encoding=encoding))
+            data = open(path_or_stream, encoding=encoding)
         elif not isinstance(path_or_stream, StringIO):
             raise ValueError(
                 f"`path_or_stream` must be `Path` or `StringIO` - got {type(path_or_stream)}"
@@ -94,9 +100,10 @@ class SimaProCSV:
         else:
             # We have to assume that the StringIO object was created with
             # some reasonable newline definition.
-            data = (line for line in path_or_stream)
+            data = path_or_stream
         # Converting Pydantic back to dict to release memory
-        self.header = parse_header(data).model_dump()
+        header, header_lines = parse_header(data)
+        self.header = header.model_dump()
         self.uses_end_text = False
 
         logger.info(
@@ -105,12 +112,20 @@ class SimaProCSV:
             delimiter="<tab>" if self.header["delimiter"] == "\t" else self.header["delimiter"],
             name=self.header["project"] or "(Not given)",
         )
+        if self.debug:
+            logger.debug(
+                "Header information:\n\theader lines: {header_lines}\n\t{header}",
+                header_lines=header_lines,
+                header="\n\t".join(["{}: {}".format(k, v) for k, v in self.header.items()]),
+            )
 
         if self.header["delimiter"] not in {";", ".", "\t", "|", " "}:
             logger.warning(f"SimaPro CSV file uses unusual delimiter '{self.header['delimiter']}'")
 
         rewindable_csv_reader = BeKindRewind(
-            csv.reader(data, delimiter=self.header["delimiter"], strict=True), clean_elements=True
+            csv.reader(data, delimiter=self.header["delimiter"], strict=True),
+            clean_elements=True,
+            offset=header_lines,
         )
 
         self.blocks = []
@@ -151,11 +166,25 @@ class SimaProCSV:
         for line in rewindable_csv_reader:
             if line and line[0] == "End":
                 self.uses_end_text = True
-                return block_class(data, header) if data else None
+                return (
+                    block_class(data, header, rewindable_csv_reader.line_no - len(data))
+                    if data
+                    else None
+                )
             if line and line[0] in CONTROL_BLOCK_MAPPING:
                 rewindable_csv_reader.rewind()
-                return block_class(data, header) if data else None
+                return (
+                    block_class(data, header, rewindable_csv_reader.line_no - len(data))
+                    if data
+                    else None
+                )
             data.append(line)
 
         # EOF
-        return block_class(data, header) if data else None
+        return (
+            block_class(data, header, rewindable_csv_reader.line_no - len(data)) if data else None
+        )
+
+    def parse_calculated_parameters(self) -> None:
+        """Read in input parameters, and normalize, resolve,"""
+        pass
