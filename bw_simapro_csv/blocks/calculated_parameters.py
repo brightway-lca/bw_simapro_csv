@@ -29,3 +29,8 @@ class DatabaseCalculatedParameters(SimaProCSVBlock):
             if not line or not any(line):
                 continue
             self.parsed.append({"label": line[0], "formula": line[1], "comment": line[2]})
+
+
+class ProjectCalculatedParameters(DatabaseCalculatedParameters):
+    """Same as format and layout as `DatabaseCalculatedParameters`"""
+    pass

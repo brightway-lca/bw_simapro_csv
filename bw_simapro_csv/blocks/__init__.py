@@ -8,6 +8,7 @@ __all__ = (
     "Method",
     "NormalizationWeightingSet",
     "Process",
+    "ProjectCalculatedParameters",
     "ProjectInputParameters",
     "Quantities",
     "SimaProCSVBlock",
@@ -18,7 +19,7 @@ __all__ = (
 
 from .base import EmptyBlock, SimaProCSVBlock, SimaProCSVUncertainBlock
 from .damage_category import DamageCategory
-from .database_calculated_parameters import DatabaseCalculatedParameters
+from .calculated_parameters import DatabaseCalculatedParameters, ProjectCalculatedParameters
 from .impact_category import ImpactCategory
 from .literature_reference import LiteratureReference
 from .method import Method
