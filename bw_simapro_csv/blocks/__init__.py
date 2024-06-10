@@ -1,5 +1,6 @@
 __all__ = (
     "DamageCategory",
+    "DatabaseCalculatedParameters",
     "DatabaseInputParameters",
     "EmptyBlock",
     "ImpactCategory",
@@ -16,6 +17,7 @@ __all__ = (
 
 
 from .base import EmptyBlock, SimaProCSVBlock, SimaProCSVUncertainBlock
+from .database_calculated_parameters import DatabaseCalculatedParameters
 from .damage_category import DamageCategory
 from .impact_category import ImpactCategory
 from .literature_reference import LiteratureReference

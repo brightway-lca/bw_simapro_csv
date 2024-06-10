@@ -10,6 +10,7 @@ from loguru import logger
 
 from .blocks import (
     DamageCategory,
+    DatabaseCalculatedParameters,
     DatabaseInputParameters,
     EmptyBlock,
     ImpactCategory,
@@ -32,7 +33,7 @@ def dummy(data, *args):
 
 
 CONTROL_BLOCK_MAPPING = {
-    "Database Calculated parameters": dummy,
+    "Database Calculated parameters": DatabaseCalculatedParameters,
     "Database Input parameters": DatabaseInputParameters,
     "Literature reference": LiteratureReference,
     "Project Input parameters": ProjectInputParameters,
