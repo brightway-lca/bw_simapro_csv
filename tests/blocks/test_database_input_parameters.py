@@ -1,5 +1,5 @@
 from bw_simapro_csv import SimaProCSV
-from bw_simapro_csv.blocks.parameters import DatabaseInputParameters
+from bw_simapro_csv.blocks import DatabaseInputParameters
 
 
 def test_db_input_params_empty(fixtures_dir):

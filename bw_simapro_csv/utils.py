@@ -1,15 +1,35 @@
 import itertools
+import re
 from collections.abc import Iterator
 from copy import copy
 from datetime import date
 from typing import List
 
+import ftfy
 from dateutil.parser import parse as dtparse
+
+UNDEFINED = re.compile("[\x8d\x81\x8f\x90\x9d]")
+CONTROL_CHARACTERS = re.compile(
+    "[\x00\x01\x02\x03\x04\x05\x06\x07\x08\x0b\x0c\x0d\x0e\x0f\x10\x11\x12\x13\x14\x15\x16"
+    + "\x17\x18\x19\x1a\x1b\x1c\x1d\x1e\x1f]"
+)
+WARNING_CHARS = "ÃÂ€˜â¿"
 
 
 def clean(s: str) -> str:
-    """Strip string and remove ASCII delete character"""
-    return s.replace("\x7f", "").strip()
+    """Strip string, fix encoding, and remove undefined or control characters"""
+    # This makes no sense - /u007f is the delete control character
+    # https://www.ascii-code.com/grid
+    # But SimaPro uses this as a linebreak inside a CSV line
+    # This is why we can't have nice things
+    # olca-simapro-csv does the same thing:
+    # https://github.com/GreenDelta/olca-simapro-csv/blob/c11e40e7722f2ecaf62e813eebcc8d0793c8c3ff/src/test/java/org/openlca/simapro/csv/CsvLineTest.java#L53
+    s = s.replace("\x7f", "\n")
+    s = UNDEFINED.sub("", s)
+    s = CONTROL_CHARACTERS.sub("", s)
+    if any(char in s for char in WARNING_CHARS):
+        s = ftfy.fix_text(s)
+    return s.strip()
 
 
 def nobraces(s: str) -> str:
@@ -47,7 +67,7 @@ def asnumber(value: str, decimal_separator: str = ".", allow_nonnumber: bool = F
         value = value.replace(".", "")
     value = value.replace(decimal_separator, ".").replace("_", "").replace(" ", "")
     if value.endswith("%"):
-        value = value.repalce("%", "")
+        value = value.replace("%", "")
         conversion = 0.01
     try:
         return float(value) * conversion
@@ -60,6 +80,49 @@ def asnumber(value: str, decimal_separator: str = ".", allow_nonnumber: bool = F
 def asdate(value: str, dayfirst: bool = True) -> date:
     """Parse a string to a `datetime.date`"""
     return dtparse(value, dayfirst=dayfirst).date()
+
+
+def alternating_key_value(data: List[list]) -> List[tuple]:
+    """Transform data in alternating key/value/blank rows to tuples with `(key, value)`.
+
+    For example, turn:
+
+    ```
+
+    Foo
+    bar; baz
+
+    ```
+
+    Into:
+
+    ```python
+    [("Foo", ["bar", "baz"])]
+    ```
+
+    """
+    processed = []
+    index = 0
+
+    if not any(data[index]):
+        index += 1
+
+    while index < len(data):
+        if not len(data[index]) == 1:
+            raise ValueError(f"Line {data[index]} is supposed to be single-element")
+        key, value = data[index], data[index + 1]
+        if not value:
+            processed.append((data[index][0], None))
+        elif len(value) == 1:
+            processed.append((data[index][0], data[index + 1][0]))
+        else:
+            processed.append((data[index][0], data[index + 1]))
+        index += 2
+
+        if index < len(data) and not any(data[index]):
+            index += 1
+
+    return processed
 
 
 class BeKindRewind(Iterator):
@@ -82,7 +145,7 @@ class BeKindRewind(Iterator):
 
     """
 
-    def __init__(self, data_iterable: Iterator, strip_elements: bool = False):
+    def __init__(self, data_iterable: Iterator, strip_elements: bool = True):
         self.data_iterable = data_iterable
         self.current = None
         self.strip_elements = strip_elements
@@ -90,7 +153,7 @@ class BeKindRewind(Iterator):
     def __next__(self) -> List[str]:
         self.current = next(self.data_iterable)
         if self.strip_elements:
-            return [elem.strip() for elem in self.current]
+            self.current = [elem.strip() for elem in self.current]
         return self.current
 
     def rewind(self) -> None:

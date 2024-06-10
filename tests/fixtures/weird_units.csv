@@ -1,0 +1,156 @@
+{SimaPro 8.5.2.0}
+{processes}
+{Date: 15.05.2019}
+{Time: 09:38:37}
+{Project: for Yannik}
+{CSV Format version: 8.0.5}
+{CSV separator: Semicolon}
+{Decimal separator: ,}
+{Date separator: .}
+{Short date format: dd.MM.yyyy}
+{Skip empty fields: Yes}
+{Convert expressions to constants: No}
+{Selection: Selection (77)}
+{Related objects (system descriptions, substances, units, etc.): Yes}
+{Include sub product stages and processes: Yes}
+{Open project: 'for Yannik'}
+{Library 'Ecoinvent 3 - allocation, cut-off by classification - unit'}
+{Library 'Methods'}
+
+Process
+
+Category type
+energy
+
+Process identifier
+psigabe1000266275900056
+
+Type
+
+
+Status
+
+
+Time period
+Unspecified
+
+Geography
+Unspecified
+
+Technology
+Unspecified
+
+Representativeness
+Unspecified
+
+Multiple output allocation
+Unspecified
+
+Substitution allocation
+Unspecified
+
+Cut off rules
+Unspecified
+
+Capital goods
+Unspecified
+
+Boundary with nature
+Unspecified
+
+Infrastructure
+No
+
+Date
+22.10.2014
+
+Products
+hot water tank, carbon dioxide capture process {CH}| production | Alloc Rec, U;p;1;100;not defined;Power to Gas\3.1 CO2 Capture\Atmosphere;
+
+Avoided products
+
+Resources
+
+Materials/fuels
+Steel, low-alloyed {RER}| steel production, electric, low-alloyed | Alloc Rec, U;!!!g;0,001;Lognormal;1,05;0;0;(1,1,1,3,1,na)
+
+Electricity/heat
+
+Emissions to air
+
+Emissions to water
+
+Emissions to soil
+
+Final waste flows
+
+Non material emissions
+
+Social issues
+
+Economic issues
+
+Waste to treatment
+
+Units
+¾g;Mass;0,000000001;kg
+BCAPU;Mass;833;kg
+MEU;Mass;1;kg
+T.R.;Energy;1;MJ
+TL;Volume;1000000000;m3
+GL;Volume;1000000;m3
+Ág;Mass;0,000000001;kg
+kgCOD;Mass;1;kg
+Ml;Volume;1000;m3
+aaa;Mass;1;kg
+kg-NO;Energy;56,6;MJ
+kg-RU;Energy;49,3;MJ
+kg-GB;Energy;47;MJ
+kg-DZ;Energy;49,7;MJ
+kg-DE;Energy;45,9;MJ
+T;Mass;1000;kg
+‘g;Mass;0,000000001;kg
+_g;Mass;0,000000001;kg
+g;Mass;0,000000001;kg
+•g;Mass;0,000000001;kg
+cuin;Volume;1,64E-5;m3
+ï¾µg;Mass;0,000000001;kg
+ï¾‘g;Mass;0,000000001;kg
+ug;Mass;0,000000001;kg
+100%;Mass;1;kg
+metric to.;Mass;1000;kg
+MCF;Volume;28,31685;m3
+MT*;Mass;9,071847E8;kg
+MMCF;Volume;28316,85;m3
+5g;Mass;0,000000001;kg
+fg;Mass;0,000000001;kg
+EU;Mass;0,45454545;kg
+m3sub;Volume;1;m3
+ï¿½g;Mass;0,000000001;kg
+!!!g;Mass;0,000000001;kg
+?g;Mass;0,000000001;kg
+Oz;Mass;0,02835;kg
+OA33z;Mass;0,02835;kg
+MJe;Energy;1;MJ
+z;Mass;0,02834952;kg
+kg N1;Mass;1;kg
+kg enlevé;Mass;1;kg
+kg enlevŽ;Mass;1;kg
+oz (fl);Volume;0,0000296;m3
+M3;Volume;1;m3
+Kl;Volume;1;m3
+kM3;Volume;1000;m3
+bbl;Volume;0,15898729;m3
+MMBtu;Energy;1055,87;MJ
+Mscf;Volume;28,1685;m3
+Bushel;Mass;27,21;kg
+Mton;Mass;1000000000;kg
+km3;Volume;1,0E9;m3
+m3M;Volume;1000000;m3
+M m3;Volume;1000000;m3
+Ag;Mass;0,000000001;kg
+fl. oz;Volume;2,957353E-5;m3
+BoardFoot;Volume;0,00235974;m3
+
+
+End

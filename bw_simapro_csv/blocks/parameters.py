@@ -23,7 +23,7 @@ class GlobalInputParameters(SimaProCSVUncertainBlock):
         self.parsed = []
 
         for line in block:
-            if not any(elem.strip() for elem in line):
+            if not any(line):
                 continue
             self.parsed.append(
                 self.distribution(*line[1:6], header=header)

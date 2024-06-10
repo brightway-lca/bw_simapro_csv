@@ -57,7 +57,7 @@ Can't convert uncertainty data to numbers:
             return self.undefined_distribution(amount)
         if kind == "Lognormal":
             if not amount or field1 <= 0:
-                logger.warning("Invalid lognormal distribution: {amount}|{field1}")
+                logger.warning(f"Invalid lognormal distribution: {amount}|{field1}")
                 return self.undefined_distribution(amount)
             return {
                 "uncertainty type": LognormalUncertainty.id,
@@ -68,7 +68,7 @@ Can't convert uncertainty data to numbers:
             }
         if kind == "Normal":
             if not amount or field1 <= 0:
-                logger.warning("Invalid normal distribution: {amount}|{field1}")
+                logger.warning(f"Invalid normal distribution: {amount}|{field1}")
                 return self.undefined_distribution(amount)
             return {
                 "uncertainty type": NormalUncertainty.id,
@@ -79,7 +79,7 @@ Can't convert uncertainty data to numbers:
             }
         if kind == "Triangle":
             if not field2 <= amount <= field3:
-                logger.warning("Invalid triangular distribution: {amount}|{field2}|{field3}")
+                logger.warning(f"Invalid triangular distribution: {amount}|{field2}|{field3}")
                 return self.undefined_distribution(amount)
             return {
                 "uncertainty type": TriangularUncertainty.id,
@@ -91,7 +91,7 @@ Can't convert uncertainty data to numbers:
             }
         if kind == "Uniform":
             if not field2 <= amount <= field3:
-                logger.warning("Invalid uniform distribution: {amount}|{field2}|{field3}")
+                logger.warning(f"Invalid uniform distribution: {amount}|{field2}|{field3}")
                 return self.undefined_distribution(amount)
             return {
                 "uncertainty type": UniformUncertainty.id,

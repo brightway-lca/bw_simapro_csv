@@ -101,7 +101,7 @@ class Process(SimaProCSVUncertainBlock):
                 data.append(
                     {
                         "name": a,
-                        "categories": (key, b),
+                        "context": (key, b),
                         "maybe_unit": c,
                         "maybe_value": d,
                         "kind": e,
@@ -130,7 +130,7 @@ class Process(SimaProCSVUncertainBlock):
         # The amount could be a formula with only a variable
         # We don't handle this case for now
         else:
-            logger.warning("Ambiguous unit/value pair: '{a}' and '{b}' in section {key}")
+            logger.warning(f"Ambiguous unit/value pair: '{a}' and '{b}' in section {key}")
             unit, amount = a, b
         if has_letters.search(amount):
             return {"unit": unit, "formula": amount}
