@@ -4,6 +4,7 @@ import os
 from io import StringIO
 from pathlib import Path
 from typing import Union
+from functools import partial
 
 from bw2parameters import ParameterSet
 from loguru import logger
@@ -13,10 +14,12 @@ from .blocks import (
     DatabaseCalculatedParameters,
     DatabaseInputParameters,
     EmptyBlock,
+    GenericBiosphere,
     ImpactCategory,
     LiteratureReference,
     Method,
     NormalizationWeightingSet,
+    SystemDescription,
     Process,
     ProjectCalculatedParameters,
     ProjectInputParameters,
@@ -58,15 +61,15 @@ CONTROL_BLOCK_MAPPING = {
 
 # These are lists of flows at the end of the file
 INDETERMINATE_SECTION_HEADERS = {
-    "Non material emissions": dummy,
-    "Airborne emissions": dummy,
-    "Waterborne emissions": dummy,
-    "Raw materials": dummy,
-    "Final waste flows": dummy,
-    "Emissions to soil": dummy,
-    "Social issues": dummy,
-    "Economic issues": dummy,
-    "System description": dummy,
+    "Non material emissions": partial(GenericBiosphere, category="Non material emissions"),
+    "Airborne emissions": partial(GenericBiosphere, category="Airborne emissions"),
+    "Waterborne emissions": partial(GenericBiosphere, category="Waterborne emissions"),
+    "Raw materials": partial(GenericBiosphere, category="Raw materials"),
+    "Final waste flows": partial(GenericBiosphere, category="Final waste flows"),
+    "Emissions to soil": partial(GenericBiosphere, category="Emissions to soil"),
+    "Social issues": partial(GenericBiosphere, category="Social issues"),
+    "Economic issues": partial(GenericBiosphere, category="Economic issues"),
+    "System description": SystemDescription,
 }
 
 INDETERMINATE_SECTION_ERROR = """
@@ -174,14 +177,14 @@ class SimaProCSV:
             if line and line[0] == "End":
                 self.uses_end_text = True
                 return (
-                    block_class(data, header, rewindable_csv_reader.line_no - len(data))
+                    block_class(data, header, rewindable_csv_reader.line_no - len(data) + 1)
                     if data
                     else None
                 )
             if line and line[0] in CONTROL_BLOCK_MAPPING:
                 rewindable_csv_reader.rewind()
                 return (
-                    block_class(data, header, rewindable_csv_reader.line_no - len(data))
+                    block_class(data, header, rewindable_csv_reader.line_no - len(data) + 1)
                     if data
                     else None
                 )
@@ -189,7 +192,7 @@ class SimaProCSV:
 
         # EOF
         return (
-            block_class(data, header, rewindable_csv_reader.line_no - len(data)) if data else None
+            block_class(data, header, rewindable_csv_reader.line_no - len(data) + 1) if data else None
         )
 
     def resolve_parameters(self) -> None:
