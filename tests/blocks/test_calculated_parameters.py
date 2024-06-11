@@ -13,17 +13,17 @@ def test_database_calculated_parameters():
     )
     expected = [
         {
-            "label": "empty",
+            "name": "empty",
             "formula": "1/load",
             "comment": "",
         },
         {
-            "label": "m1",
+            "name": "m1",
             "formula": "Iff(m=1; 1; 0)",
             "comment": "",
         },
         {
-            "label": "Conv_STon_MTon",
+            "name": "Conv_STon_MTon",
             "formula": "2/2.20462",
             "comment": "Convert short ton  (U.S. ton) to metric ton (tonne)",
         },
@@ -43,17 +43,17 @@ def test_project_calculated_parameters():
     )
     expected = [
         {
-            "label": "empty",
+            "name": "empty",
             "formula": "1/load",
             "comment": "",
         },
         {
-            "label": "m1",
+            "name": "m1",
             "formula": "Iff(m=1; 1; 0)",
             "comment": "",
         },
         {
-            "label": "Conv_STon_MTon",
+            "name": "Conv_STon_MTon",
             "formula": "2/2.20462",
             "comment": "Convert short ton  (U.S. ton) to metric ton (tonne)",
         },

@@ -19,7 +19,7 @@ class DatabaseCalculatedParameters(SimaProCSVBlock):
 
         Each line has the form:
 
-        0. label
+        0. name
         1. formula
         2. comment
 
@@ -32,7 +32,7 @@ class DatabaseCalculatedParameters(SimaProCSVBlock):
                 continue
             self.parsed.append(
                 {
-                    "label": line[0],
+                    "name": line[0],
                     "formula": normalize_number_in_formula(
                         line[1], header.get("decimal_separator", ".")
                     ),
