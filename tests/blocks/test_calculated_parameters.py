@@ -15,16 +15,19 @@ def test_database_calculated_parameters():
         {
             "name": "empty",
             "formula": "1/load",
+            "line_no": 0,
             "comment": "",
         },
         {
             "name": "m1",
             "formula": "Iff(m=1; 1; 0)",
+            "line_no": 1,
             "comment": "",
         },
         {
             "name": "Conv_STon_MTon",
             "formula": "2/2.20462",
+            "line_no": 2,
             "comment": "Convert short ton  (U.S. ton) to metric ton (tonne)",
         },
     ]
@@ -45,16 +48,19 @@ def test_project_calculated_parameters():
         {
             "name": "empty",
             "formula": "1/load",
+            "line_no": 0,
             "comment": "",
         },
         {
             "name": "m1",
             "formula": "Iff(m=1; 1; 0)",
+            "line_no": 1,
             "comment": "",
         },
         {
             "name": "Conv_STon_MTon",
             "formula": "2/2.20462",
+            "line_no": 2,
             "comment": "Convert short ton  (U.S. ton) to metric ton (tonne)",
         },
     ]

@@ -37,6 +37,7 @@ class DatabaseCalculatedParameters(SimaProCSVBlock):
                         line[1], header.get("decimal_separator", ".")
                     ),
                     "comment": line[2],
+                    "line_no": index,
                 }
             )
 

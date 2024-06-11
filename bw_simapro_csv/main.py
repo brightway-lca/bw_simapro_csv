@@ -1,11 +1,10 @@
 import csv
+import itertools
 import os
 from io import StringIO
 from pathlib import Path
 from typing import Union
 
-# Makes `sloppy-windows-1252` encoding available
-import ftfy
 from loguru import logger
 
 from .blocks import (
@@ -26,6 +25,12 @@ from .blocks import (
 )
 from .errors import IndeterminateBlockEnd
 from .header import parse_header
+from .parameters import (
+    add_prefix_to_input_parameters,
+    build_substitutes,
+    prepare_formulas,
+    substitute_in_formulas,
+)
 from .utils import BeKindRewind
 
 
@@ -185,6 +190,36 @@ class SimaProCSV:
             block_class(data, header, rewindable_csv_reader.line_no - len(data)) if data else None
         )
 
-    def parse_calculated_parameters(self) -> None:
-        """Read in input parameters, and normalize, resolve,"""
-        pass
+    def resolve_parameters(self) -> None:
+        """Read in input parameters, and resolve formulas."""
+        dcp = [
+            add_prefix_to_input_parameters(prepare_formulas(b.parsed, self.header))
+            for b in self.blocks
+            if isinstance(b, DatabaseCalculatedParameters)
+        ]
+        dip = [
+            add_prefix_to_input_parameters(b.parsed)
+            for b in self.blocks
+            if isinstance(b, DatabaseInputParameters)
+        ]
+        pcp = [
+            add_prefix_to_input_parameters(prepare_formulas(b.parsed, self.header))
+            for b in self.blocks
+            if isinstance(b, ProjectCalculatedParameters)
+        ]
+        pip = [
+            add_prefix_to_input_parameters(b.parsed)
+            for b in self.blocks
+            if isinstance(b, ProjectInputParameters)
+        ]
+
+        substitutes = build_substitutes(
+            itertools.chain(*pip), itertools.chain(*dip)
+        ) | build_substitutes(itertools.chain(*pcp), itertools.chain(*dcp))
+
+        for obj in itertools.chain(*pcp):
+            substitute_in_formulas(obj, substitutes)
+        for obj in itertools.chain(*dcp):
+            substitute_in_formulas(obj, substitutes)
+
+        return pcp, dcp

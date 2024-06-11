@@ -32,6 +32,7 @@ class GlobalInputParameters(SimaProCSVUncertainBlock):
                     "name": line[0],
                     "hidden": asboolean(line[6]),
                     "comment": "\n".join([elem for elem in line[7:] if elem]),
+                    "line_no": index,
                 }
             )
 

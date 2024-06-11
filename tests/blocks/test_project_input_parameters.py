@@ -18,6 +18,7 @@ def test_db_input_params(fixtures_dir):
             "loc": 32.0,
             "minimum": 10.0,
             "maximum": 35.0,
+            "line_no": 281,
             "negative": False,
             "hidden": False,
             "name": "proj_input_param",
