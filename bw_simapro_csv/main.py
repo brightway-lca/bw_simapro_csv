@@ -5,6 +5,7 @@ from io import StringIO
 from pathlib import Path
 from typing import Union
 
+from bw2parameters import ParameterSet
 from loguru import logger
 
 from .blocks import (
@@ -26,7 +27,8 @@ from .blocks import (
 from .errors import IndeterminateBlockEnd
 from .header import parse_header
 from .parameters import (
-    add_prefix_to_input_parameters,
+    FormulaSubstitutor,
+    add_prefix_to_uppercase_input_parameters,
     build_substitutes,
     prepare_formulas,
     substitute_in_formulas,
@@ -193,33 +195,49 @@ class SimaProCSV:
     def resolve_parameters(self) -> None:
         """Read in input parameters, and resolve formulas."""
         dcp = [
-            add_prefix_to_input_parameters(prepare_formulas(b.parsed, self.header))
+            add_prefix_to_uppercase_input_parameters(prepare_formulas(b.parsed, self.header))
             for b in self.blocks
             if isinstance(b, DatabaseCalculatedParameters)
         ]
         dip = [
-            add_prefix_to_input_parameters(b.parsed)
+            add_prefix_to_uppercase_input_parameters(b.parsed)
             for b in self.blocks
             if isinstance(b, DatabaseInputParameters)
         ]
         pcp = [
-            add_prefix_to_input_parameters(prepare_formulas(b.parsed, self.header))
+            add_prefix_to_uppercase_input_parameters(prepare_formulas(b.parsed, self.header))
             for b in self.blocks
             if isinstance(b, ProjectCalculatedParameters)
         ]
         pip = [
-            add_prefix_to_input_parameters(b.parsed)
+            add_prefix_to_uppercase_input_parameters(b.parsed)
             for b in self.blocks
             if isinstance(b, ProjectInputParameters)
         ]
 
         substitutes = build_substitutes(
             itertools.chain(*pip), itertools.chain(*dip)
-        ) | build_substitutes(itertools.chain(*pcp), itertools.chain(*dcp))
+        ) | build_substitutes(itertools.chain(*dcp), itertools.chain(*pcp))
+
+        visitor = FormulaSubstitutor(substitutes)
+
+        for obj in itertools.chain(*dcp):
+            substitute_in_formulas(obj, visitor)
+
+        global_params = {o["name"]: o["amount"] for o in itertools.chain(*dip)} | {
+            o["name"]: o["amount"] for o in itertools.chain(*pip)
+        }
+
+        ps = ParameterSet({o["name"]: o for o in itertools.chain(*dcp)}, global_params)
+        ps.evaluate_and_set_amount_field()
+
+        substitutes = substitutes | {
+            o["original_name"].upper(): o["name"] for o in itertools.chain(*dcp)
+        }
+        visitor = FormulaSubstitutor(substitutes)
 
         for obj in itertools.chain(*pcp):
-            substitute_in_formulas(obj, substitutes)
-        for obj in itertools.chain(*dcp):
-            substitute_in_formulas(obj, substitutes)
+            substitute_in_formulas(obj, visitor)
 
-        return pcp, dcp
+        ps = ParameterSet({o["name"]: o for o in itertools.chain(*pcp)}, global_params)
+        ps.evaluate_and_set_amount_field()

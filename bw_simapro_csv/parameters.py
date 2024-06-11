@@ -1,24 +1,26 @@
+import ast
 import re
-from typing import Iterable, Pattern
+from typing import Iterable, Pattern, Type
 
-from bw2parameters import FormulaSubstitutor
+from asteval.astutils import NameFinder
+from astunparse import unparse
 from loguru import logger
 
 
-def add_prefix_to_input_parameters(block: list, prefix: str = "sp_") -> list:
-    """For each input parameter, add `prefix` to its name and store the original.
+def add_prefix_to_uppercase_input_parameters(block: list, prefix: str = "SP_") -> list:
+    """For each input parameter, uppercase and add `prefix` to its name and store the original.
 
     Example usage:
 
     ... code-block:: python
 
         >>> add_prefix_to_input_parameters([{'name': 'foo'}])
-        [{'name': 'sp_foo', 'original_name': 'foo'}]
+        [{'name': 'SP_FOO', 'original_name': 'foo'}]
 
     """
     for dct in block:
         dct["original_name"] = dct["name"]
-        dct["name"] = f"{prefix}{dct['name']}"
+        dct["name"] = f"{prefix}{dct['name']}".upper()
     return block
 
 
@@ -27,7 +29,7 @@ def build_substitutes(
 ) -> dict[str, str]:
     """Build a dictionary of parameter name substitutions.
 
-    Database parameters take precedence over project parameters.
+    Project parameters take precedence over database parameters.
 
     Example usage:
 
@@ -42,8 +44,8 @@ def build_substitutes(
         {'foo': 'hey_foo', 'bar': 'sp_bar'}
 
     """
-    return {o["original_name"]: o["name"] for o in project_parameters} | {
-        o["original_name"]: o["name"] for o in database_parameters
+    return {o["original_name"].upper(): o["name"] for o in database_parameters} | {
+        o["original_name"].upper(): o["name"] for o in project_parameters
     }
 
 
@@ -145,7 +147,36 @@ def prepare_formulas(block: list[dict], header: dict) -> list[dict]:
     return block
 
 
-def substitute_in_formulas(obj: dict, substitutions: dict) -> dict:
+class OnlySelectedUppercase(NameFinder):
+    """Change name of all symbols already redefined in ``substitutes``."""
+
+    def __init__(self, substitutes=None):
+        self.substitutes = substitutes
+        ast.NodeVisitor.__init__(self)
+
+    def generic_visit(self, node):
+        if node.__class__.__name__ == "Name" and node.ctx.__class__ == ast.Load:
+            node.id = node.id.upper()
+            try:
+                node.id = self.substitutes[node.id]
+            except KeyError:
+                pass
+        ast.NodeVisitor.generic_visit(self, node)
+
+
+class FormulaSubstitutor:
+    """Callable class that will substitute symbol names using ``substitutions`` substitution dictionary."""
+
+    def __init__(self, substitutions):
+        self.visitor = OnlySelectedUppercase(substitutions)
+
+    def __call__(self, formula):
+        parsed = ast.parse(formula)
+        self.visitor.visit(parsed)
+        return unparse(parsed).strip()
+
+
+def substitute_in_formulas(obj: dict, visitor: Type) -> dict:
     """Substitute variables names in `obj['formula']` based on `substitutions`.
 
     Keeps `original_formula`.
@@ -160,8 +191,6 @@ def substitute_in_formulas(obj: dict, substitutions: dict) -> dict:
         {'formula': 'hi_mom * 2', 'original_formula': 'a * 2'}
 
     """
-    visitor = FormulaSubstitutor(substitutions)
-
     if "formula" in obj:
         obj["original_formula"] = obj["formula"]
         obj["formula"] = visitor(obj["formula"])
