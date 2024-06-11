@@ -56,16 +56,38 @@ def asboolean(s: str, allow_nonboolean: bool = False) -> bool:
     raise ValueError(f"Can't convert '{s}' to boolean")
 
 
-def asnumber(value: str, decimal_separator: str = ".", allow_nonnumber: bool = False) -> float:
+underscore = re.compile("(\\d)_(\\d)")
+comma = re.compile("(\\d),(\\d)")
+period = re.compile("(\\d)\\.(\\d)")
+RE_SPECIAL = ".*^$+?[]\\|"
+
+
+def normalize_number_in_formula(formula: str, decimal_separator: str = ".") -> str:
+    formula = underscore.sub("\\g<1>\\g<2>", formula)
+    if decimal_separator == ",":
+        formula = period.sub("\\g<1>\\g<2>", formula)
+        formula = comma.sub("\\g<1>.\\g<2>", formula)
+    elif decimal_separator == ".":
+        formula = comma.sub("\\g<1>\\g<2>", formula)
+    else:
+        if decimal_separator in RE_SPECIAL:
+            decimal_separator = f"\\{decimal_separator}"
+        formula = period.sub("\\g<1>\\g<2>", formula)
+        formula = comma.sub("\\g<1>\\g<2>", formula)
+        formula = re.sub(f"(\\d){decimal_separator}(\\d)", "\\g<1>.\\g<2>", formula)
+    return formula
+
+
+def asnumber(
+    value: str, decimal_separator: str = ".", allow_nonnumber: bool = False
+) -> float | str:
     """Take a number stored as a string and convert to a float.
 
     Tries hard to handle different formats."""
     original = copy(value)
 
-    conversion = 1
-    if decimal_separator != "." and "." in value:
-        value = value.replace(".", "")
-    value = value.replace(decimal_separator, ".").replace("_", "").replace(" ", "")
+    conversion = 1.0
+    value = normalize_number_in_formula(value, decimal_separator)
     if value.endswith("%"):
         value = value.replace("%", "")
         conversion = 0.01

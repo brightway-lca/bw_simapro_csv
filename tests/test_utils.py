@@ -2,7 +2,7 @@ import math
 
 import pytest
 
-from bw_simapro_csv.utils import BeKindRewind, asnumber, clean
+from bw_simapro_csv.utils import BeKindRewind, asnumber, clean, normalize_number_in_formula
 
 
 def test_rewindable_generator():
@@ -72,3 +72,12 @@ def test_clean():
     assert clean("Â\x8dg") == "Âg"
     assert clean("CO2\x1a") == "CO2"
     assert clean("CO2") == "CO\n2"
+
+
+def test_normalize_number_in_formula():
+    assert normalize_number_in_formula("400_404;2", ";") == "400404.2"
+    assert normalize_number_in_formula("400_404?2", "?") == "400404.2"
+    assert normalize_number_in_formula("400,404.2", ".") == "400404.2"
+    assert normalize_number_in_formula("400.404,2", ",") == "400404.2"
+    assert normalize_number_in_formula("alpha * 400.404,2", ",") == "alpha * 400404.2"
+    assert normalize_number_in_formula("alpha * 400.404*2", "*") == "alpha * 400404.2"

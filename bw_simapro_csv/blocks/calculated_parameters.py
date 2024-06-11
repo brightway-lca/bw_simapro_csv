@@ -1,5 +1,6 @@
 from typing import List
 
+from ..utils import normalize_number_in_formula
 from .base import SimaProCSVBlock
 
 
@@ -29,7 +30,15 @@ class DatabaseCalculatedParameters(SimaProCSVBlock):
         for index, line in enumerate(block, start=offset):
             if not line or not any(line):
                 continue
-            self.parsed.append({"label": line[0], "formula": line[1], "comment": line[2]})
+            self.parsed.append(
+                {
+                    "label": line[0],
+                    "formula": normalize_number_in_formula(
+                        line[1], header.get("decimal_separator", ".")
+                    ),
+                    "comment": line[2],
+                }
+            )
 
 
 class ProjectCalculatedParameters(DatabaseCalculatedParameters):
