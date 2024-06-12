@@ -21,7 +21,8 @@ def test_db_input_params(fixtures_dir):
             "line_no": 283,
             "negative": False,
             "hidden": False,
-            "name": "proj_input_param",
+            "original_name": "proj_input_param",
+            "name": "SP_PROJ_INPUT_PARAM",
             "comment": "project input parameter",
         }
     ]

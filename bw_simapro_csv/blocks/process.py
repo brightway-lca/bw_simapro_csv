@@ -3,8 +3,8 @@ from bw2parameters import Interpreter, ParameterSet
 from ..parameters import (
     FormulaSubstitutor,
     add_prefix_to_uppercase_input_parameters,
-    prepare_formulas,
     substitute_in_formulas,
+    prepare_formulas,
 )
 from ..utils import asboolean, asdate, get_key_multiline_values, jump_to_nonempty
 from .base import SimaProCSVUncertainBlock
@@ -44,6 +44,7 @@ class Process(SimaProCSVUncertainBlock):
     def __init__(self, block: list[list], header: dict):
         self.parsed = {"metadata": {}}
         self.blocks = {}
+        self.header = header
 
         block = jump_to_nonempty(block)
 
@@ -118,7 +119,7 @@ class Process(SimaProCSVUncertainBlock):
             }
 
         if "Calculated parameters" in self.blocks:
-            add_prefix_to_uppercase_input_parameters(self.blocks["Calculated parameters"].parsed)
+            add_prefix_to_uppercase_input_parameters(prepare_formulas(self.blocks["Calculated parameters"].parsed, self.header))
             substitutes = substitutes | {
                 o["original_name"].upper(): o["name"]
                 for o in self.blocks["Calculated parameters"].parsed
@@ -141,6 +142,7 @@ class Process(SimaProCSVUncertainBlock):
         for label, block in self.blocks.items():
             if not getattr(block, "has_formula", None):
                 continue
+            prepare_formulas(block.parsed, self.header)
             for obj in block.parsed:
                 if "formula" in obj:
                     substitute_in_formulas(obj, visitor)

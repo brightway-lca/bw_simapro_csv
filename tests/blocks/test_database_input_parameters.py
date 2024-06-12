@@ -20,7 +20,8 @@ def test_db_input_params(fixtures_dir):
             "line_no": 273,
             "negative": False,
             "hidden": False,
-            "name": "db_input_param",
+            "original_name": "db_input_param",
+            "name": "SP_DB_INPUT_PARAM",
             "comment": "database parameter",
         }
     ]
