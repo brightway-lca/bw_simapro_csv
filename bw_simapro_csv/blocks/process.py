@@ -60,8 +60,6 @@ class Process(SimaProCSVUncertainBlock):
             }
             if not block_data:
                 continue
-            print(block_type)
-            print(block_data)
             if BLOCK_MAPPING.get(block_type):
                 self.blocks[block_type] = BLOCK_MAPPING[block_type](**kwargs)
             else:
