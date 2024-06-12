@@ -1,5 +1,13 @@
+from bw2parameters import Interpreter, ParameterSet
 from loguru import logger
 
+from ..parameters import (
+    FormulaSubstitutor,
+    add_prefix_to_uppercase_input_parameters,
+    build_substitutes,
+    prepare_formulas,
+    substitute_in_formulas,
+)
 from ..utils import asboolean, asdate, get_key_multiline_values, jump_to_nonempty
 from .base import SimaProCSVUncertainBlock
 from .calculated_parameters import DatasetCalculatedParameters
@@ -7,7 +15,7 @@ from .generic_biosphere import GenericUncertainBiosphere
 from .parameters import DatasetInputParameters
 from .products import Products
 from .technosphere_edges import TechnosphereEdges
-from .wastes import WasteTreatment, WasteScenario, SeparatedWaste, RemainingWaste
+from .wastes import RemainingWaste, SeparatedWaste, WasteScenario, WasteTreatment
 
 BLOCK_MAPPING = {
     "Avoided products": TechnosphereEdges,
@@ -96,3 +104,46 @@ class Process(SimaProCSVUncertainBlock):
             self.index += 1
 
         return key, value
+
+    def resolve_local_parameters(self, global_params: dict, substitutes: dict) -> None:
+        """Resolve any formulae in input or output amounts, and convert raw data to parsed.
+
+        Takes in parameter renames and amounts from project and database input parameters."""
+        if "Input parameters" in self.blocks:
+            add_prefix_to_uppercase_input_parameters(self.blocks["Input parameters"].parsed)
+            substitutes = substitutes | {
+                o["original_name"].upper(): o["name"]
+                for o in self.blocks["Input parameters"].parsed
+            }
+            global_params = global_params | {
+                o["name"]: o["amount"] for o in self.blocks["Input parameters"].parsed
+            }
+
+        if "Calculated parameters" in self.blocks:
+            add_prefix_to_uppercase_input_parameters(self.blocks["Calculated parameters"].parsed)
+            substitutes = substitutes | {
+                o["original_name"].upper(): o["name"]
+                for o in self.blocks["Calculated parameters"].parsed
+            }
+            visitor = FormulaSubstitutor(substitutes)
+            for obj in self.blocks["Calculated parameters"].parsed:
+                substitute_in_formulas(obj, visitor)
+            ParameterSet(
+                {o["name"]: o for o in self.blocks["Calculated parameters"].parsed}, global_params
+            ).evaluate_and_set_amount_field()
+            global_params = global_params | {
+                o["name"]: o["amount"] for o in self.blocks["Calculated parameters"].parsed
+            }
+        else:
+            visitor = FormulaSubstitutor(substitutes)
+
+        interpreter = Interpreter()
+        interpreter.add_symbols(global_params)
+
+        for label, block in self.blocks.items():
+            if not getattr(block, "has_formula", None):
+                continue
+            for obj in block.parsed:
+                if "formula" in obj:
+                    substitute_in_formulas(obj, visitor)
+                    obj["amount"] = interpreter(obj["formula"])

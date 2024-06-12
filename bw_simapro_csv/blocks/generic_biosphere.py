@@ -1,7 +1,7 @@
 from typing import Any, List
 
 from ..cas import validate_cas
-from ..utils import jump_to_nonempty, skip_empty
+from ..utils import add_amount_or_formula, jump_to_nonempty, skip_empty
 from .base import SimaProCSVBlock
 
 
@@ -93,24 +93,28 @@ class GenericUncertainBiosphere(GenericBiosphere):
         7. uncert. param.
         8. comment
 
-        In previous versions, the index of units and values were switched. This doesn't appear
+        In previous versions, the index of units and values could be switched. This doesn't appear
         to be the case anymore.
 
         """
         self.category = category
-        self.raw = []
+        self.parsed = []
+        self.has_formula = True
 
         for line_no, line in skip_empty(block):
-            self.raw.append(
-                {
-                    "name": line[0],
-                    "context": (self.category, line[1]),
-                    "unit": line[2],
-                    "value_raw": line[3],
-                    "kind": line[4],
-                    "field1": line[5],
-                    "field2": line[6],
-                    "field3": line[7],
-                    "line_no": line_no,
-                }
+            self.parsed.append(
+                add_amount_or_formula(
+                    {
+                        "name": line[0],
+                        "context": (self.category, line[1]),
+                        "unit": line[2],
+                        "kind": line[4],
+                        "field1": line[5],
+                        "field2": line[6],
+                        "field3": line[7],
+                        "line_no": line_no,
+                    },
+                    line[3],
+                    header["decimal_separator"],
+                )
             )

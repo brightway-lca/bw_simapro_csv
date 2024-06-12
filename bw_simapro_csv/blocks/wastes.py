@@ -1,4 +1,4 @@
-from ..utils import skip_empty, asnumber
+from ..utils import asnumber, skip_empty
 from .base import SimaProCSVBlock
 
 
@@ -31,7 +31,7 @@ class WasteTreatment(SimaProCSVBlock):
                 {
                     "name": line[0],
                     "unit": line[1],
-                    "amount": asnumber(line[2], decimal_separator=header['decimal_separator']),
+                    "amount": asnumber(line[2], decimal_separator=header["decimal_separator"]),
                     "waste_type": line[3],
                     "category": line[4],
                     "comment": line[5] if len(line) > 5 else None,
@@ -71,7 +71,7 @@ class SeparatedWaste(SimaProCSVBlock):
                 {
                     "name": line[0],
                     "unit": line[1],
-                    "amount": asnumber(line[2], decimal_separator=header['decimal_separator']),
+                    "amount": asnumber(line[2], decimal_separator=header["decimal_separator"]),
                     "comment": line[3] if len(line) > 3 else None,
                     "line_no": line_no,
                 }

@@ -38,4 +38,4 @@ from .products import Products
 from .quantities import Quantities
 from .system_description import SystemDescription
 from .units import Units
-from .wastes import WasteTreatment, WasteScenario, SeparatedWaste, RemainingWaste
+from .wastes import RemainingWaste, SeparatedWaste, WasteScenario, WasteTreatment

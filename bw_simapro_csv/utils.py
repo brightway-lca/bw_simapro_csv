@@ -198,6 +198,15 @@ def get_numbers_re(separator: str) -> Pattern:
     return re.compile(f"^[{separator}0-9e_\\.\\s]+$")
 
 
+def add_amount_or_formula(data: dict, value: str, decimal_separator: str) -> dict:
+    """Add amount or formula depending on `value` form"""
+    if get_numbers_re(decimal_separator).match(value):
+        data["amount"] = asnumber(value, decimal_separator)
+    else:
+        data["formula"] = normalize_number_in_formula(value, decimal_separator)
+    return data
+
+
 def is_unit_first(a: str, b: str, pattern: Pattern) -> bool | None:
     """Determine the unit and amount fields as accurately as possible."""
     # Normally the unit comes first

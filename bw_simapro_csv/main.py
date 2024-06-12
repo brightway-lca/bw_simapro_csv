@@ -144,8 +144,7 @@ class SimaProCSV:
             if block is not EmptyBlock:
                 self.blocks.append(block)
 
-        # self.label_process_units_and_values()
-        # self.resolve_parameters()
+        self.resolve_parameters()
 
     def __iter__(self):
         return iter(self.blocks)
@@ -249,8 +248,4 @@ class SimaProCSV:
         global_params = global_params | {o["name"]: o["amount"] for o in itertools.chain(*pcp)}
 
         for block in filter(lambda b: isinstance(b, Process), self):
-            for label, data in block.raw.items():
-                for obj in data:
-                    substitute_in_formulas(obj, visitor)
-                    if "formula" in obj:
-                        obj["amount"] = ps.interpreter(obj["formula"])
+            block.resolve_local_parameters(global_params=global_params, substitutes=substitutes)
