@@ -9,6 +9,7 @@ __all__ = (
     "Method",
     "NormalizationWeightingSet",
     "Process",
+    "Products",
     "ProjectCalculatedParameters",
     "ProjectInputParameters",
     "Quantities",
@@ -29,6 +30,7 @@ from .method import Method
 from .normalization_weighting_set import NormalizationWeightingSet
 from .parameters import DatabaseInputParameters, ProjectInputParameters
 from .process import Process
+from .products import Products
 from .quantities import Quantities
 from .system_description import SystemDescription
 from .units import Units

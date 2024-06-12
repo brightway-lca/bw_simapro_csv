@@ -14,6 +14,7 @@ def test_impact_category(fixtures_dir):
                 {
                     "name": "NORM - HH - Releases",
                     "factor": 1.51,
+                    "line_no": 75,
                 }
             ],
         },
@@ -21,9 +22,9 @@ def test_impact_category(fixtures_dir):
             "name": "NORM - Ecosystems",
             "unit": "PDFm3d",
             "impact_categories": [
-                {"name": "NORM - Eco - Freshwater", "factor": 0.5},
-                {"name": "NORM - Eco - Marine", "factor": 0.5},
-                {"name": "NORM - Eco - Terrestrial", "factor": 0.5},
+                {"name": "NORM - Eco - Freshwater", "factor": 0.5, "line_no": 81},
+                {"name": "NORM - Eco - Marine", "factor": 0.5, "line_no": 82},
+                {"name": "NORM - Eco - Terrestrial", "factor": 0.5, "line_no": 83},
             ],
         },
     ]

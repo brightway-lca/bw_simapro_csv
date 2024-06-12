@@ -1,5 +1,6 @@
 # pylint: disable=too-many-arguments,unused-argument,too-many-return-statements
 import math
+from typing import Any
 
 from loguru import logger
 from stats_arrays import (
@@ -16,6 +17,10 @@ from ..utils import asnumber
 class SimaProCSVBlock:
     """Base class for parsing and cleaning logical blocks in a SimaPro CSV file"""
 
+    def __init__(self, data: Any):
+        """Used for only testing; overridden in all real subclasses."""
+        self.parsed = data
+
 
 class EmptyBlock(SimaProCSVBlock):
     """An empty block without content."""
@@ -23,6 +28,11 @@ class EmptyBlock(SimaProCSVBlock):
 
 class SimaProCSVUncertainBlock(SimaProCSVBlock):
     """Base class which includes logic for parsing lines with probability distributions"""
+
+    def __eq__(self, other: Any | SimaProCSVBlock) -> bool:
+        if isinstance(other, SimaProCSVBlock):
+            return self.parsed == other.parsed
+        return False
 
     def undefined_distribution(self, amount: float) -> dict:
         return {

@@ -1,10 +1,10 @@
 import csv
 import itertools
 import os
+from functools import partial
 from io import StringIO
 from pathlib import Path
-from typing import Union
-from functools import partial
+from typing import Iterable, Union
 
 from bw2parameters import ParameterSet
 from loguru import logger
@@ -19,15 +19,15 @@ from .blocks import (
     LiteratureReference,
     Method,
     NormalizationWeightingSet,
-    SystemDescription,
     Process,
     ProjectCalculatedParameters,
     ProjectInputParameters,
     Quantities,
     SimaProCSVBlock,
+    SystemDescription,
     Units,
 )
-from .errors import IndeterminateBlockEnd
+from .errors import AmbiguousOrder, IndeterminateBlockEnd
 from .header import parse_header
 from .parameters import (
     FormulaSubstitutor,
@@ -36,7 +36,7 @@ from .parameters import (
     prepare_formulas,
     substitute_in_formulas,
 )
-from .utils import BeKindRewind
+from .utils import BeKindRewind, get_numbers_re, is_unit_first
 
 
 def dummy(data, *args):
@@ -144,6 +144,61 @@ class SimaProCSV:
             if block is not EmptyBlock:
                 self.blocks.append(block)
 
+        # self.label_process_units_and_values()
+        # self.resolve_parameters()
+
+    def __iter__(self):
+        return iter(self.blocks)
+
+    def label_process_units_and_values(self) -> None:
+        """Scan the whole import to get statistics on whether unit comes before amount.
+
+        Then relabel these attributes appropriately. Changes `maybe_unit` and `maybe_value`
+        to `unit`, `amount`, and `formula`.
+
+        """
+        numbers = get_numbers_re(self.header["decimal_separator"])
+
+        unit_first, amount_first = 0, 0
+
+        for block in filter(lambda b: isinstance(b, Process), self):
+            for label, data in block.raw.items():
+                for obj in data:
+                    result = is_unit_first(obj["maybe_unit"], obj["maybe_value"], numbers)
+                    if result is True:
+                        unit_first += 1
+                    elif result is False:
+                        amount_first += 1
+
+        # Ideally we would have clarity at this point; however, SimaPro allows for weird units,
+        # including "100%", so we allow for a little wiggle room
+        if unit_first > 100 * amount_first:
+            logger.info(
+                "Using units before numeric values in `Process` blocks ({unit_first} versus {amount_first})",
+                unit_first=unit_first,
+                amount_first=amount_first,
+            )
+            for block in filter(lambda b: isinstance(b, Process), self):
+                block.relabel_unit_values(
+                    unit_first=True,
+                    pattern=numbers,
+                    decimal_separator=self.header["decimal_separator"],
+                )
+        elif amount_first > 100 * unit_first:
+            logger.info(
+                "Using units before numeric values in `Process` blocks ({unit_first} versus {amount_first})",
+                unit_first=unit_first,
+                amount_first=amount_first,
+            )
+            for block in filter(lambda b: isinstance(b, Process), self):
+                block.relabel_unit_values(
+                    unit_first=False,
+                    pattern=numbers,
+                    decimal_separator=self.header["decimal_separator"],
+                )
+        else:
+            raise AmbiguousOrder("Can't determine order of units and formulas")
+
     def get_next_block(
         self, rewindable_csv_reader: BeKindRewind, header: dict
     ) -> Union[None, SimaProCSVBlock]:
@@ -176,24 +231,14 @@ class SimaProCSV:
         for line in rewindable_csv_reader:
             if line and line[0] == "End":
                 self.uses_end_text = True
-                return (
-                    block_class(data, header, rewindable_csv_reader.line_no - len(data) + 1)
-                    if data
-                    else None
-                )
+                return block_class(data, header) if data else None
             if line and line[0] in CONTROL_BLOCK_MAPPING:
                 rewindable_csv_reader.rewind()
-                return (
-                    block_class(data, header, rewindable_csv_reader.line_no - len(data) + 1)
-                    if data
-                    else None
-                )
-            data.append(line)
+                return block_class(data, header) if data else None
+            data.append((rewindable_csv_reader.line_no, line))
 
         # EOF
-        return (
-            block_class(data, header, rewindable_csv_reader.line_no - len(data) + 1) if data else None
-        )
+        return block_class(data, header) if data else None
 
     def resolve_parameters(self) -> None:
         """Read in input parameters, and resolve formulas."""
@@ -238,9 +283,23 @@ class SimaProCSV:
             o["original_name"].upper(): o["name"] for o in itertools.chain(*dcp)
         }
         visitor = FormulaSubstitutor(substitutes)
+        global_params = global_params | {o["name"]: o["amount"] for o in itertools.chain(*dcp)}
 
         for obj in itertools.chain(*pcp):
             substitute_in_formulas(obj, visitor)
 
         ps = ParameterSet({o["name"]: o for o in itertools.chain(*pcp)}, global_params)
         ps.evaluate_and_set_amount_field()
+
+        substitutes = substitutes | {
+            o["original_name"].upper(): o["name"] for o in itertools.chain(*pcp)
+        }
+        visitor = FormulaSubstitutor(substitutes)
+        global_params = global_params | {o["name"]: o["amount"] for o in itertools.chain(*pcp)}
+
+        for block in filter(lambda b: isinstance(b, Process), self):
+            for label, data in block.raw.items():
+                for obj in data:
+                    substitute_in_formulas(obj, visitor)
+                    if "formula" in obj:
+                        obj["amount"] = ps.interpreter(obj["formula"])

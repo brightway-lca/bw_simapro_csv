@@ -13,7 +13,7 @@ def reformat(v: list | str) -> Any:
 
 
 class Method(SimaProCSVBlock):
-    def __init__(self, block: List[list], header: dict, offset: int):
+    def __init__(self, block: List[list], header: dict):
         """Parse a `Method` block.
 
         Each block as the form:
@@ -50,4 +50,3 @@ class Method(SimaProCSVBlock):
 
         """
         self.parsed = {k: reformat(v) for k, v in alternating_key_value(block)}
-        self.offset = offset

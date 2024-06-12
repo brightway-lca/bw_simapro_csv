@@ -1,11 +1,11 @@
 from typing import List
 
-from ..utils import asnumber
+from ..utils import asnumber, jump_to_nonempty, skip_empty
 from .base import SimaProCSVBlock
 
 
 class DamageCategory(SimaProCSVBlock):
-    def __init__(self, block: List[list], header: dict, offset: int):
+    def __init__(self, block: List[tuple], header: dict):
         """Parse a `Damage category` block.
 
         Damage categories are not normalization or weighting, but an aggregation of impact
@@ -35,24 +35,14 @@ class DamageCategory(SimaProCSVBlock):
 
         """
         self.parsed = {"impact_categories": []}
-        self.offset = offset
 
-        line = block.pop(0)
-        while not any(line):
-            line = block.pop(0)
+        block = jump_to_nonempty(block)
+        self.parsed["name"], self.parsed["unit"] = block.pop(0)[1]
 
-        self.parsed["name"] = line[0]
-        self.parsed["unit"] = line[1]
+        block = jump_to_nonempty(block)
+        assert block.pop(0)[1] == ["Impact categories"]
 
-        assert not block.pop(0)
-        assert block.pop(0) == ["Impact categories"]
-
-        for line in block:
-            if not any(line):
-                continue
+        for line_no, line in skip_empty(block):
             self.parsed["impact_categories"].append(
-                {
-                    "name": line[0],
-                    "factor": asnumber(line[1]),
-                }
+                {"name": line[0], "factor": asnumber(line[1]), "line_no": line_no}
             )

@@ -1,11 +1,11 @@
 from typing import List
 
-from ..utils import normalize_number_in_formula
+from ..utils import normalize_number_in_formula, skip_empty
 from .base import SimaProCSVBlock
 
 
 class DatabaseCalculatedParameters(SimaProCSVBlock):
-    def __init__(self, block: List[list], header: dict, offset: int):
+    def __init__(self, block: List[tuple], header: dict, **kwargs):
         """Parse an `Database Calculated parameters` block.
 
         Has the form:
@@ -25,11 +25,8 @@ class DatabaseCalculatedParameters(SimaProCSVBlock):
 
         """
         self.parsed = []
-        self.offset = offset
 
-        for index, line in enumerate(block, start=offset):
-            if not line or not any(line):
-                continue
+        for line_no, line in skip_empty(block):
             self.parsed.append(
                 {
                     "name": line[0],
@@ -37,7 +34,7 @@ class DatabaseCalculatedParameters(SimaProCSVBlock):
                         line[1], header.get("decimal_separator", ".")
                     ),
                     "comment": line[2],
-                    "line_no": index,
+                    "line_no": line_no,
                 }
             )
 
@@ -45,4 +42,8 @@ class DatabaseCalculatedParameters(SimaProCSVBlock):
 class ProjectCalculatedParameters(DatabaseCalculatedParameters):
     """Same as format and layout as `DatabaseCalculatedParameters`"""
 
+    pass
+
+
+class DatasetCalculatedParameters(DatabaseCalculatedParameters):
     pass

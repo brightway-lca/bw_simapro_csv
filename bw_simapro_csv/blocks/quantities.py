@@ -1,11 +1,9 @@
-from typing import Any, List
-
-from ..utils import asboolean
+from ..utils import asboolean, skip_empty
 from .base import SimaProCSVBlock
 
 
 class Quantities(SimaProCSVBlock):
-    def __init__(self, block: List[list], header: dict, offset: int):
+    def __init__(self, block: list[list], header: dict):
         """Parse a `Quantities` block.
 
         Each block as the form:
@@ -23,5 +21,4 @@ class Quantities(SimaProCSVBlock):
         ```
 
         """
-        self.parsed = {line[0]: asboolean(line[1]) for line in block if any(line)}
-        self.offset = offset
+        self.parsed = {line[0]: asboolean(line[1]) for _, line in skip_empty(block)}

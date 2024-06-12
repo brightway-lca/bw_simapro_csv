@@ -1,11 +1,11 @@
 from typing import List
 
-from ..utils import asnumber
+from ..utils import asnumber, jump_to_nonempty, skip_empty
 from .base import SimaProCSVBlock
 
 
 class NormalizationWeightingSet(SimaProCSVBlock):
-    def __init__(self, block: List[list], header: dict, offset: int):
+    def __init__(self, block: List[list], header: dict):
         """Parse a `Normalization-Weighting set` block.
 
         Has the form:
@@ -41,25 +41,17 @@ class NormalizationWeightingSet(SimaProCSVBlock):
 
         """
         self.parsed = {"normalization": [], "weighting": []}
-        self.offset = offset
+        mode = None
 
-        mode, index = None, 0
-
-        while not (line := block[index]):
-            index += 1
-
-        self.parsed["name"] = line[0]
-        index += 1
-
-        while not (line := block[index]):
-            index += 1
-
-        for line in block[index:]:
-            if not line or not any(line):
-                continue
-            elif line[0] == "Normalization":
+        block = jump_to_nonempty(block)
+        self.parsed["name"] = block.pop(0)[1][0]
+        block = jump_to_nonempty(block)
+        for line_no, line in skip_empty(block):
+            if line[0] == "Normalization":
                 mode = "normalization"
             elif line[0] == "Weighting":
                 mode = "weighting"
             else:
-                self.parsed[mode].append({"category": line[0], "factor": asnumber(line[1])})
+                self.parsed[mode].append(
+                    {"category": line[0], "factor": asnumber(line[1]), "line_no": line_no}
+                )

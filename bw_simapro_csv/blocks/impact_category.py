@@ -1,12 +1,12 @@
 from typing import List
 
 from ..cas import validate_cas
-from ..utils import asnumber
+from ..utils import asnumber, jump_to_nonempty, skip_empty
 from .base import SimaProCSVBlock
 
 
 class ImpactCategory(SimaProCSVBlock):
-    def __init__(self, block: List[list], header: dict, offset: int):
+    def __init__(self, block: List[tuple], header: dict):
         """Parse an `Impact category` block.
 
         Has the form:
@@ -31,21 +31,14 @@ class ImpactCategory(SimaProCSVBlock):
 
         """
         self.parsed = {"cfs": []}
-        self.offset = offset
 
-        line = block.pop(0)
-        while not any(line):
-            line = block.pop(0)
+        block = jump_to_nonempty(block)
+        self.parsed["name"], self.parsed["unit"] = block.pop(0)[1]
 
-        self.parsed["name"] = line[0]
-        self.parsed["unit"] = line[1]
+        block = jump_to_nonempty(block)
+        assert block.pop(0)[1] == ["Substances"]
 
-        assert not block.pop(0)
-        assert block.pop(0) == ["Substances"]
-
-        for line in block:
-            if not any(line):
-                continue
+        for line_no, line in skip_empty(block):
             self.parsed["cfs"].append(
                 {
                     "context": (line[0], line[1]),
@@ -53,5 +46,6 @@ class ImpactCategory(SimaProCSVBlock):
                     "cas_number": validate_cas(line[3]),
                     "factor": asnumber(line[4]),
                     "unit": line[5],
+                    "line_no": line_no,
                 }
             )

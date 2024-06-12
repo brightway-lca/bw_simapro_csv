@@ -1,11 +1,11 @@
 from typing import List
 
-from ..utils import asnumber
+from ..utils import asnumber, skip_empty
 from .base import SimaProCSVBlock
 
 
 class Units(SimaProCSVBlock):
-    def __init__(self, block: List[list], header: dict, offset: int):
+    def __init__(self, block: List[list], header: dict):
         """Parse a `Units` block.
 
         Each line has the form:
@@ -17,16 +17,14 @@ class Units(SimaProCSVBlock):
 
         The block header label is already stripped."""
         self.parsed = []
-        self.offset = offset
 
-        for line in block:
-            if not any(line):
-                continue
+        for line_no, line in skip_empty(block):
             self.parsed.append(
                 {
                     "name": line[0],
                     "dimension": line[1],
                     "conversion": asnumber(line[2], header.get("decimal_separator", ".")),
                     "reference unit name": line[3],
+                    "line_no": line_no,
                 }
             )

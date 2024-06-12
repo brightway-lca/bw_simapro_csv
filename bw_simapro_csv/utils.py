@@ -3,7 +3,7 @@ import re
 from collections.abc import Iterator
 from copy import copy
 from datetime import date
-from typing import List
+from typing import Any, Iterable, List, Pattern
 
 import ftfy
 from dateutil.parser import parse as dtparse
@@ -125,6 +125,7 @@ def alternating_key_value(data: List[list]) -> List[tuple]:
     """
     processed = []
     index = 0
+    data = [line for _, line in data]
 
     if not any(data[index]):
         index += 1
@@ -171,7 +172,8 @@ class BeKindRewind(Iterator):
         self.data_iterable = data_iterable
         self.current = None
         self.clean_elements = clean_elements
-        self.line_no = offset - 1
+        # Line numbers are 1-indexed
+        self.line_no = offset + 1
 
     def __next__(self) -> List[str]:
         self.current = next(self.data_iterable)
@@ -188,3 +190,62 @@ class BeKindRewind(Iterator):
             return
         self.data_iterable = itertools.chain((self.current,), self.data_iterable)
         self.current = None
+
+
+def get_numbers_re(separator: str) -> Pattern:
+    if separator == ".":
+        separator = ""
+    return re.compile(f"^[{separator}0-9e_\\.\\s]+$")
+
+
+def is_unit_first(a: str, b: str, pattern: Pattern) -> bool | None:
+    """Determine the unit and amount fields as accurately as possible."""
+    # Normally the unit comes first
+    if not pattern.match(a) and pattern.match(b):
+        return True
+    elif pattern.match(a) and not pattern.match(b):
+        return False
+    return None
+
+
+def skip_empty(data: list) -> Iterable:
+    """Return iterable of nonempty lines"""
+    for x, y in data:
+        if not y or not any(y):
+            continue
+        yield x, y
+
+
+def jump_to_nonempty(data: list) -> list:
+    """Skip empty rows at beginning of list"""
+    for i, (x, y) in enumerate(data):
+        if not y or not any(y):
+            continue
+        break
+    return data[i:]
+
+
+def get_key_multiline_values(block: list[tuple], stop_terms: Iterable) -> tuple[str, list]:
+    """Pull off the first non-empty line, then optional empty lines, and then each data line until
+    an empty line"""
+    while block:
+        block = jump_to_nonempty(block)
+        if not block:
+            return
+        _, key = block.pop(0)
+        if len(key) != 1:
+            raise ValueError(f"Block header should have one element; found {len(key)}: {key}")
+        key = key[0]
+        block = jump_to_nonempty(block)
+
+        data = []
+        while block:
+            line_no, line = block.pop(0)
+            if len(line) == 1 and line[0] in stop_terms:
+                block.insert(0, (line_no, line))
+                break
+            elif not line or not any(line):
+                break
+            data.append((line_no, line))
+        if data:
+            yield key, data

@@ -177,7 +177,7 @@ class FormulaSubstitutor:
 
 
 def substitute_in_formulas(obj: dict, visitor: Type) -> dict:
-    """Substitute variables names in `obj['formula']` based on `substitutions`.
+    """Substitute variable names in `obj['formula']` based on `substitutions`.
 
     Keeps `original_formula`.
 

@@ -16,6 +16,7 @@ def test_impact_category(fixtures_dir):
                 "cas_number": "14255-04-0",
                 "factor": 1.28e-6,
                 "unit": "kBq",
+                "line_no": 45,
             },
             {
                 "context": ("Water", "(unspecified)"),
@@ -23,6 +24,7 @@ def test_impact_category(fixtures_dir):
                 "cas_number": None,
                 "factor": 4.03e-9,
                 "unit": "kBq",
+                "line_no": 46,
             },
         ],
     }

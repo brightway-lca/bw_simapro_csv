@@ -12,56 +12,88 @@ def test_units_blocks_tab_delimiter(fixtures_dir):
     obj = SimaProCSV(fixtures_dir / "damagecategory.txt")
     pip = [elem.parsed for elem in obj.blocks if isinstance(elem, Units)][0]
     assert pip == [
-        {"name": "Pt", "dimension": "Indicator", "conversion": 1.0, "reference unit name": "Pt"},
+        {
+            "name": "Pt",
+            "dimension": "Indicator",
+            "conversion": 1.0,
+            "reference unit name": "Pt",
+            "line_no": 95,
+        },
         {
             "name": "Bq",
             "dimension": "Radioactivity",
             "conversion": 1.0,
+            "line_no": 96,
             "reference unit name": "Bq",
         },
         {
             "name": "kBq",
             "dimension": "Radioactivity",
             "conversion": 1000.0,
+            "line_no": 97,
             "reference unit name": "Bq",
         },
         {
             "name": "mBq",
             "dimension": "Radioactivity",
             "conversion": 0.001,
+            "line_no": 98,
             "reference unit name": "Bq",
         },
-        {"name": "µPt", "dimension": "Indicator", "conversion": 1e-06, "reference unit name": "Pt"},
-        {"name": "nPt", "dimension": "Indicator", "conversion": 1e-09, "reference unit name": "Pt"},
+        {
+            "name": "µPt",
+            "dimension": "Indicator",
+            "conversion": 1e-06,
+            "reference unit name": "Pt",
+            "line_no": 99,
+        },
+        {
+            "name": "nPt",
+            "dimension": "Indicator",
+            "conversion": 1e-09,
+            "reference unit name": "Pt",
+            "line_no": 100,
+        },
         {
             "name": "kPt",
             "dimension": "Indicator",
             "conversion": 1000.0,
+            "line_no": 101,
             "reference unit name": "Pt",
         },
         {
             "name": "MPt",
             "dimension": "Indicator",
             "conversion": 1000000.0,
+            "line_no": 102,
             "reference unit name": "Pt",
         },
         {
             "name": "GPt",
             "dimension": "Indicator",
             "conversion": 1000000000.0,
+            "line_no": 103,
             "reference unit name": "Pt",
         },
-        {"name": "mPt", "dimension": "Indicator", "conversion": 0.001, "reference unit name": "Pt"},
+        {
+            "name": "mPt",
+            "dimension": "Indicator",
+            "conversion": 0.001,
+            "reference unit name": "Pt",
+            "line_no": 104,
+        },
         {
             "name": "µBq",
             "dimension": "Radioactivity",
             "conversion": 1e-06,
+            "line_no": 105,
             "reference unit name": "Bq",
         },
         {
             "name": "nBq",
             "dimension": "Radioactivity",
             "conversion": 1e-09,
+            "line_no": 106,
             "reference unit name": "Bq",
         },
     ]
@@ -70,7 +102,7 @@ def test_units_blocks_tab_delimiter(fixtures_dir):
 def test_units_block_encoding(fixtures_dir):
     obj = SimaProCSV(fixtures_dir / "weird_units.csv")
     pip = [elem.parsed for elem in obj.blocks if isinstance(elem, Units)][0]
-    assert pip == [
+    expected = [
         {
             "conversion": 1e-09,
             "dimension": "Mass",
@@ -420,3 +452,6 @@ def test_units_block_encoding(fixtures_dir):
             "reference unit name": "m3",
         },
     ]
+    for index, line in enumerate(expected, start=96):
+        line["line_no"] = index
+    assert pip == expected

@@ -5,7 +5,7 @@ from .base import SimaProCSVBlock
 
 
 class SystemDescription(SimaProCSVBlock):
-    def __init__(self, block: List[list], header: dict, offset: int):
+    def __init__(self, block: List[list], header: dict):
         """Parse a `System description` block.
 
         Each block as the form:
@@ -32,4 +32,3 @@ class SystemDescription(SimaProCSVBlock):
 
         """
         self.parsed = dict(alternating_key_value(block))
-        self.offset = offset

@@ -1,11 +1,11 @@
 from typing import List
 
-from ..utils import asboolean
+from ..utils import asboolean, skip_empty
 from .base import SimaProCSVUncertainBlock
 
 
-class GlobalInputParameters(SimaProCSVUncertainBlock):
-    def __init__(self, block: List[list], header: dict, offset: int):
+class InputParameters(SimaProCSVUncertainBlock):
+    def __init__(self, block: List[list], header: dict, **kwargs):
         """Parse an `Project|Database Input Parameters` block.
 
         Each line has the form:
@@ -21,25 +21,26 @@ class GlobalInputParameters(SimaProCSVUncertainBlock):
 
         The block header label is already stripped."""
         self.parsed = []
-        self.offset = offset
 
-        for index, line in enumerate(block, start=offset):
-            if not any(line):
-                continue
+        for line_no, line in skip_empty(block):
             self.parsed.append(
-                self.distribution(*line[1:6], header=header, line_no=index)
+                self.distribution(*line[1:6], header=header, line_no=line_no)
                 | {
                     "name": line[0],
                     "hidden": asboolean(line[6]),
                     "comment": "\n".join([elem for elem in line[7:] if elem]),
-                    "line_no": index,
+                    "line_no": line_no,
                 }
             )
 
 
-class DatabaseInputParameters(GlobalInputParameters):
+class DatabaseInputParameters(InputParameters):
     pass
 
 
-class ProjectInputParameters(GlobalInputParameters):
+class ProjectInputParameters(InputParameters):
+    pass
+
+
+class DatasetInputParameters(InputParameters):
     pass

@@ -4,12 +4,18 @@ from bw_simapro_csv.blocks import DatabaseCalculatedParameters, ProjectCalculate
 def test_database_calculated_parameters():
     given = DatabaseCalculatedParameters(
         [
-            ("empty", "1/load", ""),
-            ("m1", "Iff(m=1; 1; 0)", ""),
-            ("Conv_STon_MTon", "2/2,20462", "Convert short ton  (U.S. ton) to metric ton (tonne)"),
+            (0, ("empty", "1/load", "")),
+            (1, ("m1", "Iff(m=1; 1; 0)", "")),
+            (
+                2,
+                (
+                    "Conv_STon_MTon",
+                    "2/2,20462",
+                    "Convert short ton  (U.S. ton) to metric ton (tonne)",
+                ),
+            ),
         ],
         {"decimal_separator": ","},
-        0,
     )
     expected = [
         {
@@ -37,12 +43,18 @@ def test_database_calculated_parameters():
 def test_project_calculated_parameters():
     given = ProjectCalculatedParameters(
         [
-            ("empty", "1/load", ""),
-            ("m1", "Iff(m=1; 1; 0)", ""),
-            ("Conv_STon_MTon", "2/2,20462", "Convert short ton  (U.S. ton) to metric ton (tonne)"),
+            (0, ("empty", "1/load", "")),
+            (1, ("m1", "Iff(m=1; 1; 0)", "")),
+            (
+                2,
+                (
+                    "Conv_STon_MTon",
+                    "2/2,20462",
+                    "Convert short ton  (U.S. ton) to metric ton (tonne)",
+                ),
+            ),
         ],
         {"decimal_separator": ","},
-        0,
     )
     expected = [
         {
