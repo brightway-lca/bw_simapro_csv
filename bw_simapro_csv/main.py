@@ -4,7 +4,6 @@ import os
 from functools import partial
 from io import StringIO
 from pathlib import Path
-from typing import Union
 
 from bw2parameters import ParameterSet
 from loguru import logger
@@ -84,7 +83,7 @@ INDETERMINATE_SECTION_ERROR = """
 class SimaProCSV:
     def __init__(
         self,
-        path_or_stream: Union[Path, StringIO],
+        path_or_stream: Path | StringIO,
         encoding: str = "sloppy-windows-1252",
         debug: bool = False,
     ):
@@ -151,7 +150,7 @@ class SimaProCSV:
 
     def get_next_block(
         self, rewindable_csv_reader: BeKindRewind, header: dict
-    ) -> Union[None, SimaProCSVBlock]:
+    ) -> None | SimaProCSVBlock:
         data = []
 
         for line in rewindable_csv_reader:
