@@ -3,8 +3,8 @@ from bw2parameters import Interpreter, ParameterSet
 from ..parameters import (
     FormulaSubstitutor,
     add_prefix_to_uppercase_input_parameters,
-    substitute_in_formulas,
     prepare_formulas,
+    substitute_in_formulas,
 )
 from ..utils import asboolean, asdate, get_key_multiline_values, jump_to_nonempty
 from .base import SimaProCSVUncertainBlock
@@ -119,7 +119,9 @@ class Process(SimaProCSVUncertainBlock):
             }
 
         if "Calculated parameters" in self.blocks:
-            add_prefix_to_uppercase_input_parameters(prepare_formulas(self.blocks["Calculated parameters"].parsed, self.header))
+            add_prefix_to_uppercase_input_parameters(
+                prepare_formulas(self.blocks["Calculated parameters"].parsed, self.header)
+            )
             substitutes = substitutes | {
                 o["original_name"].upper(): o["name"]
                 for o in self.blocks["Calculated parameters"].parsed
