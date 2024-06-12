@@ -17,6 +17,10 @@ __all__ = (
     "SimaProCSVUncertainBlock",
     "SystemDescription",
     "Units",
+    "WasteScenario",
+    "WasteTreatment",
+    "RemainingWaste",
+    "SeparatedWaste",
 )
 
 
@@ -34,3 +38,4 @@ from .products import Products
 from .quantities import Quantities
 from .system_description import SystemDescription
 from .units import Units
+from .wastes import WasteTreatment, WasteScenario, SeparatedWaste, RemainingWaste

@@ -71,7 +71,7 @@ Materials/fuels
 Electricity/heat
 
 Separated waste
-test waste treatment 1;All waste types;90
+test waste treatment 1;All waste types;90;
 
 Remaining waste
 test waste treatment 2;;100

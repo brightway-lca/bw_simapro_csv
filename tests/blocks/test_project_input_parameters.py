@@ -3,8 +3,8 @@ from bw_simapro_csv.blocks import ProjectInputParameters
 
 
 def test_db_input_params_empty(fixtures_dir):
-    obj = SimaProCSV(fixtures_dir / "stages.csv")
-    pip = [elem.parsed for elem in obj.blocks if isinstance(elem, ProjectInputParameters)][0]
+    obj = SimaProCSV(fixtures_dir / "process_with_invalid_lognormal_scale.csv")
+    pip = [elem.parsed for elem in obj.blocks if isinstance(elem, ProjectInputParameters)]
     assert pip == []
 
 

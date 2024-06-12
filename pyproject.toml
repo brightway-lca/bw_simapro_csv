@@ -48,6 +48,7 @@ testing = [
     "bw_simapro_csv",
     "pytest",
     "pytest-cov",
+    "pytest-randomly",
     "python-coveralls"
 ]
 dev = [

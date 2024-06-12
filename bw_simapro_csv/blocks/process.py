@@ -7,25 +7,28 @@ from .generic_biosphere import GenericUncertainBiosphere
 from .parameters import DatasetInputParameters
 from .products import Products
 from .technosphere_edges import TechnosphereEdges
+from .wastes import WasteTreatment, WasteScenario, SeparatedWaste, RemainingWaste
 
 BLOCK_MAPPING = {
     "Avoided products": TechnosphereEdges,
+    "Calculated parameters": DatasetCalculatedParameters,
     "Economic issues": GenericUncertainBiosphere,
     "Electricity/heat": TechnosphereEdges,
     "Emissions to air": GenericUncertainBiosphere,
     "Emissions to soil": GenericUncertainBiosphere,
     "Emissions to water": GenericUncertainBiosphere,
     "Final waste flows": GenericUncertainBiosphere,
+    "Input parameters": DatasetInputParameters,
     "Materials/fuels": TechnosphereEdges,
     "Non material emissions": GenericUncertainBiosphere,
     "Products": Products,
+    "Remaining waste": RemainingWaste,
     "Resources": GenericUncertainBiosphere,
+    "Separated waste": SeparatedWaste,
     "Social issues": GenericUncertainBiosphere,
+    "Waste scenario": WasteScenario,
     "Waste to treatment": TechnosphereEdges,
-    "Waste treatment": None,
-    "Separated waste": None,
-    "Calculated parameters": DatasetCalculatedParameters,
-    "Input parameters": DatasetInputParameters,
+    "Waste treatment": WasteTreatment,
 }
 
 
@@ -60,10 +63,7 @@ class Process(SimaProCSVUncertainBlock):
             }
             if not block_data:
                 continue
-            if BLOCK_MAPPING.get(block_type):
-                self.blocks[block_type] = BLOCK_MAPPING[block_type](**kwargs)
-            else:
-                logger.warning("Unhandled block data type {block_type}", block_type=block_type)
+            self.blocks[block_type] = BLOCK_MAPPING[block_type](**kwargs)
 
     def pull_metadata_pair(self, block: list[list], header: dict) -> (str, str):
         key = block[self.index][1][0]

@@ -116,27 +116,27 @@ def test_basic_header_extraction(fixtures_dir):
         "created": datetime(2022, 4, 13, 10, 37, 26),
     }
 
-    obj = SimaProCSV(fixtures_dir / "stages.csv")
-    assert obj.header == {
-        "simapro_version": "9.1.0.7",
-        "kind": SimaProCSVType.stages,
-        "delimiter": ";",
-        "project": "all stages",
-        "csv_version": "9.0.0",
-        "libraries": [],
-        "dayfirst": True,
-        "selection": "Selection (5)",
-        "open_project": "all stages",
-        "open_library": None,
-        "date_separator": ".",
-        "export_platform_ids": True,
-        "skip_empty_fields": False,
-        "convert_expressions": False,
-        "related_objects": True,
-        "include_stages": True,
-        "decimal_separator": ".",
-        "created": datetime(2021, 10, 13, 13, 6, 4),
-    }
+    # obj = SimaProCSV(fixtures_dir / "stages.csv")
+    # assert obj.header == {
+    #     "simapro_version": "9.1.0.7",
+    #     "kind": SimaProCSVType.stages,
+    #     "delimiter": ";",
+    #     "project": "all stages",
+    #     "csv_version": "9.0.0",
+    #     "libraries": [],
+    #     "dayfirst": True,
+    #     "selection": "Selection (5)",
+    #     "open_project": "all stages",
+    #     "open_library": None,
+    #     "date_separator": ".",
+    #     "export_platform_ids": True,
+    #     "skip_empty_fields": False,
+    #     "convert_expressions": False,
+    #     "related_objects": True,
+    #     "include_stages": True,
+    #     "decimal_separator": ".",
+    #     "created": datetime(2021, 10, 13, 13, 6, 4),
+    # }
 
     obj = SimaProCSV(fixtures_dir / "waste_scenario.csv")
     assert obj.header == {

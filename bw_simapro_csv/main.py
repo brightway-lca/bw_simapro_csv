@@ -27,7 +27,7 @@ from .blocks import (
     SystemDescription,
     Units,
 )
-from .errors import AmbiguousOrder, IndeterminateBlockEnd
+from .errors import IndeterminateBlockEnd
 from .header import parse_header
 from .parameters import (
     FormulaSubstitutor,
@@ -149,55 +149,6 @@ class SimaProCSV:
 
     def __iter__(self):
         return iter(self.blocks)
-
-    def label_process_units_and_values(self) -> None:
-        """Scan the whole import to get statistics on whether unit comes before amount.
-
-        Then relabel these attributes appropriately. Changes `maybe_unit` and `maybe_value`
-        to `unit`, `amount`, and `formula`.
-
-        """
-        numbers = get_numbers_re(self.header["decimal_separator"])
-
-        unit_first, amount_first = 0, 0
-
-        for block in filter(lambda b: isinstance(b, Process), self):
-            for label, data in block.raw.items():
-                for obj in data:
-                    result = is_unit_first(obj["maybe_unit"], obj["maybe_value"], numbers)
-                    if result is True:
-                        unit_first += 1
-                    elif result is False:
-                        amount_first += 1
-
-        # Ideally we would have clarity at this point; however, SimaPro allows for weird units,
-        # including "100%", so we allow for a little wiggle room
-        if unit_first > 100 * amount_first:
-            logger.info(
-                "Using units before numeric values in `Process` blocks ({unit_first} versus {amount_first})",
-                unit_first=unit_first,
-                amount_first=amount_first,
-            )
-            for block in filter(lambda b: isinstance(b, Process), self):
-                block.relabel_unit_values(
-                    unit_first=True,
-                    pattern=numbers,
-                    decimal_separator=self.header["decimal_separator"],
-                )
-        elif amount_first > 100 * unit_first:
-            logger.info(
-                "Using units before numeric values in `Process` blocks ({unit_first} versus {amount_first})",
-                unit_first=unit_first,
-                amount_first=amount_first,
-            )
-            for block in filter(lambda b: isinstance(b, Process), self):
-                block.relabel_unit_values(
-                    unit_first=False,
-                    pattern=numbers,
-                    decimal_separator=self.header["decimal_separator"],
-                )
-        else:
-            raise AmbiguousOrder("Can't determine order of units and formulas")
 
     def get_next_block(
         self, rewindable_csv_reader: BeKindRewind, header: dict
