@@ -3,7 +3,7 @@ import re
 from collections.abc import Iterator
 from copy import copy
 from datetime import date
-from typing import Any, Iterable, List, Pattern
+from typing import Iterable, List, Pattern
 
 import ftfy
 from dateutil.parser import parse as dtparse
@@ -205,16 +205,6 @@ def add_amount_or_formula(data: dict, value: str, decimal_separator: str) -> dic
     else:
         data["formula"] = normalize_number_in_formula(value, decimal_separator)
     return data
-
-
-def is_unit_first(a: str, b: str, pattern: Pattern) -> bool | None:
-    """Determine the unit and amount fields as accurately as possible."""
-    # Normally the unit comes first
-    if not pattern.match(a) and pattern.match(b):
-        return True
-    elif pattern.match(a) and not pattern.match(b):
-        return False
-    return None
 
 
 def skip_empty(data: list) -> Iterable:

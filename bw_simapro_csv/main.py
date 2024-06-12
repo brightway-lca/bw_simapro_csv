@@ -4,7 +4,7 @@ import os
 from functools import partial
 from io import StringIO
 from pathlib import Path
-from typing import Iterable, Union
+from typing import Union
 
 from bw2parameters import ParameterSet
 from loguru import logger
@@ -36,7 +36,7 @@ from .parameters import (
     prepare_formulas,
     substitute_in_formulas,
 )
-from .utils import BeKindRewind, get_numbers_re, is_unit_first
+from .utils import BeKindRewind
 
 
 def dummy(data, *args):

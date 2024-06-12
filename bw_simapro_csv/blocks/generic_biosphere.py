@@ -1,7 +1,7 @@
 from typing import Any, List
 
 from ..cas import validate_cas
-from ..utils import add_amount_or_formula, jump_to_nonempty, skip_empty
+from ..utils import add_amount_or_formula, skip_empty
 from .base import SimaProCSVBlock
 
 

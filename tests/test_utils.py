@@ -8,7 +8,6 @@ from bw_simapro_csv.utils import (
     clean,
     get_key_multiline_values,
     get_numbers_re,
-    is_unit_first,
     jump_to_nonempty,
     normalize_number_in_formula,
     skip_empty,
@@ -91,33 +90,6 @@ def test_normalize_number_in_formula():
     assert normalize_number_in_formula("400.404,2", ",") == "400404.2"
     assert normalize_number_in_formula("alpha * 400.404,2", ",") == "alpha * 400404.2"
     assert normalize_number_in_formula("alpha * 400.404*2", "*") == "alpha * 400404.2"
-
-
-def test_is_number_first_decimal():
-    re = get_numbers_re(".")
-    assert re.match("0.000623954323")
-    assert not re.match("m3")
-    assert is_unit_first("m3", "0.000623954323", re) is True
-    assert is_unit_first("0.000623954323", "m3", re) is False
-    assert is_unit_first("MJ", "m3", re) is None
-
-
-def test_is_number_first_comma():
-    re = get_numbers_re(",")
-    assert re.match("0,00062_39543.23")
-    assert not re.match("m3")
-    assert is_unit_first("m3", "0,000623954323", re) is True
-    assert is_unit_first("0,000623954323", "m3", re) is False
-    assert is_unit_first("MJ", "m3", re) is None
-
-
-def test_is_number_first_semicolon():
-    re = get_numbers_re(";")
-    assert re.match("0;000623_954323")
-    assert not re.match("m3")
-    assert is_unit_first("m3", "0;000623954323", re) is True
-    assert is_unit_first("0;000623954323", "m3", re) is False
-    assert is_unit_first("MJ", "m3", re) is None
 
 
 def test_skip_empty():

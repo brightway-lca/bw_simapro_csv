@@ -1,10 +1,8 @@
 from bw2parameters import Interpreter, ParameterSet
-from loguru import logger
 
 from ..parameters import (
     FormulaSubstitutor,
     add_prefix_to_uppercase_input_parameters,
-    build_substitutes,
     prepare_formulas,
     substitute_in_formulas,
 )
