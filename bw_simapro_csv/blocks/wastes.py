@@ -69,8 +69,8 @@ class SeparatedWaste(SimaProCSVBlock):
         for line_no, line in skip_empty(block):
             self.parsed.append(
                 {
-                    "name": line[0],
-                    "unit": line[1],
+                    "waste_treatment": line[0],
+                    "waste_type": line[1],
                     "amount": asnumber(line[2], decimal_separator=header["decimal_separator"]),
                     "comment": line[3] if len(line) > 3 else None,
                     "line_no": line_no,
