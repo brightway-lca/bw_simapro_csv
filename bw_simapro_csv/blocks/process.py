@@ -6,6 +6,7 @@ from ..parameters import (
     prepare_formulas,
     substitute_in_formulas,
 )
+from ..uncertainty import clean_simapro_uncertainty_fields, distribution
 from ..utils import asboolean, asdate, get_key_multiline_values, jump_to_nonempty
 from .base import SimaProCSVBlock
 from .calculated_parameters import DatasetCalculatedParameters
@@ -149,3 +150,10 @@ class Process(SimaProCSVBlock):
                 if "formula" in obj:
                     substitute_in_formulas(obj, visitor)
                     obj["amount"] = interpreter(obj["formula"])
+                if "field1" in obj:
+                    # We can only now construct and validate an uncertainty distribution,
+                    # because we finally have an `amount` field.
+                    obj.update(
+                        distribution(decimal_separator=self.header["decimal_separator"], **obj)
+                    )
+                    clean_simapro_uncertainty_fields(obj)
