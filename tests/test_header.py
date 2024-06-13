@@ -1,7 +1,13 @@
 from datetime import datetime
+from pathlib import Path
 
 from bw_simapro_csv import SimaProCSV
 from bw_simapro_csv.header import SimaProCSVType
+
+
+def test_log_file_patching(fixtures_dir: Path, temporary_logs_dir: Path):
+    obj = SimaProCSV(fixtures_dir / "allocation.csv")
+    assert str(temporary_logs_dir) in str(obj.logs_dir)
 
 
 def test_basic_header_extraction(fixtures_dir):

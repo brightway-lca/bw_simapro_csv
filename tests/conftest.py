@@ -15,7 +15,5 @@ def fixtures_dir():
 
 @pytest.fixture(autouse=True)
 def temporary_logs_dir(monkeypatch, tmp_path):
-    def temp_user_log_dir(*args, **kwargs):
-        return tmp_path
-
-    monkeypatch.setattr(platformdirs, "user_log_dir", temp_user_log_dir)
+    monkeypatch.setattr("bw_simapro_csv.main.user_log_dir", lambda *args, **kwargs: tmp_path)
+    yield tmp_path
