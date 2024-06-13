@@ -1,12 +1,16 @@
 import csv
+import datetime
 import itertools
 import os
+import shutil
+import sys
 from functools import partial
 from io import StringIO
 from pathlib import Path
 
 from bw2parameters import ParameterSet
 from loguru import logger
+from platformdirs import user_log_dir
 
 from .blocks import (
     DamageCategory,
@@ -86,7 +90,7 @@ class SimaProCSV:
         self,
         path_or_stream: Path | StringIO,
         encoding: str = "sloppy-windows-1252",
-        debug: bool = False,
+        stderr_logs: bool = True,
     ):
         """Read a SimaPro CSV file object, and parse the contents.
 
@@ -95,7 +99,7 @@ class SimaProCSV:
 
         We then break the file into logical chunks, such as processes or LCIA impact categories."""
         # Control logging level
-        self.debug = debug
+        now = datetime.datetime.now().isoformat()[:19].replace(":", "-")
 
         if isinstance(path_or_stream, Path):
             if not path_or_stream.is_file():
@@ -103,6 +107,9 @@ class SimaProCSV:
             if not os.access(path_or_stream, os.R_OK):
                 raise ValueError(f"File {path_or_stream} exists but lacks read permission")
             data = open(path_or_stream, encoding=encoding)
+            self.logs_dir = (
+                Path(user_log_dir("bw_simapro_csv", "pylca")) / f"{path_or_stream.stem}-{now}"
+            )
         elif not isinstance(path_or_stream, StringIO):
             raise ValueError(
                 f"`path_or_stream` must be `Path` or `StringIO` - got {type(path_or_stream)}"
@@ -111,6 +118,11 @@ class SimaProCSV:
             # We have to assume that the StringIO object was created with
             # some reasonable newline definition.
             data = path_or_stream
+            self.logs_dir = Path(user_log_dir("bw_simapro_csv", "pylca")) / f"StringIO-{now}"
+
+        self.logs_dir.mkdir(parents=True, exist_ok=True)
+        self.configure_logs(stderr_logs)
+
         # Converting Pydantic back to dict to release memory
         header, header_lines = parse_header(data)
         self.header = header.model_dump()
@@ -122,12 +134,11 @@ class SimaProCSV:
             delimiter="<tab>" if self.header["delimiter"] == "\t" else self.header["delimiter"],
             name=self.header["project"] or "(Not given)",
         )
-        if self.debug:
-            logger.debug(
-                "Header information:\n\theader lines: {header_lines}\n\t{header}",
-                header_lines=header_lines,
-                header="\n\t".join(["{}: {}".format(k, v) for k, v in self.header.items()]),
-            )
+        logger.debug(
+            "Header information:\n\theader lines: {header_lines}\n\t{header}",
+            header_lines=header_lines,
+            header="\n\t".join(["{}: {}".format(k, v) for k, v in self.header.items()]),
+        )
 
         if self.header["delimiter"] not in {";", ".", "\t", "|", " "}:
             logger.warning(f"SimaPro CSV file uses unusual delimiter '{self.header['delimiter']}'")
@@ -149,6 +160,21 @@ class SimaProCSV:
 
     def __iter__(self):
         return iter(self.blocks)
+
+    def configure_logs(self, stderr_logs: bool) -> None:
+        logger.remove()
+        if stderr_logs:
+            logger.add(sys.stderr, level="INFO")
+        logger.add(self.logs_dir / "debug.log", level="DEBUG")
+        logger.add(self.logs_dir / "warning.log", level="WARNING")
+
+    def copy_log_dir(self, base_dir: Path) -> None:
+        """Copy the logs directory and its files to `base_dir`"""
+        if not isinstance(base_dir, Path):
+            raise ValueError(f"`base_dir` must be a `pathlib.Path` instance; got {type(base_dir)}")
+        if not base_dir.is_dir():
+            raise ValueError(f"`base_dir` must be an existing directory; got {type(base_dir)}")
+        return shutil.copytree(self.logs_dir, base_dir / self.logs_dir.stem)
 
     def get_next_block(
         self, rewindable_csv_reader: BeKindRewind, header: dict

@@ -1,9 +1,9 @@
-from numbers import Number
 import itertools
 import re
 from collections.abc import Iterator
 from copy import copy
 from datetime import date
+from numbers import Number
 from typing import Iterable, List, Pattern
 
 import ftfy

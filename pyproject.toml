@@ -31,6 +31,7 @@ dependencies = [
     "bw2parameters",
     "ftfy",
     "loguru",
+    "platformdirs",
     "pydantic",
     "python-dateutil",
     "stats_arrays",
