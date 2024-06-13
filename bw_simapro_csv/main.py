@@ -91,6 +91,7 @@ class SimaProCSV:
         path_or_stream: Path | StringIO,
         encoding: str = "sloppy-windows-1252",
         stderr_logs: bool = True,
+        write_logs: bool = True
     ):
         """Read a SimaPro CSV file object, and parse the contents.
 
@@ -120,8 +121,7 @@ class SimaProCSV:
             data = path_or_stream
             self.logs_dir = Path(user_log_dir("bw_simapro_csv", "pylca")) / f"StringIO-{now}"
 
-        self.logs_dir.mkdir(parents=True, exist_ok=True)
-        self.configure_logs(stderr_logs)
+        self.configure_logs(stderr_logs, write_logs)
 
         # Converting Pydantic back to dict to release memory
         header, header_lines = parse_header(data)
@@ -161,12 +161,14 @@ class SimaProCSV:
     def __iter__(self):
         return iter(self.blocks)
 
-    def configure_logs(self, stderr_logs: bool) -> None:
+    def configure_logs(self, stderr_logs: bool, write_logs: bool) -> None:
         logger.remove()
         if stderr_logs:
             logger.add(sys.stderr, level="INFO")
-        logger.add(self.logs_dir / "debug.log", level="DEBUG")
-        logger.add(self.logs_dir / "warning.log", level="WARNING")
+        if write_logs:
+            self.logs_dir.mkdir(parents=True, exist_ok=True)
+            logger.add(self.logs_dir / "debug.log", level="DEBUG")
+            logger.add(self.logs_dir / "warning.log", level="WARNING")
 
     def copy_log_dir(self, base_dir: Path) -> None:
         """Copy the logs directory and its files to `base_dir`"""
