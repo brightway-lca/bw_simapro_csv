@@ -35,6 +35,7 @@ from .parameters import (
     prepare_formulas,
     substitute_in_formulas,
 )
+from .units import normalize_units
 from .utils import BeKindRewind
 
 
@@ -144,6 +145,7 @@ class SimaProCSV:
                 self.blocks.append(block)
 
         self.resolve_parameters()
+        normalize_units(self.blocks)
 
     def __iter__(self):
         return iter(self.blocks)
