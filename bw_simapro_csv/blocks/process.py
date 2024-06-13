@@ -7,7 +7,7 @@ from ..parameters import (
     substitute_in_formulas,
 )
 from ..utils import asboolean, asdate, get_key_multiline_values, jump_to_nonempty
-from .base import SimaProCSVUncertainBlock
+from .base import SimaProCSVBlock
 from .calculated_parameters import DatasetCalculatedParameters
 from .generic_biosphere import GenericUncertainBiosphere
 from .parameters import DatasetInputParameters
@@ -38,7 +38,7 @@ BLOCK_MAPPING = {
 }
 
 
-class Process(SimaProCSVUncertainBlock):
+class Process(SimaProCSVBlock):
     """A life cycle inventory process, with inputs, products, and elementary exchanges"""
 
     def __init__(self, block: list[list], header: dict):

@@ -14,7 +14,6 @@ __all__ = (
     "ProjectInputParameters",
     "Quantities",
     "SimaProCSVBlock",
-    "SimaProCSVUncertainBlock",
     "SystemDescription",
     "Units",
     "WasteScenario",
@@ -24,7 +23,7 @@ __all__ = (
 )
 
 
-from .base import EmptyBlock, SimaProCSVBlock, SimaProCSVUncertainBlock
+from .base import EmptyBlock, SimaProCSVBlock
 from .calculated_parameters import DatabaseCalculatedParameters, ProjectCalculatedParameters
 from .damage_category import DamageCategory
 from .generic_biosphere import GenericBiosphere
