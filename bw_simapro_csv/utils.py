@@ -1,3 +1,4 @@
+from numbers import Number
 import itertools
 import re
 from collections.abc import Iterator
@@ -79,11 +80,14 @@ def normalize_number_in_formula(formula: str, decimal_separator: str = ".") -> s
 
 
 def asnumber(
-    value: str, decimal_separator: str = ".", allow_nonnumber: bool = False
-) -> float | str:
+    value: str | Number, decimal_separator: str = ".", allow_nonnumber: bool = False
+) -> Number | str:
     """Take a number stored as a string and convert to a float.
 
     Tries hard to handle different formats."""
+    if isinstance(value, Number):
+        return value
+
     original = copy(value)
 
     conversion = 1.0
