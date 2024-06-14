@@ -30,6 +30,7 @@ from .blocks import (
     SystemDescription,
     Units,
 )
+from .csv_reader import BeKindRewind
 from .errors import IndeterminateBlockEnd
 from .header import parse_header
 from .parameters import (
@@ -40,7 +41,6 @@ from .parameters import (
     substitute_in_formulas,
 )
 from .units import normalize_units
-from .csv_reader import BeKindRewind
 
 
 def dummy(data, *args):
@@ -279,3 +279,4 @@ class SimaProCSV:
 
         for block in filter(lambda b: isinstance(b, Process), self):
             block.resolve_local_parameters(global_params=global_params, substitutes=substitutes)
+            block.supplement_biosphere_edges(blocks=self.blocks)

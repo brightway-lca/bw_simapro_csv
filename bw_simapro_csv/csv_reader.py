@@ -1,7 +1,7 @@
 import itertools
+import re
 from collections.abc import Iterator
 from typing import List
-import re
 
 import ftfy
 

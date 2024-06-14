@@ -1,5 +1,6 @@
 from bw2parameters import Interpreter, ParameterSet
 
+from ..constants import CONTEXT_MAPPING, MAGIC
 from ..parameters import (
     FormulaSubstitutor,
     add_prefix_to_uppercase_input_parameters,
@@ -10,7 +11,7 @@ from ..uncertainty import clean_simapro_uncertainty_fields, distribution
 from ..utils import asboolean, asdate, get_key_multiline_values, jump_to_nonempty
 from .base import SimaProCSVBlock
 from .calculated_parameters import DatasetCalculatedParameters
-from .generic_biosphere import GenericUncertainBiosphere
+from .generic_biosphere import GenericBiosphere, GenericUncertainBiosphere
 from .parameters import DatasetInputParameters
 from .products import Products
 from .technosphere_edges import TechnosphereEdges
@@ -93,7 +94,7 @@ class Process(SimaProCSVBlock):
             self.index += 2
         else:
             value = (
-                " ⧺ ".join([elem for elem in block[self.index + 1][1] if elem])
+                MAGIC.join([elem for elem in block[self.index + 1][1] if elem])
                 if block[self.index + 1][1]
                 else ""
             )
@@ -157,3 +158,27 @@ class Process(SimaProCSVBlock):
                         distribution(decimal_separator=self.header["decimal_separator"], **obj)
                     )
                     clean_simapro_uncertainty_fields(obj)
+
+    def supplement_biosphere_edges(self, blocks: list[SimaProCSVBlock]) -> None:
+        """Add comments and CAS numbers from the metadata blocks"""
+        for block in filter(lambda x: isinstance(x, GenericBiosphere), blocks):
+            try:
+                correspondent = self.blocks[CONTEXT_MAPPING[block.category]]
+            except KeyError:
+                continue
+
+            data_dict = {o["name"]: o for o in block.parsed}
+
+            for edge in correspondent.parsed:
+                try:
+                    partner = data_dict[edge["name"]]
+                except KeyError:
+                    continue
+
+                if partner.get("cas_number"):
+                    edge["cas_number"] = partner["cas_number"]
+                if partner.get("comment"):
+                    if edge.get("comment"):
+                        edge["comment"] += MAGIC + partner["comment"]
+                    else:
+                        edge["comment"] = partner["comment"]

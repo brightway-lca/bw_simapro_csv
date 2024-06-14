@@ -1,9 +1,6 @@
 import pytest
 
-from bw_simapro_csv.csv_reader import (
-    BeKindRewind,
-    clean,
-)
+from bw_simapro_csv.csv_reader import BeKindRewind, clean
 
 
 def test_rewindable_generator():
