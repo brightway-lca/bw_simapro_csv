@@ -40,7 +40,7 @@ from .parameters import (
     substitute_in_formulas,
 )
 from .units import normalize_units
-from .utils import BeKindRewind
+from .csv_reader import BeKindRewind
 
 
 def dummy(data, *args):
@@ -91,7 +91,7 @@ class SimaProCSV:
         path_or_stream: Path | StringIO,
         encoding: str = "sloppy-windows-1252",
         stderr_logs: bool = True,
-        write_logs: bool = True
+        write_logs: bool = True,
     ):
         """Read a SimaPro CSV file object, and parse the contents.
 
