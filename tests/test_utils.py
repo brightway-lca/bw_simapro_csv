@@ -173,3 +173,22 @@ def test_get_key_multilines_value_stop_on_empty_block():
         ("Header", [(6, ["data", 1]), (7, ["data", 2])]),
     ]
     assert list(get_key_multiline_values(given, ["Stop"])) == expected
+
+
+def test_get_numbers_re():
+    assert get_numbers_re(",").match('1,11657894165076E-9')
+    assert get_numbers_re(";").match('1;11657894165076E-9')
+    assert get_numbers_re(".").match('1.11657894165076E-9')
+
+    assert get_numbers_re(",").match('1,11657894165076e-9')
+    assert get_numbers_re(";").match('1;11657894165076e-9')
+    assert get_numbers_re(".").match('1.11657894165076e-9')
+
+    assert get_numbers_re(",").match('1,11657894165076e9')
+    assert get_numbers_re(";").match('1;11657894165076e9')
+    assert get_numbers_re(".").match('1.11657894165076e9')
+
+    assert get_numbers_re(",").match(' \t1,11657894165076E-9\n')
+
+    assert not get_numbers_re(",").match('e1234')
+
