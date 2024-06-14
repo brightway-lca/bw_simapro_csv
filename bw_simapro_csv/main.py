@@ -127,10 +127,11 @@ class SimaProCSV:
         header, header_lines = parse_header(data)
         self.header = header.model_dump()
         self.uses_end_text = False
+        self.filepath = str(path_or_stream) if isinstance(path_or_stream, Path) else "<StringIO>"
 
         logger.info(
             "SimaPro CSV import started.\n\tFile: {file}\n\tDelimiter: {delimiter}\n\tName: {name}",
-            file=path_or_stream if isinstance(path_or_stream, Path) else "StringIO",
+            file=path_or_stream if isinstance(path_or_stream, Path) else "<StringIO>",
             delimiter="<tab>" if self.header["delimiter"] == "\t" else self.header["delimiter"],
             name=self.header["project"] or "(Not given)",
         )
