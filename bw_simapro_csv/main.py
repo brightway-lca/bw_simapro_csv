@@ -30,6 +30,7 @@ from .blocks import (
     SystemDescription,
     Units,
 )
+from .csv_reader import BeKindRewind
 from .errors import IndeterminateBlockEnd
 from .header import parse_header
 from .parameters import (
@@ -40,7 +41,6 @@ from .parameters import (
     substitute_in_formulas,
 )
 from .units import normalize_units
-from .utils import BeKindRewind
 
 
 def dummy(data, *args):
@@ -91,7 +91,7 @@ class SimaProCSV:
         path_or_stream: Path | StringIO,
         encoding: str = "sloppy-windows-1252",
         stderr_logs: bool = True,
-        write_logs: bool = True
+        write_logs: bool = True,
     ):
         """Read a SimaPro CSV file object, and parse the contents.
 
@@ -128,10 +128,11 @@ class SimaProCSV:
         header, header_lines = parse_header(data)
         self.header = header.model_dump()
         self.uses_end_text = False
+        self.filepath = str(path_or_stream) if isinstance(path_or_stream, Path) else "<StringIO>"
 
         logger.info(
             "SimaPro CSV import started.\n\tFile: {file}\n\tDelimiter: {delimiter}\n\tName: {name}",
-            file=path_or_stream if isinstance(path_or_stream, Path) else "StringIO",
+            file=path_or_stream if isinstance(path_or_stream, Path) else "<StringIO>",
             delimiter="<tab>" if self.header["delimiter"] == "\t" else self.header["delimiter"],
             name=self.header["project"] or "(Not given)",
         )
@@ -279,3 +280,4 @@ class SimaProCSV:
 
         for block in filter(lambda b: isinstance(b, Process), self):
             block.resolve_local_parameters(global_params=global_params, substitutes=substitutes)
+            block.supplement_biosphere_edges(blocks=self.blocks)
