@@ -163,6 +163,11 @@ class SimaProCSV:
     def __iter__(self):
         return iter(self.blocks)
 
+    def to_brightway(self) -> dict:
+        from .brightway import lci_to_brightway
+
+        return lci_to_brightway(self)
+
     def configure_logs(self, stderr_logs: bool, write_logs: bool) -> None:
         logger.remove()
         if stderr_logs:
