@@ -1,4 +1,7 @@
+import pytest
+
 from bw_simapro_csv.blocks import GenericBiosphere, Process
+from bw_simapro_csv.errors import WasteModelMismatch
 
 
 def test_supplement_biosphere_edges():
@@ -51,3 +54,71 @@ def test_supplement_biosphere_edges():
 
     p.supplement_biosphere_edges([b])
     assert p.blocks["Emissions to air"].parsed == expected
+
+
+def test_check_waste_production_model_consistency_products():
+    class O:
+        pass
+
+    class P(Process):
+        def __init__(self):
+            pass
+
+    wt = O()
+    wt.category = "Waste treatment"
+    wt.parsed = [1]
+
+    pr = O()
+    pr.category = "Products"
+    pr.parsed = []
+
+    p = P()
+    p.blocks = {"Products": pr, "Waste treatment": wt}
+    p.parsed = {"metadata": {"Category type": "waste treatment"}}
+    assert p.check_waste_production_model_consistency() is None
+
+    wt.parsed = [1, 2, 3]
+    pr.parsed = [2, 3, 4, 5]
+
+    with pytest.raises(WasteModelMismatch) as exc_info:
+        p.check_waste_production_model_consistency()
+
+    assert "3 waste treatment inputs and 4 products" in str(exc_info.value)
+
+
+def test_check_waste_production_model_consistency_category_type():
+    class O:
+        pass
+
+    class P(Process):
+        def __init__(self):
+            pass
+
+    wt = O()
+    wt.category = "Waste treatment"
+    wt.parsed = [1]
+
+    p = P()
+    p.blocks = {"Waste treatment": wt}
+    p.parsed = {"metadata": {"Category type": "waste treatment"}}
+    assert p.check_waste_production_model_consistency() is None
+
+    p.parsed = {"metadata": {"Category type": "w00t"}}
+
+    with pytest.raises(WasteModelMismatch) as exc_info:
+        p.check_waste_production_model_consistency()
+
+    assert "`waste treatment`; instead got `w00t`" in str(exc_info.value)
+
+    pr = O()
+    pr.category = "Products"
+    pr.parsed = [1]
+
+    wt.parsed = []
+
+    p.blocks = {"Waste treatment": wt, "Products": pr}
+    p.parsed = {"metadata": {"Category type": "waste treatment"}}
+    with pytest.raises(WasteModelMismatch) as exc_info:
+        p.check_waste_production_model_consistency()
+
+    assert "Expected processes with `Products` blocks" in str(exc_info.value)

@@ -280,4 +280,5 @@ class SimaProCSV:
 
         for block in filter(lambda b: isinstance(b, Process), self):
             block.resolve_local_parameters(global_params=global_params, substitutes=substitutes)
+            block.check_waste_production_model_consistency()
             block.supplement_biosphere_edges(blocks=self.blocks)

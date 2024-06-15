@@ -1,6 +1,7 @@
 from bw2parameters import Interpreter, ParameterSet
 
 from ..constants import CONTEXT_MAPPING, MAGIC
+from ..errors import WasteModelMismatch
 from ..parameters import (
     FormulaSubstitutor,
     add_prefix_to_uppercase_input_parameters,
@@ -182,3 +183,25 @@ class Process(SimaProCSVBlock):
                         edge["comment"] += MAGIC + partner["comment"]
                     else:
                         edge["comment"] = partner["comment"]
+
+    def check_waste_production_model_consistency(self):
+        """Check to make sure that our understanding of SimaPro waste treatment aligns with the data."""
+        if "Waste treatment" in self.blocks and self.blocks["Waste treatment"].parsed:
+            if "Products" in self.blocks and self.blocks["Products"].parsed:
+                raise WasteModelMismatch(
+                    "We don't know how to parse a process with {} waste treatment inputs and {} products".format(
+                        len(self.blocks["Waste treatment"].parsed),
+                        len(self.blocks["Products"].parsed),
+                    )
+                )
+            elif self.parsed["metadata"]["Category type"] != "waste treatment":
+                raise WasteModelMismatch(
+                    "Expected waste treatment processes to have category type `waste treatment`; instead got `{}`".format(
+                        self.parsed["metadata"]["Category type"]
+                    )
+                )
+        elif "Products" in self.blocks and self.blocks["Products"].parsed:
+            if self.parsed["metadata"]["Category type"] == "waste treatment":
+                raise WasteModelMismatch(
+                    "Expected processes with `Products` blocks not have category type `waste treatment`"
+                )
