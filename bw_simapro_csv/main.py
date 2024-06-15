@@ -111,6 +111,7 @@ class SimaProCSV:
             self.logs_dir = (
                 Path(user_log_dir("bw_simapro_csv", "pylca")) / f"{path_or_stream.stem}-{now}"
             )
+            logger.info("Writing logs to {d}", d=str(self.logs_dir))
         elif not isinstance(path_or_stream, StringIO):
             raise ValueError(
                 f"`path_or_stream` must be `Path` or `StringIO` - got {type(path_or_stream)}"
