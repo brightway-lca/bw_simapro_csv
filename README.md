@@ -47,6 +47,23 @@ The file object must be an instance of `pathlib.Path` or `io.StringIO`. The `Sim
 
 The end result is `SimaProCSV.blocks`, a list of `SimaProCSVBlock` instances with parsed and cleaned data.
 
+## Products versus processes
+
+Despite the presence of a `Products` block in processes, SimaPro doesn't really differentiate between between the two. Therefore, all process datasets should be considered as [`ProcessWithReferenceProduct`](https://github.com/brightway-lca/bw_interface_schemas/blob/5fb1d40587aec2a4bb2248505550fc883a91c355/bw_interface_schemas/lci.py#L83). Consider this quote from the tutorial:
+
+    Process name in SimaPro
+    Under the Documentation tab, you can enter the process name. Please note that this is only for
+    your own reference and this name is not used anywhere. Processes are identified by the name
+    defined under the Input/Output tab in the product section. Therefore, if you want to search for a
+    certain process, you should use the product name defined in the Input/Output as the keyword.
+
+## Waste modelling
+
+The intersection of ecoinvent waste models (negative values means things labelled as inputs are outputs, and vice-versa) and SimaPro `Waste treatment` versus `Waste to treatment` make life interesting. The SimaPro model is:
+
+* `Waste treatment` are *inputs*, and indicate that the given process is a waste treatment process, i.e. it does not have a `Products` block, and has the `category_type` `waste treatment`.
+* `Waste to treatment` are *outputs*, and indicate that waste is being produced which needs to be treated. Negative amounts in `Waste to treatment` indicate that these wastes are *inputs*, and that this process is a waste treatment process.
+
 ## Logging
 
 `bw_simapro_csv` uses the [loguru](https://github.com/Delgan/loguru) library for controlling logs. By default, logs are printed to `stderr`.
