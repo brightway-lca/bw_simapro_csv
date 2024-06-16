@@ -54,7 +54,7 @@ class SimaProCSVHeader(BaseModel):
     related_objects: Optional[bool] = None
     include_stages: Optional[bool] = None
     decimal_separator: Optional[str] = "."
-    created: Optional[datetime] = datetime.now()
+    created: Optional[datetime] = None
 
 
 def parse_header(data: List[str]) -> (SimaProCSVHeader, int):
@@ -124,6 +124,6 @@ def parse_header(data: List[str]) -> (SimaProCSVHeader, int):
     try:
         parsed["created"] = parser.parse(f"{date} {time}", dayfirst=dayfirst)
     except parser.ParserError:
-        pass
+        parsed["created"] = datetime.now()
 
     return SimaProCSVHeader(**parsed), index
