@@ -1,10 +1,10 @@
 from datetime import datetime
 from pathlib import Path
 
+import pytest
+
 from bw_simapro_csv import SimaProCSV
 from bw_simapro_csv.header import SimaProCSVType
-
-import pytest
 
 
 def test_log_file_patching(fixtures_dir: Path, temporary_logs_dir: Path):

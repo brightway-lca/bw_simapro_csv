@@ -33,7 +33,7 @@ from .blocks import (
 )
 from .csv_reader import BeKindRewind
 from .errors import IndeterminateBlockEnd
-from .header import parse_header, SimaProCSVType
+from .header import SimaProCSVType, parse_header
 from .parameters import (
     FormulaSubstitutor,
     add_prefix_to_uppercase_input_parameters,
@@ -168,7 +168,9 @@ class SimaProCSV:
             if block is not EmptyBlock:
                 self.blocks.append(block)
 
-        self.resolve_parameters()
+        if header.kind in (SimaProCSVType.processes, SimaProCSVType.stages):
+            self.resolve_parameters()
+
         normalize_units(self.blocks)
 
     def __iter__(self):
@@ -294,6 +296,10 @@ class SimaProCSV:
         visitor = FormulaSubstitutor(substitutes)
         global_params = global_params | {o["name"]: o["amount"] for o in itertools.chain(*pcp)}
 
+        logger.info(
+            "Extracted and cleaned {n} process datasets",
+            n=sum([1 for block in self if isinstance(block, Process)]),
+        )
         for block in filter(lambda b: isinstance(b, Process), self):
             block.resolve_local_parameters(global_params=global_params, substitutes=substitutes)
             block.check_waste_production_model_consistency()
