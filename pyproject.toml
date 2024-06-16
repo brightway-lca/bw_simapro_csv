@@ -71,7 +71,7 @@ dev = [
 [tool.setuptools]
 license-files = ["LICENSE"]
 include-package-data = true
-packages = ["bw_simapro_csv"]
+packages = ["bw_simapro_csv", "bw_simapro_csv.blocks"]
 
 [tool.setuptools.dynamic]
 version = {attr = "bw_simapro_csv.__version__"}
