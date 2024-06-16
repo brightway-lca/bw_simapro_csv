@@ -148,6 +148,7 @@ def test_add_amount_or_formula():
     assert add_amount_or_formula({}, "3.141", ".") == {"amount": 3.141}
     assert add_amount_or_formula({}, "pi", ".") == {"formula": "pi"}
     assert add_amount_or_formula({}, "259,26-2,81", ",") == {"formula": "259.26-2.81"}
+    assert add_amount_or_formula({}, "259,26-2", ",") == {"formula": "259.26-2"}
     assert add_amount_or_formula({}, "1,1165E-9", ",") == {"amount": 1.1165e-9}
     assert add_amount_or_formula({}, "3,14159 * pi", ",") == {"formula": "3.14159 * pi"}
     assert add_amount_or_formula({}, "3,14159 * pi", ",", formula_key="foo") == {

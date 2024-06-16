@@ -129,7 +129,7 @@ def alternating_key_value(data: List[list]) -> List[tuple]:
 def get_numbers_re(separator: str) -> Pattern:
     if separator == ".":
         separator = "\\."
-    return re.compile(f"^\\s*[-+]?[\\d]+{separator}?[\\d]*[Ee]*(?:[-+]?[\\d]+)?\\s*$")
+    return re.compile(f"^\\s*[-+]?[\\d]+{separator}?[\\d]*([Ee][+-]*[0-9]+)?\\s*$")
 
 
 def add_amount_or_formula(
