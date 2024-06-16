@@ -111,7 +111,7 @@ def fix_iff_formula(formula: str, pattern: Pattern) -> str:
     return formula
 
 
-def prepare_formulas(block: list[dict], header: dict) -> list[dict]:
+def prepare_formulas(block: list[dict], header: dict, formula_field: str = "formula") -> list[dict]:
     """Make necessary conversions so formulas can be parsed by Python.
 
     Does the following:
@@ -123,26 +123,26 @@ def prepare_formulas(block: list[dict], header: dict) -> list[dict]:
     iff_re = compile_iff_re(header)
 
     for obj in block:
-        if "formula" in obj:
-            if "^" in obj["formula"]:
-                new_formula = obj["formula"].replace("^", "**")
-                logger.info(
+        if formula_field in obj:
+            if "^" in obj[formula_field]:
+                new_formula = obj[formula_field].replace("^", "**")
+                logger.debug(
                     f"""Replacing `^` in formula on line {obj['line_no']}:
-        {obj['formula']} >>> {new_formula}"""
+        {obj[formula_field]} >>> {new_formula}"""
                 )
-                if "original_formula" not in obj["formula"]:
-                    obj["original_formula"] = obj["formula"]
-                obj["formula"] = new_formula
+                if f"original_{formula_field}" not in obj:
+                    obj[f"original_{formula_field}"] = obj[formula_field]
+                obj[formula_field] = new_formula
 
-            new_formula = fix_iff_formula(obj["formula"], iff_re)
-            if new_formula != obj["formula"]:
-                logger.info(
+            new_formula = fix_iff_formula(obj[formula_field], iff_re)
+            if new_formula != obj[formula_field]:
+                logger.debug(
                     f"""Replacing `Iff` expression in formula on line {obj['line_no']}:
-        {obj['formula']} >>> {new_formula}"""
+        {obj[formula_field]} >>> {new_formula}"""
                 )
-                if "original_formula" not in obj["formula"]:
-                    obj["original_formula"] = obj["formula"]
-                obj["formula"] = new_formula
+                if f"original_{formula_field}" not in obj:
+                    obj[f"original_{formula_field}"] = obj[formula_field]
+                obj[formula_field] = new_formula
 
     return block
 
@@ -176,8 +176,8 @@ class FormulaSubstitutor:
         return unparse(parsed).strip()
 
 
-def substitute_in_formulas(obj: dict, visitor: Type) -> dict:
-    """Substitute variable names in `obj['formula']` based on `substitutions`.
+def substitute_in_formulas(obj: dict, visitor: Type, formula_field: str = "formula") -> dict:
+    """Substitute variable names in `obj[formula_field]` based on `substitutions`.
 
     Keeps `original_formula`.
 
@@ -191,8 +191,11 @@ def substitute_in_formulas(obj: dict, visitor: Type) -> dict:
         {'formula': 'hi_mom * 2', 'original_formula': 'a * 2'}
 
     """
-    if "formula" in obj:
-        obj["original_formula"] = obj["formula"]
-        obj["formula"] = visitor(obj["formula"])
+    if formula_field in obj:
+        obj[f"original_{formula_field}"] = obj[formula_field]
+        obj[formula_field] = visitor(obj[formula_field])
+
+        if obj[f"original_{formula_field}"] == obj[formula_field]:
+            del obj[f"original_{formula_field}"]
 
     return obj

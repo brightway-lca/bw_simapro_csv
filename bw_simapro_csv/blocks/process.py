@@ -148,10 +148,14 @@ class Process(SimaProCSVBlock):
             if not getattr(block, "has_formula", None):
                 continue
             prepare_formulas(block.parsed, self.header)
+            prepare_formulas(block.parsed, self.header, formula_field="allocation_formula")
             for obj in block.parsed:
                 if "formula" in obj:
                     substitute_in_formulas(obj, visitor)
                     obj["amount"] = interpreter(obj["formula"])
+                if "allocation_formula" in obj:
+                    substitute_in_formulas(obj, visitor, formula_field="allocation_formula")
+                    obj["allocation"] = interpreter(obj["allocation_formula"])
                 if "field1" in obj:
                     # We can only now construct and validate an uncertainty distribution,
                     # because we finally have an `amount` field.
