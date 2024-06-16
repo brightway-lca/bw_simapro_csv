@@ -134,12 +134,18 @@ def get_numbers_re(separator: str) -> Pattern:
     return re.compile(f"^\\s*[0-9]+[{separator}0-9eE_\\-\\.]+\\s*$")
 
 
-def add_amount_or_formula(data: dict, value: str, decimal_separator: str) -> dict:
+def add_amount_or_formula(
+    data: dict,
+    value: str,
+    decimal_separator: str,
+    amount_key: str = "amount",
+    formula_key: str = "formula",
+) -> dict:
     """Add amount or formula depending on `value` form"""
     if get_numbers_re(decimal_separator).match(value):
-        data["amount"] = asnumber(value, decimal_separator)
+        data[amount_key] = asnumber(value, decimal_separator)
     else:
-        data["formula"] = normalize_number_in_formula(value, decimal_separator)
+        data[formula_key] = normalize_number_in_formula(value, decimal_separator)
     return data
 
 

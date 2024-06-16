@@ -9,6 +9,7 @@ from bw_simapro_csv.utils import (
     jump_to_nonempty,
     normalize_number_in_formula,
     skip_empty,
+    add_amount_or_formula,
 )
 
 
@@ -140,3 +141,12 @@ def test_get_numbers_re():
     assert get_numbers_re(",").match(" \t1,11657894165076E-9\n")
 
     assert not get_numbers_re(",").match("e1234")
+
+
+def test_add_amount_or_formula():
+    assert add_amount_or_formula({}, "3.141", ".") == {'amount': 3.141}
+    assert add_amount_or_formula({}, "pi", ".") == {'formula': "pi"}
+    assert add_amount_or_formula({}, "1,1165E-9", ",") == {'amount': 1.1165e-9}
+    assert add_amount_or_formula({}, "3,14159 * pi", ",") == {'formula': "3.14159 * pi"}
+    assert add_amount_or_formula({}, "3,14159 * pi", ",", formula_key="foo") == {'foo': "3.14159 * pi"}
+    assert add_amount_or_formula({}, "3;141", ";", amount_key="foo") == {'foo': 3.141}
