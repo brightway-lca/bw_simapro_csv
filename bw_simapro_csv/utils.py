@@ -1,10 +1,19 @@
+import itertools
 import re
 from copy import copy
-from datetime import date
+from datetime import date, datetime
 from numbers import Number
 from typing import Iterable, List, Pattern
 
 from dateutil.parser import parse as dtparse
+
+
+def json_serializer(obj):
+    if isinstance(obj, (datetime, date)):
+        return obj.isoformat()
+    if isinstance(obj, itertools.chain):
+        return list(obj)
+    raise TypeError(f"Type {type(obj)} not serializable")
 
 
 def nobraces(s: str) -> str:

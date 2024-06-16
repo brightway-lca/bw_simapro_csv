@@ -1,13 +1,14 @@
 import csv
 import datetime
 import itertools
+import json
 import os
 import shutil
 import sys
 from functools import partial
 from io import StringIO
 from pathlib import Path
-from typing import Optional
+from typing import Optional, Union
 
 from bw2parameters import ParameterSet
 from loguru import logger
@@ -42,6 +43,7 @@ from .parameters import (
     substitute_in_formulas,
 )
 from .units import normalize_units
+from .utils import json_serializer
 
 
 def dummy(data, *args):
@@ -176,11 +178,19 @@ class SimaProCSV:
     def __iter__(self):
         return iter(self.blocks)
 
-    def to_brightway(self) -> dict:
+    def to_brightway(self, filepath: Optional[Path] = None) -> Union[dict, Path]:
         if self.header["kind"] == SimaProCSVType.processes:
             from .brightway import lci_to_brightway
 
-            return lci_to_brightway(self)
+            data = lci_to_brightway(self)
+            if filepath is not None:
+                with open(filepath, "w") as f:
+                    json.dump(
+                        data, f, indent=2, ensure_ascii=False, default=json_serializer
+                    )
+                return filepath
+            else:
+                return data
         else:
             raise TypeError("Only process exports are currently supported")
 
