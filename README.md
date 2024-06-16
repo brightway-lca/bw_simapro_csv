@@ -43,7 +43,7 @@ The file object must be an instance of `pathlib.Path` or `io.StringIO`. The `Sim
 * Read the header, and build `SimaProCSV.header`. The header is a dictionary of metadata. We do our best to convert the values to their python equivalents, such as datetimes or booleans.
 * Using the metadata, read the rest of the file, and convert it into a series of blocks. Each block has its own data schema, though they are mostly similar.
 * While reading the file, some common data mistakes are cleaned up. For example, impossible uncertainty distributions are switch to `UnkownUncertainty`. We also do our best to create valid and reasonable unicode text.
-* Many numeric values can be defined by formulae. In order to parse these formulae in python, we need to substitute some operators for their python equivalents (e.g. `**` instead of `^`). As python is case-sensitive, we switch all variable names to upper case, and add the prefix `SP_`, so `my_variable` would become `SP_MY_VARIABLE`. We then evaluate all formulas, and store their numeric results in the `amount` field.
+* Many numeric values can be defined by formulae. In order to parse these formulae in python, we need to substitute some operators for their python equivalents (e.g. `**` instead of `^`). As python is case-sensitive, we switch all variable names to upper case, and add the prefix `SP_`, so `my_variable` would become `SP_MY_VARIABLE`. We then evaluate all formulas (including for allocation), and store their numeric results in the `amount` field.
 
 The end result is `SimaProCSV.blocks`, a list of `SimaProCSVBlock` instances with parsed and cleaned data.
 
@@ -66,7 +66,20 @@ The intersection of ecoinvent waste models (negative values means things labelle
 
 ## Logging
 
-`bw_simapro_csv` uses the [loguru](https://github.com/Delgan/loguru) library for controlling logs. By default, logs are printed to `stderr`.
+`bw_simapro_csv` uses the [loguru](https://github.com/Delgan/loguru) library for controlling logs. By default, logs are printed to `stderr`, and two log files are created: `warning.log` for important errors or information messages, and `debug.log`, for a detailed log of operations and resolved data issues.
+
+Log are created in a directory path drawn from the [platformdirs](https://platformdirs.readthedocs.io/en/latest/) library; you can copy them to a more convenient place with `SimaProCSV.copy_log_dir(some_dir)`, where `some_dir` is a `pathlib.Path` directory instance.
+
+## Exporting to Brightway
+
+Process datasets can be exported to a format usable by `bw2io` with `SimaProCSV.to_brightway()`. This returns a Python dictionary, but you can also write this data to a file on disk by passing a `pathlib.Path` instance, i.e.:
+
+```python
+from pathlib import Path
+from bw_simapro_csv import SimaProCSV
+sp = SimaProCSV(Path("my SimaPro file.csv"))
+sp.to_brightway(Path("my-export.json"))
+```
 
 ## Blocks
 
