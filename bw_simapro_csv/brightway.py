@@ -1,9 +1,17 @@
 import datetime
+import itertools
 from typing import Union
 
 from loguru import logger
 
-from .blocks import LiteratureReference, Process
+from .blocks import (
+    DatabaseCalculatedParameters,
+    DatabaseInputParameters,
+    LiteratureReference,
+    Process,
+    ProjectCalculatedParameters,
+    ProjectInputParameters,
+)
 from .main import SimaProCSV
 
 OPTIONAL_TAG_MAPPING = [
@@ -44,7 +52,35 @@ def lci_to_brightway(spcsv: SimaProCSV, missing_string: str = "(unknown)") -> di
     """Turn an extracted SimaPro CSV extract into metadata that can be imported into Brightway.
 
     Doesn't do any normalization or other data changes, just reorganizes the existing data."""
-    data = {"database": [], "processes": []}
+    data = {
+        "database": {
+            "name": spcsv.database_name,
+            "simapro_filepath": spcsv.filepath,
+            "simapro_project": spcsv.header.get("project"),
+            "simapro_libraries": spcsv.header.get("libraries"),
+            "simapro_version": spcsv.header.get("simapro_version"),
+            "simapro_csv_version": spcsv.header.get("simapro_csv_version"),
+            "created": spcsv.header["created"].isoformat()[:19],
+        },
+        "processes": [],
+        # Note reversing of database and project terms here
+        # In SimaPro, the project is lower priority than the database
+        # but in Brightway it's the opposite.
+        "project_parameters": itertools.chain(
+            *[
+                block.parsed
+                for block in spcsv.blocks
+                if isinstance(block, (DatabaseCalculatedParameters, DatabaseInputParameters))
+            ]
+        ),
+        "database_parameters": itertools.chain(
+            *[
+                block.parsed
+                for block in spcsv.blocks
+                if isinstance(block, (ProjectCalculatedParameters, ProjectInputParameters))
+            ]
+        ),
+    }
 
     literature_mapping = {
         obj.parsed["Name"]: obj.parsed
