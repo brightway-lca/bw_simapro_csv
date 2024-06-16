@@ -7,6 +7,7 @@ import sys
 from functools import partial
 from io import StringIO
 from pathlib import Path
+from typing import Optional
 
 from bw2parameters import ParameterSet
 from loguru import logger
@@ -32,7 +33,7 @@ from .blocks import (
 )
 from .csv_reader import BeKindRewind
 from .errors import IndeterminateBlockEnd
-from .header import parse_header
+from .header import parse_header, SimaProCSVType
 from .parameters import (
     FormulaSubstitutor,
     add_prefix_to_uppercase_input_parameters,
@@ -90,6 +91,7 @@ class SimaProCSV:
         self,
         path_or_stream: Path | StringIO,
         encoding: str = "sloppy-windows-1252",
+        database_name: Optional[str] = None,
         stderr_logs: bool = True,
         write_logs: bool = True,
     ):
@@ -127,6 +129,15 @@ class SimaProCSV:
         # Converting Pydantic back to dict to release memory
         header, header_lines = parse_header(data)
         self.header = header.model_dump()
+
+        if header.kind in (SimaProCSVType.processes, SimaProCSVType.stages):
+            self.database_name = database_name or self.header["project"]
+            if not self.database_name:
+                raise ValueError(
+                    "Can't find database name in parameter `database_name` or SimaPro header"
+                )
+            logger.info("Using database name {n}", n=self.database_name)
+
         self.uses_end_text = False
         self.filepath = str(path_or_stream) if isinstance(path_or_stream, Path) else "<StringIO>"
 

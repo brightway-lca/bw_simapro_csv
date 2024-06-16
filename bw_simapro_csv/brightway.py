@@ -44,11 +44,7 @@ def lci_to_brightway(spcsv: SimaProCSV, missing_string: str = "(unknown)") -> di
     """Turn an extracted SimaPro CSV extract into metadata that can be imported into Brightway.
 
     Doesn't do any normalization or other data changes, just reorganizes the existing data."""
-    database_name = spcsv.header["project"]
-    data = {
-        'database': [],
-        'processes': []
-    }
+    data = {"database": [], "processes": []}
 
     literature_mapping = {
         obj.parsed["Name"]: obj.parsed
@@ -57,7 +53,8 @@ def lci_to_brightway(spcsv: SimaProCSV, missing_string: str = "(unknown)") -> di
 
     for process in filter(lambda b: isinstance(b, Process), spcsv):
         process_dataset = {
-            "database": database_name,
+            "database": spcsv.database_name,
+            "simapro_project": substitute_unspecified(spcsv.header["project"]) or missing_string,
             "code": process.parsed["metadata"]["Process identifier"],
             "exchanges": [],
             "type": "multifunctional" if len(process.blocks["Products"].parsed) > 1 else "process",
@@ -132,6 +129,6 @@ def lci_to_brightway(spcsv: SimaProCSV, missing_string: str = "(unknown)") -> di
                 for edge in process.blocks[label].parsed:
                     process_dataset["exchanges"].append(edge | {"type": "biosphere"})
 
-        data['processes'].append(process_dataset)
+        data["processes"].append(process_dataset)
 
     return data

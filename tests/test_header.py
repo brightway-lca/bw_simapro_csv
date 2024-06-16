@@ -4,6 +4,8 @@ from pathlib import Path
 from bw_simapro_csv import SimaProCSV
 from bw_simapro_csv.header import SimaProCSVType
 
+import pytest
+
 
 def test_log_file_patching(fixtures_dir: Path, temporary_logs_dir: Path):
     obj = SimaProCSV(fixtures_dir / "allocation.csv")
@@ -169,3 +171,10 @@ def test_basic_header_extraction(fixtures_dir):
         "decimal_separator": ".",
         "created": datetime(2021, 11, 18, 13, 49, 13),
     }
+
+
+def test_header_project_missing(fixtures_dir):
+    with pytest.raises(ValueError):
+        SimaProCSV(fixtures_dir / "missing-project.csv")
+
+    assert SimaProCSV(fixtures_dir / "missing-project.csv", database_name="foo")
