@@ -17,6 +17,7 @@ BOOLEAN_LABELS = {
     "Convert expressions to constants:": "convert_expressions",
     "Related objects (system descriptions, substances, units, etc.):": "related_objects",
     "Include sub product stages and processes:": "include_stages",
+    "Skip unused parameters:": "skip_unused_parameters",
 }
 STRING_LABELS = {
     "CSV Format version:": "csv_version",
