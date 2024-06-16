@@ -128,10 +128,8 @@ def alternating_key_value(data: List[list]) -> List[tuple]:
 
 def get_numbers_re(separator: str) -> Pattern:
     if separator == ".":
-        separator = ""
-    # This isn't perfect, e.g. it matches against `e` at end of string... but good enough.
-    # Hard to predict what we will get. Can't use `float()` because of separator character.
-    return re.compile(f"^\\s*[0-9]+[{separator}0-9eE_\\-\\.]+\\s*$")
+        separator = "\\."
+    return re.compile(f"^\\s*[-+]?[\\d]+{separator}?[\\d]*[Ee]*(?:[-+]?[\\d]+)?\\s*$")
 
 
 def add_amount_or_formula(
