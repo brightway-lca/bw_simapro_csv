@@ -65,7 +65,7 @@ Line number: {line_no}
         return undefined_distribution(amount)
     if kind == "Lognormal":
         if not amount or field1 <= 0:
-            logger.warning(f"Invalid lognormal distribution on line {line_no}: {amount}|{field1}")
+            logger.debug(f"Invalid lognormal distribution on line {line_no}: {amount}|{field1}")
             return undefined_distribution(amount)
         return {
             "uncertainty type": LognormalUncertainty.id,
@@ -76,7 +76,7 @@ Line number: {line_no}
         }
     if kind == "Normal":
         if field1 <= 0:
-            logger.warning(f"Invalid normal distribution (sigma <= 0) on line {line_no}: {field1}")
+            logger.debug(f"Invalid normal distribution (sigma <= 0) on line {line_no}: {field1}")
             return undefined_distribution(amount)
         return {
             "uncertainty type": NormalUncertainty.id,
@@ -87,7 +87,7 @@ Line number: {line_no}
         }
     if kind == "Triangle":
         if not field2 <= amount <= field3:
-            logger.warning(
+            logger.debug(
                 f"Invalid triangular distribution on line {line_no}: {amount}|{field2}|{field3}"
             )
             return undefined_distribution(amount)
@@ -101,7 +101,7 @@ Line number: {line_no}
         }
     if kind == "Uniform":
         if not field2 <= amount <= field3:
-            logger.warning(
+            logger.debug(
                 f"Invalid uniform distribution on line {line_no}: {amount}|{field2}|{field3}"
             )
             return undefined_distribution(amount)
