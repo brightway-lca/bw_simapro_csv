@@ -60,4 +60,4 @@ def normalize_units(blocks: list[SimaProCSVBlock]) -> list[SimaProCSVBlock]:
                 except KeyError:
                     if obj["unit"] not in missing_units:
                         missing_units.add(obj["unit"])
-                        logger.critical("Unknown unit {unit} on line {line_no}", **obj)
+                        logger.warning("Unknown unit {unit} used on line {line_no}", **obj)
