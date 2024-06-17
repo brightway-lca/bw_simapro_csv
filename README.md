@@ -21,11 +21,37 @@
 
 ## Installation
 
-You can install _bw_simapro_csv_ via [pip] from [PyPI] or conda/mamba from the channel `cmutel`:
+You can install _bw_simapro_csv_ via from [PyPI](https://pypi.org/project/bw-simapro-csv/):
 
 ```console
 $ pip install bw_simapro_csv
 ```
+
+Or using conda/mamba from the channel `cmutel`:
+
+```console
+$ mamba install -c conda-forge -c cmutel bw_simapro_csv
+```
+
+To install with the compatible Brightway libraries via `pip`:
+
+```console
+$ pip install "bw_simapro_csv[brightway]""
+```
+
+Or via conda/mamba:
+
+```console
+$ mamba install -c conda-forge -c cmutel bw_simapro_csv brightway25
+```
+
+On MacOS with ARM chips, run instead:
+
+```console
+$ mamba install -c conda-forge -c cmutel bw_simapro_csv brightway25_nosolver
+```
+
+See the Brightway docs for more on [ARM CPUs and sparse solvers](https://docs.brightway.dev/en/latest/content/installation/index.html#installing-brightway-using-pip).
 
 ## Usage
 
