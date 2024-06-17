@@ -40,14 +40,12 @@ def asboolean(s: str, allow_nonboolean: bool = False) -> bool:
     raise ValueError(f"Can't convert '{s}' to boolean")
 
 
-underscore = re.compile("(\\d)_(\\d)")
 comma = re.compile("(\\d),(\\d)")
 period = re.compile("(\\d)\\.(\\d)")
 RE_SPECIAL = ".*^$+?[]\\|"
 
 
 def normalize_number_in_formula(formula: str, decimal_separator: str = ".") -> str:
-    formula = underscore.sub("\\g<1>\\g<2>", formula)
     if decimal_separator == ",":
         formula = period.sub("\\g<1>\\g<2>", formula)
         formula = comma.sub("\\g<1>.\\g<2>", formula)
