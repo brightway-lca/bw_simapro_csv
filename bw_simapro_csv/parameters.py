@@ -193,7 +193,11 @@ def substitute_in_formulas(obj: dict, visitor: Type, formula_field: str = "formu
     """
     if formula_field in obj:
         obj[f"original_{formula_field}"] = obj[formula_field]
-        obj[formula_field] = visitor(obj[formula_field])
+        try:
+            obj[formula_field] = visitor(obj[formula_field])
+        except SyntaxError as exc:
+            logger.critical("Syntax error in field {ff} in object {o}", ff=formula_field, o=obj)
+            raise SyntaxError from exc
 
         if obj[f"original_{formula_field}"] == obj[formula_field]:
             del obj[f"original_{formula_field}"]

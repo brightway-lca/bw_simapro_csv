@@ -1,4 +1,5 @@
-from bw2parameters import Interpreter, ParameterSet
+from bw2parameters import Interpreter, MissingName, ParameterSet
+from loguru import logger
 
 from ..constants import CONTEXT_MAPPING, MAGIC
 from ..errors import WasteModelMismatch
@@ -152,10 +153,19 @@ class Process(SimaProCSVBlock):
             for obj in block.parsed:
                 if "formula" in obj:
                     substitute_in_formulas(obj, visitor)
-                    obj["amount"] = interpreter(obj["formula"])
+                    try:
+                        obj["amount"] = interpreter(obj["formula"])
+                    except MissingName as exc:
+                        logger.critical("Invalid reference in formula field in {o}", o=obj)
+                        raise MissingName from exc
+
                 if "allocation_formula" in obj:
                     substitute_in_formulas(obj, visitor, formula_field="allocation_formula")
-                    obj["allocation"] = interpreter(obj["allocation_formula"])
+                    try:
+                        obj["allocation"] = interpreter(obj["allocation_formula"])
+                    except MissingName as exc:
+                        logger.critical("Invalid reference in allocation formula in {o}", o=obj)
+                        raise MissingName from exc
                 if "field1" in obj:
                     # We can only now construct and validate an uncertainty distribution,
                     # because we finally have an `amount` field.

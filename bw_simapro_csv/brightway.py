@@ -89,7 +89,9 @@ def lci_to_brightway(spcsv: SimaProCSV, missing_string: str = "(unknown)") -> di
     }
 
     for process in filter(lambda b: isinstance(b, Process), spcsv):
-        multifunctional = (len(process.blocks.get("Products", [])) + len(process.blocks.get("Waste treatment", []))) > 1
+        multifunctional = (
+            len(process.blocks.get("Products", [])) + len(process.blocks.get("Waste treatment", []))
+        ) > 1
 
         process_dataset = {
             "database": spcsv.database_name,
