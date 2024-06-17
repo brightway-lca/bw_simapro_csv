@@ -7,6 +7,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.1.3] - 2022-06-17
+
+* Fix parsing of variables with `number underscore number` pattern
+* Drop log level of invalid uncertainty distributions
+* Provide more context when raising syntax or formula errors
+
 ## [0.1.2] - 2022-06-17
 
 Correct Brightway export of product edges and waste treatment functional inputs
