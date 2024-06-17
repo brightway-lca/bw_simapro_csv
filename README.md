@@ -90,6 +90,8 @@ The intersection of ecoinvent waste models (negative values means things labelle
 * `Waste treatment` are *inputs*, and indicate that the given process is a waste treatment process, i.e. it does not have a `Products` block, and has the `category_type` `waste treatment`.
 * `Waste to treatment` are *outputs*, and indicate that waste is being produced which needs to be treated. Negative amounts in `Waste to treatment` indicate that these wastes are *inputs*, and that this process is a waste treatment process.
 
+We label edges in both `Products` and `Waste treatment` as functional when exporting to Brightway.
+
 ## Logging
 
 `bw_simapro_csv` uses the [loguru](https://github.com/Delgan/loguru) library for controlling logs. By default, logs are printed to `stderr`, and two log files are created: `warning.log` for important errors or information messages, and `debug.log`, for a detailed log of operations and resolved data issues.

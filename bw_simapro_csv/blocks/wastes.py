@@ -11,7 +11,6 @@ class WasteTreatment(SimaProCSVBlock):
         ```
         Waste treatment
         Aluminium scrap, post-consumer {GLO};kg;-1;All waste types;Metals\\Market;comment here
-
         ```
 
         Each data line has the form:

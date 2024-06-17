@@ -1,5 +1,6 @@
 import datetime
 import itertools
+from copy import deepcopy
 from typing import Union
 
 from loguru import logger
@@ -88,12 +89,14 @@ def lci_to_brightway(spcsv: SimaProCSV, missing_string: str = "(unknown)") -> di
     }
 
     for process in filter(lambda b: isinstance(b, Process), spcsv):
+        multifunctional = (len(process.blocks.get("Products", [])) + len(process.blocks.get("Waste treatment", []))) > 1
+
         process_dataset = {
             "database": spcsv.database_name,
             "simapro_project": substitute_unspecified(spcsv.header["project"]) or missing_string,
             "code": process.parsed["metadata"]["Process identifier"],
             "exchanges": [],
-            "type": "multifunctional" if len(process.blocks["Products"].parsed) > 1 else "process",
+            "type": "multifunctional" if multifunctional else "process",
             "name": substitute_unspecified(process.parsed["metadata"].get("Process name"))
             or missing_string,
             "comment": substitute_unspecified(process.parsed["metadata"].get("Comment"))
@@ -164,6 +167,27 @@ def lci_to_brightway(spcsv: SimaProCSV, missing_string: str = "(unknown)") -> di
             if label in process.blocks:
                 for edge in process.blocks[label].parsed:
                     process_dataset["exchanges"].append(edge | {"type": "biosphere"})
+        if "Products" in process.blocks:
+            for edge in process.blocks["Products"].parsed:
+                process_dataset["exchanges"].append(
+                    edge | {"type": "production", "functional": True}
+                )
+        elif "Waste treatment" in process.blocks:
+            for edge in process.blocks["Waste treatment"].parsed:
+                process_dataset["exchanges"].append(
+                    edge | {"type": "technosphere", "functional": True}
+                )
+                if not any(e for e in process_dataset["exchanges"] if e["type"] == "production"):
+                    dummy = deepcopy(edge)
+                    dummy.update(
+                        {
+                            "amount": 0,
+                            "type": "production",
+                            "functional": False,
+                            "comment": "Dummy edge inserted to stop auto-generation of unitary production edge",
+                        }
+                    )
+                    process_dataset["exchanges"].append(dummy)
 
         data["processes"].append(process_dataset)
 

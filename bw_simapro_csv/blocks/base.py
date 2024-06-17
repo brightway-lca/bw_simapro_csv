@@ -14,6 +14,9 @@ class SimaProCSVBlock:
             return self.parsed == other.parsed
         return False
 
+    def __len__(self) -> int:
+        return len(self.parsed)
+
 
 class EmptyBlock(SimaProCSVBlock):
     """An empty block without content."""

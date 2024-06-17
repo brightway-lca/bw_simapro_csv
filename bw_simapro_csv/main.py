@@ -185,9 +185,7 @@ class SimaProCSV:
             data = lci_to_brightway(self)
             if filepath is not None:
                 with open(filepath, "w") as f:
-                    json.dump(
-                        data, f, indent=2, ensure_ascii=False, default=json_serializer
-                    )
+                    json.dump(data, f, indent=2, ensure_ascii=False, default=json_serializer)
                 return filepath
             else:
                 return data
