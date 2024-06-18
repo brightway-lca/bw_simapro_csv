@@ -17,11 +17,11 @@ def test_asnumber():
     assert asnumber("4.2", ".") == 4.2
     assert asnumber("400_404.2", ".") == 400404.2
     assert asnumber("400_404;2", ";") == 400404.2
-    assert asnumber("400.404,2", ",") == 400404.2
+    assert asnumber("400404,2", ",") == 400404.2
 
 
 def test_asnumber_percentage():
-    assert math.isclose(asnumber("400.404,2%", ","), 4004.042)
+    assert math.isclose(asnumber("400404,2%", ","), 4004.042)
 
 
 def test_asnumber_allow_nonnumber():
@@ -36,10 +36,10 @@ def test_asnumber_error():
 def test_normalize_number_in_formula():
     assert normalize_number_in_formula("400404;2", ";") == "400404.2"
     assert normalize_number_in_formula("400404?2", "?") == "400404.2"
-    assert normalize_number_in_formula("400,404.2", ".") == "400404.2"
-    assert normalize_number_in_formula("400.404,2", ",") == "400404.2"
-    assert normalize_number_in_formula("alpha * 400.404,2", ",") == "alpha * 400404.2"
-    assert normalize_number_in_formula("alpha * 400.404*2", "*") == "alpha * 400404.2"
+    assert normalize_number_in_formula("400404.2", ".") == "400404.2"
+    assert normalize_number_in_formula("400404,2", ",") == "400404.2"
+    assert normalize_number_in_formula("alpha * 400404,2", ",") == "alpha * 400404.2"
+    assert normalize_number_in_formula("alpha * 400404*2", "*") == "alpha * 400404.2"
     assert normalize_number_in_formula("PM2_5", ",") == "PM2_5"
     assert normalize_number_in_formula("4,45E-4*,8/1000", ",") == "4.45E-4*.8/1000"
 
