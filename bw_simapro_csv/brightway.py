@@ -41,6 +41,12 @@ BIOSPHERE_EDGES = (
     "Resources",
     "Social issues",
 )
+OPTIONAL_PROCESS_FIELDS = [
+    ("Comment", "comment"),
+    ("Generator", "data_generator"),
+    ("Record", "data_entry"),
+    ("External documents", "data_links"),
+]
 
 
 def substitute_unspecified(s: Union[str, None]) -> Union[str, None]:
@@ -67,20 +73,18 @@ def lci_to_brightway(spcsv: SimaProCSV, missing_string: str = "(unknown)") -> di
         # Note reversing of database and project terms here
         # In SimaPro, the project is lower priority than the database
         # but in Brightway it's the opposite.
-        "project_parameters": itertools.chain(
-            *[
-                block.parsed
-                for block in spcsv.blocks
-                if isinstance(block, (DatabaseCalculatedParameters, DatabaseInputParameters))
-            ]
-        ),
-        "database_parameters": itertools.chain(
-            *[
-                block.parsed
-                for block in spcsv.blocks
-                if isinstance(block, (ProjectCalculatedParameters, ProjectInputParameters))
-            ]
-        ),
+        "project_parameters": [
+            param
+            for block in spcsv.blocks
+            for param in block.parsed
+            if isinstance(block, (DatabaseCalculatedParameters, DatabaseInputParameters))
+        ],
+        "database_parameters": [
+            param
+            for block in spcsv.blocks
+            for param in block.parsed
+            if isinstance(block, (ProjectCalculatedParameters, ProjectInputParameters))
+        ]
     }
 
     literature_mapping = {
@@ -101,21 +105,15 @@ def lci_to_brightway(spcsv: SimaProCSV, missing_string: str = "(unknown)") -> di
             "type": "multifunctional" if multifunctional else "process",
             "name": substitute_unspecified(process.parsed["metadata"].get("Process name"))
             or missing_string,
-            "comment": substitute_unspecified(process.parsed["metadata"].get("Comment"))
-            or missing_string,
-            "location": substitute_unspecified(process.parsed["metadata"].get("Geography"))
-            or missing_string,
-            "data_generator": substitute_unspecified(process.parsed["metadata"].get("Generator"))
-            or missing_string,
-            "data_entry": substitute_unspecified(process.parsed["metadata"].get("Record"))
-            or missing_string,
-            "data_links": substitute_unspecified(
-                process.parsed["metadata"].get("External documents")
-            )
-            or missing_string,
+            "location": substitute_unspecified(process.parsed["metadata"].get("Geography")),
             "publication_date": process.parsed["metadata"].get("Date") or datetime.date.today(),
             "tags": {},
         }
+
+        for sp_label, bw_label in OPTIONAL_PROCESS_FIELDS:
+            if val := substitute_unspecified(process.parsed["metadata"].get(sp_label)):
+                process_dataset[bw_label] = val
+
         if process.parsed["metadata"].get("Literature references"):
             process_dataset["references"] = []
             for reference in process.parsed["metadata"]["Literature references"]:

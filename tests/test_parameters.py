@@ -1,5 +1,5 @@
-from bw_simapro_csv.utils import normalize_number_in_formula
 from bw_simapro_csv.parameters import compile_iff_re, fix_iff_formula
+from bw_simapro_csv.utils import normalize_number_in_formula
 
 
 def test_iff_formula_with_equals_sign():
