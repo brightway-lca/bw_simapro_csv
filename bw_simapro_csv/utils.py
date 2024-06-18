@@ -40,23 +40,23 @@ def asboolean(s: str, allow_nonboolean: bool = False) -> bool:
     raise ValueError(f"Can't convert '{s}' to boolean")
 
 
-comma = re.compile("(\\d),(\\d)")
-period = re.compile("(\\d)\\.(\\d)")
+comma = re.compile(",(\\d)")
+period = re.compile("\\.(\\d)")
 RE_SPECIAL = ".*^$+?[]\\|"
 
 
 def normalize_number_in_formula(formula: str, decimal_separator: str = ".") -> str:
     if decimal_separator == ",":
-        formula = period.sub("\\g<1>\\g<2>", formula)
-        formula = comma.sub("\\g<1>.\\g<2>", formula)
+        formula = period.sub("\\g<1>", formula)
+        formula = comma.sub(".\\g<1>", formula)
     elif decimal_separator == ".":
-        formula = comma.sub("\\g<1>\\g<2>", formula)
+        formula = comma.sub("\\g<1>", formula)
     else:
         if decimal_separator in RE_SPECIAL:
             decimal_separator = f"\\{decimal_separator}"
-        formula = period.sub("\\g<1>\\g<2>", formula)
-        formula = comma.sub("\\g<1>\\g<2>", formula)
-        formula = re.sub(f"(\\d){decimal_separator}(\\d)", "\\g<1>.\\g<2>", formula)
+        formula = period.sub("\\g<1>", formula)
+        formula = comma.sub("\\g<1>", formula)
+        formula = re.sub(f"{decimal_separator}(\\d)", ".\\g<1>", formula)
     return formula
 
 

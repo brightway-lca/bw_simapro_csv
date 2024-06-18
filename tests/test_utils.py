@@ -41,6 +41,7 @@ def test_normalize_number_in_formula():
     assert normalize_number_in_formula("alpha * 400.404,2", ",") == "alpha * 400404.2"
     assert normalize_number_in_formula("alpha * 400.404*2", "*") == "alpha * 400404.2"
     assert normalize_number_in_formula("PM2_5", ",") == "PM2_5"
+    assert normalize_number_in_formula("4,45E-4*,8/1000", ",") == "4.45E-4*.8/1000"
 
 
 def test_skip_empty():
