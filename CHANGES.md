@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.1.6] - 2022-06-19
+
+* Change default values for missing attributes during Brightway export
+
 ## [0.1.5] - 2022-06-18
 
 * Don't replace commas when decimal separator is a `.`, and vice-versa
