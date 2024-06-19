@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.1.7] - 2022-06-19
+
+* Add checks for issues related to unit conversions
+
 ## [0.1.6] - 2022-06-19
 
 * Change default values for missing attributes during Brightway export
