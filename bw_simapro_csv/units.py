@@ -1,3 +1,5 @@
+from collections import defaultdict
+
 from loguru import logger
 
 from .blocks import (
@@ -31,6 +33,31 @@ def normalize_units(blocks: list[SimaProCSVBlock]) -> None:
     * uncertainty distribution
 
     """
+    unit_conversion_check = defaultdict(list)
+    for block in filter(lambda x: isinstance(x, Units), blocks):
+        for o in block.parsed:
+            unit_conversion_check[o["name"]].append(o)
+
+    for key, values in unit_conversion_check.items():
+        if len(values) > 1 and len({v["conversion"] for v in values}) > 1:
+            logger.critical(
+                """
+    Multiple different unit conversions given for input unit "{a}".
+    After removing illegal characters and fixing potential encoding issues,
+    unit "{a}" has multiple possible conversion factors. This will lead to
+    incorrect results and undefined behaviour. To fix this, please remove
+    all unwanted unit conversions lines. We found the follow possible conversions:
+    Source unit; target unit; conversion; line number:{b}""",
+                a=key,
+                b="\n\t"
+                + "\n\t".join(
+                    [
+                        str((v["name"], v["reference unit name"], v["conversion"], v["line_no"]))
+                        for v in values
+                    ]
+                ),
+            )
+
     unit_mapping = {
         o["name"]: o
         for block in filter(lambda x: isinstance(x, Units), blocks)
