@@ -84,7 +84,7 @@ def lci_to_brightway(spcsv: SimaProCSV, missing_string: str = "(unknown)") -> di
             for block in spcsv.blocks
             for param in block.parsed
             if isinstance(block, (ProjectCalculatedParameters, ProjectInputParameters))
-        ]
+        ],
     }
 
     literature_mapping = {

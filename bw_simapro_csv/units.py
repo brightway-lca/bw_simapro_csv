@@ -1,3 +1,5 @@
+from loguru import logger
+
 from .blocks import (
     GenericUncertainBiosphere,
     Process,
@@ -7,6 +9,7 @@ from .blocks import (
     Units,
     WasteTreatment,
 )
+from .uncertainty import recalculate_uncertainty_distribution
 
 HAS_UNITS = (
     GenericUncertainBiosphere,
@@ -15,14 +18,11 @@ HAS_UNITS = (
     WasteTreatment,
 )
 
-from loguru import logger
-
-from .uncertainty import recalculate_uncertainty_distribution
-
 missing_units = set()
+unit_conversions = set()
 
 
-def normalize_units(blocks: list[SimaProCSVBlock]) -> list[SimaProCSVBlock]:
+def normalize_units(blocks: list[SimaProCSVBlock]) -> None:
     """Convert all values to the base unit.
 
     Need to change:
@@ -37,19 +37,41 @@ def normalize_units(blocks: list[SimaProCSVBlock]) -> list[SimaProCSVBlock]:
         for o in block.parsed
     }
 
+    for mapping in unit_mapping.values():
+        if mapping["name"] == mapping["reference unit name"] and mapping["conversion"] != 1:
+            logger.critical(
+                """
+    Possible unit error which requires a manual check.
+    After removing illegal characters and fixing potential encoding issues,
+    unit "{a}" is identical to reference unit "{b}",
+    but the conversion factor is given as {c}.
+    Please look at line {d} to see the original label of this unit.
+    It would be best to rename or delete this unit if possible.""",
+                a=mapping["name"],
+                b=mapping["reference unit name"],
+                c=mapping["conversion"],
+                d=mapping["line_no"],
+            )
+
     for process_block in filter(lambda x: isinstance(x, Process), blocks):
         for block in filter(lambda x: isinstance(x, HAS_UNITS), process_block.blocks.values()):
             for obj in block.parsed:
                 try:
                     mapping = unit_mapping[obj["unit"]]
                     if mapping["reference unit name"] != obj["unit"]:
-                        logger.debug(
-                            "Changing units from {a} to {b} with conversion factor {c} on line {d}",
-                            a=obj["unit"],
-                            b=mapping["reference unit name"],
-                            c=mapping["conversion"],
-                            d=obj["line_no"],
-                        )
+                        if (
+                            key := (obj["unit"], mapping["reference unit name"])
+                        ) not in unit_conversions:
+                            unit_conversions.add(key)
+                            logger.debug(
+                                "Changing units from {a} to {b} with conversion factor {c} on line {d}",
+                                a=obj["unit"],
+                                b=mapping["reference unit name"],
+                                c=mapping["conversion"],
+                                d=obj["line_no"],
+                            )
+                        obj["original unit before conversion"] = obj["unit"]
+                        obj["unit conversion factor"] = mapping["conversion"]
                         obj["unit"] = mapping["reference unit name"]
                         if "formula" in obj:
                             obj["formula"] = f"({obj['formula']}) * {mapping['conversion']}"
