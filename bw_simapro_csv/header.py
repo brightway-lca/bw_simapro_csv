@@ -111,6 +111,15 @@ def parse_header(data: List[str]) -> (SimaProCSVHeader, int):
         else:
             logger.warning(f"Can't understand header line (skipping):\n\t{line}")
 
+    if "kind" not in parsed:
+        logger.warning(
+            """
+    Export is missing type (processes, methods, or product stages).
+    Using default value of 'processes'
+        """
+        )
+        parsed["kind"] = "processes"
+
     dayfirst = not (
         date
         and time

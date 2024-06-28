@@ -178,3 +178,27 @@ def test_header_project_missing(fixtures_dir):
         SimaProCSV(fixtures_dir / "missing-project.csv")
 
     assert SimaProCSV(fixtures_dir / "missing-project.csv", database_name="foo")
+
+
+def test_minimal_header_extraction(fixtures_dir):
+    obj = SimaProCSV(fixtures_dir / "minimal_header.csv")
+    assert obj.header == {
+        "simapro_version": "9.5.0.2",
+        "kind": SimaProCSVType.processes,
+        "delimiter": ";",
+        "project": "foo_bar",
+        "csv_version": "9.0.0",
+        "libraries": [],
+        "dayfirst": False,
+        "date_separator": "/",
+        "open_project": None,
+        "open_library": None,
+        "export_platform_ids": None,
+        "skip_empty_fields": None,
+        "convert_expressions": None,
+        "selection": None,
+        "related_objects": None,
+        "include_stages": None,
+        "decimal_separator": ".",
+        "created": datetime(2024, 2, 20, 14, 42, 45),
+    }
