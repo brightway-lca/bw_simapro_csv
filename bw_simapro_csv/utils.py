@@ -173,7 +173,7 @@ def get_key_multiline_values(block: list[tuple], stop_terms: Iterable) -> tuple[
     an empty line"""
     while block:
         block = jump_to_nonempty(block)
-        if not block:
+        if not any(data for _, data in block):
             return
         _, key = block.pop(0)
         if len(key) != 1:
