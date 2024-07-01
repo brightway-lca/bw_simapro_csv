@@ -43,7 +43,7 @@ from .parameters import (
     substitute_in_formulas,
 )
 from .units import normalize_units
-from .utils import json_serializer
+from .utils import json_serializer, parameter_set_evaluate_each_formula
 
 
 def dummy(data, *args):
@@ -287,7 +287,7 @@ class SimaProCSV:
         }
 
         ps = ParameterSet({o["name"]: o for o in itertools.chain(*dcp)}, global_params)
-        ps.evaluate_and_set_amount_field()
+        parameter_set_evaluate_each_formula(ps)
 
         substitutes = substitutes | {
             o["original_name"].upper(): o["name"] for o in itertools.chain(*dcp)
@@ -299,7 +299,7 @@ class SimaProCSV:
             substitute_in_formulas(obj, visitor)
 
         ps = ParameterSet({o["name"]: o for o in itertools.chain(*pcp)}, global_params)
-        ps.evaluate_and_set_amount_field()
+        parameter_set_evaluate_each_formula(ps)
 
         substitutes = substitutes | {
             o["original_name"].upper(): o["name"] for o in itertools.chain(*pcp)
