@@ -7,6 +7,16 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.1.8] - 2022-06-19
+
+* Allow header without type specification
+* Fix `yield` being used in dataset formulas
+* Catch Python reserved words in database, project, and dataset formulas
+* Add `copy_logs` parameter to `SimaProCSV`
+* Catch and log zero division errors
+* Correct inheritance tree for calculated parameters
+* Correct parsing error with multiple blank lines before end statement
+
 ## [0.1.7] - 2022-06-19
 
 * Add checks for issues related to unit conversions
