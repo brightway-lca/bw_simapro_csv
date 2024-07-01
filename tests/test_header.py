@@ -4,7 +4,7 @@ from pathlib import Path
 import pytest
 
 from bw_simapro_csv import SimaProCSV
-from bw_simapro_csv.header import SimaProCSVType
+from bw_simapro_csv.header import SimaProCSVType, parse_header
 
 
 def test_log_file_patching(fixtures_dir: Path, temporary_logs_dir: Path):
@@ -202,3 +202,27 @@ def test_minimal_header_extraction(fixtures_dir):
         "decimal_separator": ".",
         "created": datetime(2024, 2, 20, 14, 42, 45),
     }
+
+
+def test_header_without_date():
+    given = [
+        "{SimaPro 1.2.3.4}",
+        "{product stages}",
+        "{CSV separator: &}",
+        "{Short date format: yyyy-MM-dd}",
+        "{CSV Format version: 1.2}",
+    ]
+    result = parse_header(given)[0].model_dump()
+    expected = {
+        "csv_version": "1.2",
+        "date_separator": "/",
+        "dayfirst": True,
+        "decimal_separator": ".",
+        "delimiter": "&",
+        "kind": "product stages",
+        "libraries": [],
+        "simapro_version": "1.2.3.4",
+    }
+    for k, v in expected.items():
+        assert result[k] == expected[k]
+    assert result["created"].year >= 2024

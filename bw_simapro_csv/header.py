@@ -83,6 +83,8 @@ def parse_header(data: List[str]) -> (SimaProCSVHeader, int):
     """
     parsed = {"libraries": []}
 
+    date = time = dtformat = ""
+
     for index, line in enumerate(data):
         if not (line.startswith('"{') or line.startswith("{")):
             break
