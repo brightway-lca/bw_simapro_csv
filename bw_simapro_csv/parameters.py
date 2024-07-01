@@ -143,6 +143,15 @@ def prepare_formulas(block: list[dict], header: dict, formula_field: str = "form
                 if f"original_{formula_field}" not in obj:
                     obj[f"original_{formula_field}"] = obj[formula_field]
                 obj[formula_field] = new_formula
+            if "yield" in obj[formula_field]:
+                new_formula = obj[formula_field].replace("yield", "YIELD")
+                logger.debug(
+                    f"""Replacing `yield` statement with `YIELD` in formula on line {obj['line_no']}:
+        {obj[formula_field]} >>> {new_formula}"""
+                )
+                if f"original_{formula_field}" not in obj:
+                    obj[f"original_{formula_field}"] = obj[formula_field]
+                obj[formula_field] = new_formula
 
     return block
 
