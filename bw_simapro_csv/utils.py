@@ -9,6 +9,8 @@ from bw2parameters import ParameterSet
 from dateutil.parser import parse as dtparse
 from loguru import logger
 
+from .errors import FormulaReservedWord
+
 
 def json_serializer(obj):
     if isinstance(obj, (datetime, date)):
@@ -202,14 +204,13 @@ def parameter_set_evaluate_each_formula(ps: ParameterSet) -> dict[str, float]:
 
     Copied from https://github.com/brightway-lca/brightway2-parameters/blob/main/bw2parameters/parameter_set.py.
     """
-    interpreter = ps.interpreter
     result = {}
     for key in ps.order:
         if key in ps.global_params:
             value = ps.global_params[key]
         elif ps.params[key].get("formula"):
             try:
-                value = interpreter(ps.params[key]["formula"])
+                value = ps.interpreter(ps.params[key]["formula"])
             except ZeroDivisionError:
                 logger.critical(
                     f"""
@@ -218,6 +219,14 @@ def parameter_set_evaluate_each_formula(ps: ParameterSet) -> dict[str, float]:
                 """
                 )
                 value = 0
+            except NotImplementedError as exc:
+                raise FormulaReservedWord(
+                    f"""
+    Given formula {ps.params[key]['formula']} uses a Python reserved token.
+    Please report this at https://github.com/brightway-lca/bw_simapro_csv/issues
+    We can add it to the cleaning step.
+                """
+                ) from exc
         elif "amount" in ps.params[key]:
             value = ps.params[key]["amount"]
         else:

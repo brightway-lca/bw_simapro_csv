@@ -2,7 +2,7 @@ from bw2parameters import Interpreter, MissingName, ParameterSet
 from loguru import logger
 
 from ..constants import CONTEXT_MAPPING, MAGIC
-from ..errors import WasteModelMismatch
+from ..errors import FormulaReservedWord, WasteModelMismatch
 from ..parameters import (
     FormulaSubstitutor,
     add_prefix_to_uppercase_input_parameters,
@@ -155,6 +155,14 @@ class Process(SimaProCSVBlock):
                     substitute_in_formulas(obj, visitor)
                     try:
                         obj["amount"] = interpreter(obj["formula"])
+                    except NotImplementedError as exc:
+                        raise FormulaReservedWord(
+                            f"""
+                Given formula {obj['formula']} uses a Python reserved token.
+                Please report this at https://github.com/brightway-lca/bw_simapro_csv/issues
+                We can add it to the cleaning step.
+                            """
+                        ) from exc
                     except MissingName as exc:
                         logger.critical("Invalid reference in formula field in {o}", o=obj)
                         raise MissingName from exc
