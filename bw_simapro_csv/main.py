@@ -96,6 +96,7 @@ class SimaProCSV:
         database_name: Optional[str] = None,
         stderr_logs: bool = True,
         write_logs: bool = True,
+        copy_logs: bool = False,
     ):
         """Read a SimaPro CSV file object, and parse the contents.
 
@@ -174,6 +175,9 @@ class SimaProCSV:
             self.resolve_parameters()
 
         normalize_units(self.blocks)
+
+        if copy_logs:
+            self.copy_log_dir(Path.cwd())
 
     def __iter__(self):
         return iter(self.blocks)
