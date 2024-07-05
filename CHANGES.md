@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.1.8] - 2022-06-28
+
+* Allow minimal heading spec without file type (processes, methods, or product stages). Default is processes.
+
 ## [0.1.7] - 2022-06-19
 
 * Add checks for issues related to unit conversions
