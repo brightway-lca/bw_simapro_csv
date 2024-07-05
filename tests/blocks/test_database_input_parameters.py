@@ -17,7 +17,7 @@ def test_db_input_params(fixtures_dir):
             "amount": 1.0,
             "loc": 0.0,
             "scale": 0.0,
-            "line_no": 273,
+            "line_no": 274,
             "negative": False,
             "hidden": False,
             "original_name": "db_input_param",

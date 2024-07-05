@@ -43,7 +43,7 @@ from .parameters import (
     substitute_in_formulas,
 )
 from .units import normalize_units
-from .utils import json_serializer
+from .utils import json_serializer, parameter_set_evaluate_each_formula
 
 
 def dummy(data, *args):
@@ -96,6 +96,7 @@ class SimaProCSV:
         database_name: Optional[str] = None,
         stderr_logs: bool = True,
         write_logs: bool = True,
+        copy_logs: bool = False,
     ):
         """Read a SimaPro CSV file object, and parse the contents.
 
@@ -174,6 +175,9 @@ class SimaProCSV:
             self.resolve_parameters()
 
         normalize_units(self.blocks)
+
+        if copy_logs:
+            self.copy_log_dir(Path.cwd())
 
     def __iter__(self):
         return iter(self.blocks)
@@ -287,7 +291,7 @@ class SimaProCSV:
         }
 
         ps = ParameterSet({o["name"]: o for o in itertools.chain(*dcp)}, global_params)
-        ps.evaluate_and_set_amount_field()
+        parameter_set_evaluate_each_formula(ps)
 
         substitutes = substitutes | {
             o["original_name"].upper(): o["name"] for o in itertools.chain(*dcp)
@@ -299,7 +303,7 @@ class SimaProCSV:
             substitute_in_formulas(obj, visitor)
 
         ps = ParameterSet({o["name"]: o for o in itertools.chain(*pcp)}, global_params)
-        ps.evaluate_and_set_amount_field()
+        parameter_set_evaluate_each_formula(ps)
 
         substitutes = substitutes | {
             o["original_name"].upper(): o["name"] for o in itertools.chain(*pcp)

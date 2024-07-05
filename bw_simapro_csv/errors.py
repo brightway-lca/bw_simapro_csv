@@ -6,3 +6,7 @@ class WasteModelMismatch(Exception):
 
 class IndeterminateBlockEnd(Exception):
     pass
+
+
+class FormulaReservedWord(Exception):
+    pass

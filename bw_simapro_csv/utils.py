@@ -5,7 +5,11 @@ from datetime import date, datetime
 from numbers import Number
 from typing import Iterable, List, Pattern
 
+from bw2parameters import ParameterSet
 from dateutil.parser import parse as dtparse
+from loguru import logger
+
+from .errors import FormulaReservedWord
 
 
 def json_serializer(obj):
@@ -173,7 +177,7 @@ def get_key_multiline_values(block: list[tuple], stop_terms: Iterable) -> tuple[
     an empty line"""
     while block:
         block = jump_to_nonempty(block)
-        if not block:
+        if not any(data for _, data in block):
             return
         _, key = block.pop(0)
         if len(key) != 1:
@@ -192,3 +196,44 @@ def get_key_multiline_values(block: list[tuple], stop_terms: Iterable) -> tuple[
             data.append((line_no, line))
         if data:
             yield key, data
+
+
+def parameter_set_evaluate_each_formula(ps: ParameterSet) -> dict[str, float]:
+    """
+    Do manual evaluation to catch math errors and give individual context.
+
+    Copied from https://github.com/brightway-lca/brightway2-parameters/blob/main/bw2parameters/parameter_set.py.
+    """
+    result = {}
+    for key in ps.order:
+        if key in ps.global_params:
+            value = ps.global_params[key]
+        elif ps.params[key].get("formula"):
+            try:
+                value = ps.interpreter(ps.params[key]["formula"])
+            except ZeroDivisionError:
+                logger.critical(
+                    f"""
+    Division by zero in formula {ps.params[key]['formula']} on line {ps.params[key]['line_no']}.
+    Returning zero.
+                """
+                )
+                value = 0
+            except NotImplementedError as exc:
+                raise FormulaReservedWord(
+                    f"""
+    Given formula {ps.params[key]['formula']} uses a Python reserved token.
+    Please report this at https://github.com/brightway-lca/bw_simapro_csv/issues
+    We can add it to the cleaning step.
+                """
+                ) from exc
+        elif "amount" in ps.params[key]:
+            value = ps.params[key]["amount"]
+        else:
+            raise ValueError("No suitable formula or static amount found " "in {}".format(key))
+        result[key] = value
+        ps.interpreter.add_symbols({key: value})
+
+    for key, value in ps.params.items():
+        value["amount"] = result[key]
+    return result

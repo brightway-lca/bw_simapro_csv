@@ -4,9 +4,9 @@ from ..utils import normalize_number_in_formula, skip_empty
 from .base import SimaProCSVBlock
 
 
-class DatabaseCalculatedParameters(SimaProCSVBlock):
+class CalculatedParameters(SimaProCSVBlock):
     def __init__(self, block: List[tuple], header: dict, **kwargs):
-        """Parse an `Database Calculated parameters` block.
+        """Parse an `{} Calculated parameters` block.
 
         Has the form:
 
@@ -39,11 +39,13 @@ class DatabaseCalculatedParameters(SimaProCSVBlock):
             )
 
 
-class ProjectCalculatedParameters(DatabaseCalculatedParameters):
-    """Same as format and layout as `DatabaseCalculatedParameters`"""
-
+class DatabaseCalculatedParameters(CalculatedParameters):
     pass
 
 
-class DatasetCalculatedParameters(DatabaseCalculatedParameters):
+class ProjectCalculatedParameters(CalculatedParameters):
+    pass
+
+
+class DatasetCalculatedParameters(CalculatedParameters):
     pass
