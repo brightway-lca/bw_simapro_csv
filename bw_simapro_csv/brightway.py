@@ -55,6 +55,15 @@ def substitute_unspecified(s: Union[str, None]) -> Union[str, None]:
     return s
 
 
+def allocation_as_manual_property(exc: dict) -> dict:
+    """If allocation field is present, add it as manual property as well"""
+    if "allocation" in exc:
+        if "properties" not in exc:
+            exc["properties"] = {}
+        exc["properties"]["manual_allocation"] = exc["allocation"]
+    return exc
+
+
 def lci_to_brightway(spcsv: SimaProCSV, missing_string: str = "(unknown)") -> dict:
     """Turn an extracted SimaPro CSV extract into metadata that can be imported into Brightway.
 
@@ -170,7 +179,7 @@ def lci_to_brightway(spcsv: SimaProCSV, missing_string: str = "(unknown)") -> di
         if "Products" in process.blocks:
             for edge in process.blocks["Products"].parsed:
                 process_dataset["exchanges"].append(
-                    edge | {"type": "production", "functional": True}
+                    allocation_as_manual_property(edge | {"type": "production", "functional": True})
                 )
         elif "Waste treatment" in process.blocks:
             for edge in process.blocks["Waste treatment"].parsed:
