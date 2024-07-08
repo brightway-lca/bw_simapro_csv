@@ -1,10 +1,10 @@
 import datetime
-import itertools
 from copy import deepcopy
 from typing import Union
 from uuid import uuid4
 
 from loguru import logger
+from multifunctional import allocation_before_writing
 
 from .blocks import (
     DatabaseCalculatedParameters,
@@ -205,5 +205,16 @@ def lci_to_brightway(spcsv: SimaProCSV, missing_string: str = "(unknown)") -> di
                     process_dataset["exchanges"].append(dummy)
 
         data["processes"].append(process_dataset)
+
+    if any(
+        sum(1 for exc in ds.get("exchanges") if exc.get("functional")) > 1
+        for ds in data["processes"]
+    ):
+        formatted = {(spcsv.database_name, ds["code"]): ds for ds in data["processes"]}
+        as_dict = allocation_before_writing(formatted, "manual_allocation")
+        for (database, code), ds in as_dict.items():
+            ds["code"] = code
+            ds["database"] = database
+        data["processes"] = list(as_dict.values())
 
     return data
