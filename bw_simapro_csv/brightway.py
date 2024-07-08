@@ -101,6 +101,8 @@ def lci_to_brightway(spcsv: SimaProCSV, missing_string: str = "(unknown)") -> di
         for obj in filter(lambda b: isinstance(b, LiteratureReference), spcsv)
     }
 
+    known_missing_references = set()
+
     for process in filter(lambda b: isinstance(b, Process), spcsv):
         multifunctional = (
             len(process.blocks.get("Products", [])) + len(process.blocks.get("Waste treatment", []))
@@ -126,12 +128,15 @@ def lci_to_brightway(spcsv: SimaProCSV, missing_string: str = "(unknown)") -> di
         if process.parsed["metadata"].get("Literature references"):
             process_dataset["references"] = []
             for reference in process.parsed["metadata"]["Literature references"]:
-                if reference["reference"] not in literature_mapping:
+                if reference["reference"] in known_missing_references:
+                    continue
+                elif reference["reference"] not in literature_mapping:
                     logger.warning(
                         "Skipping missing reference {r}; not present in given references {g}",
                         r=reference["reference"],
                         g=list(literature_mapping),
                     )
+                    known_missing_references.add(reference["reference"])
                 else:
                     literature = literature_mapping[reference["reference"]]
                     process_dataset["references"].append(
