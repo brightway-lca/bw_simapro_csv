@@ -42,37 +42,37 @@ def test_basic_header_extraction(fixtures_dir):
     assert set(expected).union({"exchanges"}) == set(allocated)
 
     expected = {
-        'allocation': 95.8,
-        'amount': 6250.0,
-        'category': r'_WFLDB 3.0\Plant products\Arable\Rice',
-        'comment': 'INDIA',
-        'functional': True,
-        'line_no': 211,
-        'name': 'Rice, at farm (WFLDB 3.0)/IN U',
-        'properties': {'manual_allocation': 95.8},
-        'type': 'production',
-        'unit': 'kg',
-        'waste_type': 'not defined'
+        "allocation": 95.8,
+        "amount": 6250.0,
+        "category": r"_WFLDB 3.0\Plant products\Arable\Rice",
+        "comment": "INDIA",
+        "functional": True,
+        "line_no": 211,
+        "name": "Rice, at farm (WFLDB 3.0)/IN U",
+        "properties": {"manual_allocation": 95.8},
+        "type": "production",
+        "unit": "kg",
+        "waste_type": "not defined",
     }
     assert allocated["exchanges"][0] == expected
 
     expected = {
-        'allocation': 4.2,
-        'amount': 3125.0,
-        'category': r'_WFLDB 3.0\Plant products\Arable\Rice',
-        'comment': 'The amount of straw is calculated '
-                   'from the straw to grain-ratio of 1 '
-                   'and a straw harvest rate of 50%. '
-                   'Economic allocation is based on the '
-                   'assumption that grains account for '
-                   '92% and straw for 8% of the price.',
-        'functional': True,
-        'line_no': 212,
-        'name': 'Rice straw, at farm (WFLDB 3.0)/IN U',
-        'properties': {'manual_allocation': 4.2},
-        'type': 'production',
-        'unit': 'kg',
-        'waste_type': 'not defined'
+        "allocation": 4.2,
+        "amount": 3125.0,
+        "category": r"_WFLDB 3.0\Plant products\Arable\Rice",
+        "comment": "The amount of straw is calculated "
+        "from the straw to grain-ratio of 1 "
+        "and a straw harvest rate of 50%. "
+        "Economic allocation is based on the "
+        "assumption that grains account for "
+        "92% and straw for 8% of the price.",
+        "functional": True,
+        "line_no": 212,
+        "name": "Rice straw, at farm (WFLDB 3.0)/IN U",
+        "properties": {"manual_allocation": 4.2},
+        "type": "production",
+        "unit": "kg",
+        "waste_type": "not defined",
     }
     assert allocated["exchanges"][1] == expected
     assert len(allocated["exchanges"])
