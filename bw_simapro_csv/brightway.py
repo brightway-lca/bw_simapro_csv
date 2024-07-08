@@ -2,6 +2,7 @@ import datetime
 import itertools
 from copy import deepcopy
 from typing import Union
+from uuid import uuid4
 
 from loguru import logger
 
@@ -111,7 +112,7 @@ def lci_to_brightway(spcsv: SimaProCSV, missing_string: str = "(unknown)") -> di
         process_dataset = {
             "database": spcsv.database_name,
             "simapro_project": substitute_unspecified(spcsv.header["project"]) or missing_string,
-            "code": process.parsed["metadata"]["Process identifier"],
+            "code": process.parsed["metadata"]["Process identifier"] or uuid4().hex,
             "exchanges": [],
             "type": "multifunctional" if multifunctional else "process",
             "name": substitute_unspecified(process.parsed["metadata"].get("Process name"))
