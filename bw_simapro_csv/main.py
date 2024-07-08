@@ -139,13 +139,13 @@ class SimaProCSV:
                 raise ValueError(
                     "Can't find database name in parameter `database_name` or SimaPro header"
                 )
-            logger.info("Using database name {n}", n=self.database_name)
+            logger.info("Using database name '{n}'", n=self.database_name)
 
         self.uses_end_text = False
         self.filepath = str(path_or_stream) if isinstance(path_or_stream, Path) else "<StringIO>"
 
         logger.info(
-            "SimaPro CSV import started.\n\tFile: {file}\n\tDelimiter: {delimiter}\n\tName: {name}",
+            "SimaPro CSV import started.\n\tFile: '{file}'\n\tDelimiter: '{delimiter}'\n\tName: '{name}'",
             file=path_or_stream if isinstance(path_or_stream, Path) else "<StringIO>",
             delimiter="<tab>" if self.header["delimiter"] == "\t" else self.header["delimiter"],
             name=self.header["project"] or "(Not given)",
