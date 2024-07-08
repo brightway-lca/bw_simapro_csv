@@ -12,22 +12,23 @@ from .utils import asboolean, nobraces, noquotes
 DELIMITER_MAP = {"semicolon": ";", "tab": "\t", "comma": ","}
 
 BOOLEAN_LABELS = {
-    "Export platform IDs:": "export_platform_ids",
-    "Skip empty fields:": "skip_empty_fields",
     "Convert expressions to constants:": "convert_expressions",
-    "Related objects (system descriptions, substances, units, etc.):": "related_objects",
+    "Exclude library processes:": "exclude_library_processes",
+    "Export platform IDs:": "export_platform_ids",
     "Include sub product stages and processes:": "include_stages",
+    "Related objects (system descriptions, substances, units, etc.):": "related_objects",
+    "Skip empty fields:": "skip_empty_fields",
     "Skip unused parameters:": "skip_unused_parameters",
 }
 STRING_LABELS = {
     "CSV Format version:": "csv_version",
+    "Date separator:": "date_separator",
     "Decimal separator:": "decimal_separator",
-    "Selection:": "selection",
-    "Open project:": "open_project",
     "Open library:": "open_library",
+    "Open project:": "open_project",
     "Project:": "project",
     "Projet:": "project",  # French for extra flavor!?
-    "Date separator:": "date_separator",
+    "Selection:": "selection",
 }
 
 
@@ -56,6 +57,7 @@ class SimaProCSVHeader(BaseModel):
     include_stages: Optional[bool] = None
     decimal_separator: Optional[str] = "."
     created: Optional[datetime] = None
+    exclude_library_processes: Optional[bool] = None
 
 
 def parse_header(data: List[str]) -> (SimaProCSVHeader, int):
