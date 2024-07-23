@@ -18,6 +18,7 @@ def test_basic_header_extraction(fixtures_dir):
         "decimal_separator": ",",
         "delimiter": ";",
         "export_platform_ids": None,
+        'exclude_library_processes': None,
         "include_stages": None,
         "kind": SimaProCSVType.processes,
         "libraries": [],

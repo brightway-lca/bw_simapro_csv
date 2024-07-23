@@ -47,13 +47,23 @@ def test_basic_header_extraction(fixtures_dir):
         "comment": "INDIA",
         "functional": True,
         "line_no": 211,
+        "mf_allocated": True,
+        "mf_manual_input_product": False,
         "name": "Rice, at farm (WFLDB 3.0)/IN U",
         "properties": {"manual_allocation": 95.8},
         "type": "production",
         "unit": "kg",
         "waste_type": "not defined",
     }
-    assert allocated["exchanges"][0] == expected
+    for key, value in expected.items():
+        assert allocated["exchanges"][0][key] == value
+
+    assert allocated["exchanges"][0]["input"]
+    assert allocated["exchanges"][0]["mf_allocated_process_code"]
+    assert (
+        allocated["exchanges"][0]["input"][1]
+        == allocated["exchanges"][0]["mf_allocated_process_code"]
+    )
 
     expected = {
         "allocation": 4.2,
@@ -66,6 +76,8 @@ def test_basic_header_extraction(fixtures_dir):
         "assumption that grains account for "
         "92% and straw for 8% of the price.",
         "functional": True,
+        "mf_allocated": True,
+        "mf_manual_input_product": False,
         "line_no": 212,
         "name": "Rice straw, at farm (WFLDB 3.0)/IN U",
         "properties": {"manual_allocation": 4.2},
@@ -73,5 +85,13 @@ def test_basic_header_extraction(fixtures_dir):
         "unit": "kg",
         "waste_type": "not defined",
     }
-    assert allocated["exchanges"][1] == expected
-    assert len(allocated["exchanges"])
+
+    for key, value in expected.items():
+        assert allocated["exchanges"][1][key] == value
+
+    assert allocated["exchanges"][1]["input"]
+    assert allocated["exchanges"][1]["mf_allocated_process_code"]
+    assert (
+        allocated["exchanges"][1]["input"][1]
+        == allocated["exchanges"][1]["mf_allocated_process_code"]
+    )
