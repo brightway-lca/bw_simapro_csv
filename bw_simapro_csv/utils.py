@@ -215,10 +215,12 @@ def parameter_set_evaluate_each_formula(ps: ParameterSet) -> dict[str, float]:
                 logger.critical(
                     f"""
     Division by zero in formula {ps.params[key]['formula']} on line {ps.params[key]['line_no']}.
-    Returning zero.
+    Returning zero, and moving `formula` to `invalid_formula`.
                 """
                 )
                 value = 0
+                ps.params[key]["invalid_formula"] = ps.params[key]["formula"]
+                del ps.params[key]["formula"]
             except NotImplementedError as exc:
                 raise FormulaReservedWord(
                     f"""
