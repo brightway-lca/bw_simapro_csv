@@ -1,5 +1,4 @@
 import datetime
-from pprint import pprint
 
 from bw_simapro_csv import SimaProCSV
 
