@@ -109,10 +109,14 @@ def lci_to_brightway(spcsv: SimaProCSV, missing_string: str = "(unknown)") -> di
             len(process.blocks.get("Products", [])) + len(process.blocks.get("Waste treatment", []))
         ) > 1
 
+        code = process.parsed["metadata"].get("Process identifier")
+        if not code.strip() or code.strip() in {'""', "''"}:
+            code = uuid4().hex
+
         process_dataset = {
             "database": spcsv.database_name,
             "simapro_project": substitute_unspecified(spcsv.header["project"]) or missing_string,
-            "code": process.parsed["metadata"]["Process identifier"] or uuid4().hex,
+            "code": code,
             "exchanges": [],
             "type": "multifunctional" if multifunctional else "process",
             "name": substitute_unspecified(process.parsed["metadata"].get("Process name"))
