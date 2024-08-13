@@ -110,7 +110,7 @@ def lci_to_brightway(spcsv: SimaProCSV, missing_string: str = "(unknown)") -> di
         ) > 1
 
         code = process.parsed["metadata"].get("Process identifier")
-        if not code.strip() or code.strip() in {'""', "''"}:
+        if not code or not code.strip() or code.strip() in {'""', "''"}:
             code = uuid4().hex
 
         process_dataset = {
