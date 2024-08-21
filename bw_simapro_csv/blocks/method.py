@@ -1,10 +1,10 @@
-from typing import Any, List
+from typing import Any, List, Union
 
 from ..utils import alternating_key_value, asboolean
 from .base import SimaProCSVBlock
 
 
-def reformat(v: list | str) -> Any:
+def reformat(v: Union[list, str]) -> Any:
     """Do LCIA Method-specific reformatting to a list or string"""
     if isinstance(v, list):
         return tuple(v)

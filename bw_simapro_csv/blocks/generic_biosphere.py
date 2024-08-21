@@ -50,7 +50,7 @@ class GenericBiosphere(SimaProCSVBlock):
                 }
             )
 
-    def __eq__(self, other: Any | SimaProCSVBlock) -> bool:
+    def __eq__(self, other: Any) -> bool:
         if isinstance(other, SimaProCSVBlock):
             return self.parsed == other.parsed and self.category == getattr(other, "category")
         return False

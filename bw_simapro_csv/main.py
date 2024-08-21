@@ -91,7 +91,7 @@ INDETERMINATE_SECTION_ERROR = """
 class SimaProCSV:
     def __init__(
         self,
-        path_or_stream: Path | StringIO,
+        path_or_stream: Union[Path, StringIO],
         encoding: str = "sloppy-windows-1252",
         database_name: Optional[str] = None,
         stderr_logs: bool = True,
@@ -215,7 +215,7 @@ class SimaProCSV:
 
     def get_next_block(
         self, rewindable_csv_reader: BeKindRewind, header: dict
-    ) -> None | SimaProCSVBlock:
+    ) -> Optional[SimaProCSVBlock]:
         data = []
 
         for line in rewindable_csv_reader:

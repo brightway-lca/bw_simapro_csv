@@ -3,7 +3,7 @@ import re
 from copy import copy
 from datetime import date, datetime
 from numbers import Number
-from typing import Iterable, List, Pattern
+from typing import Iterable, List, Pattern, Union
 
 from bw2parameters import ParameterSet
 from dateutil.parser import parse as dtparse
@@ -62,8 +62,8 @@ def normalize_number_in_formula(formula: str, decimal_separator: str = ".") -> s
 
 
 def asnumber(
-    value: str | Number, decimal_separator: str = ".", allow_nonnumber: bool = False
-) -> Number | str:
+    value: Union[str, Number], decimal_separator: str = ".", allow_nonnumber: bool = False
+) -> Union[Number, str]:
     """Take a number stored as a string and convert to a float.
 
     Tries hard to handle different formats."""
