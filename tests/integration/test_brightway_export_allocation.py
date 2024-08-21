@@ -24,6 +24,7 @@ def test_basic_header_extraction(fixtures_dir):
         "data_generator": "Somebody",
         "database": "Bobs_burgers",
         "location": None,
+        "mf_strategy_label": "property allocation by 'manual_allocation'",
         "name": "Rice, at farm (WFLDB 3.0)/kg/IN",
         "publication_date": datetime.date(2015, 6, 8),
         "references": [],
