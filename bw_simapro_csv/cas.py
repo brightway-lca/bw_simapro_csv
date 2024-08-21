@@ -1,10 +1,11 @@
 from numbers import Number
-from typing import Any
+import numpy as np
+from typing import Any, Optional
 
 from loguru import logger
 
 
-def validate_cas(s: Any) -> str | None:
+def validate_cas(s: Any) -> Optional[str]:
     ERROR = "CAS Check Digit error: CAS '{}' has check digit of {}, but it should be {}"
 
     if isinstance(s, str):
