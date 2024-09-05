@@ -30,7 +30,7 @@ classifiers = [
 requires-python = ">=3.9"
 dependencies = [
     "bw2parameters",
-    "multifunctional>=0.4.3",
+    "multifunctional>=0.7.1",
     "ftfy",
     "loguru",
     "platformdirs",
