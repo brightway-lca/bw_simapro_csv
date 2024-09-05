@@ -16,6 +16,15 @@ def test_basic_header_extraction(fixtures_dir):
     for key, value in expected.items():
         assert value == given["database"][key]
 
+    first = given["processes"][0]
+    expected = {
+        "code": "ReCenter000033915300046",
+        "comment": "No soup for you! This is agricultural residues, actually.",
+        "name": "Agricultural residues, non-mechanized, sun dried, at farm, 1 kg dry matter (WFLDB 3.0)/GLO U",
+    }
+    for key, value in expected.items():
+        assert first[key] == value
+
     allocated = given["processes"][1]
     expected = {
         "code": "ReCenter000033915302504",
@@ -25,7 +34,7 @@ def test_basic_header_extraction(fixtures_dir):
         "database": "Bobs_burgers",
         "location": None,
         "mf_strategy_label": "property allocation by 'manual_allocation'",
-        "name": "Rice, at farm (WFLDB 3.0)/kg/IN",
+        "name": "MFP: Rice, at farm (WFLDB 3.0)⧺Rice straw, at farm (WFLD",
         "publication_date": datetime.date(2015, 6, 8),
         "references": [],
         "simapro_project": "Bobs_burgers",
@@ -47,7 +56,7 @@ def test_basic_header_extraction(fixtures_dir):
         "category": r"_WFLDB 3.0\Plant products\Arable\Rice",
         "comment": "INDIA",
         "functional": True,
-        "line_no": 211,
+        "line_no": 208,
         "mf_allocated": True,
         "mf_manual_input_product": False,
         "name": "Rice, at farm (WFLDB 3.0)/IN U",
@@ -79,7 +88,7 @@ def test_basic_header_extraction(fixtures_dir):
         "functional": True,
         "mf_allocated": True,
         "mf_manual_input_product": False,
-        "line_no": 212,
+        "line_no": 209,
         "name": "Rice straw, at farm (WFLDB 3.0)/IN U",
         "properties": {"manual_allocation": 4.2},
         "type": "production",

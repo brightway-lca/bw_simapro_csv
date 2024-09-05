@@ -65,6 +65,24 @@ def allocation_as_manual_property(exc: dict) -> dict:
     return exc
 
 
+def name_for_process(process: Process) -> str:
+    """Try several ways to generate a sensible name."""
+    if given_name := substitute_unspecified(process.parsed["metadata"].get("Process name")):
+        return given_name
+    if "Products" in process.blocks:
+        names = [edge['name'] for edge in process.blocks["Products"].parsed]
+        if len(names) == 1:
+            return names[0]
+        else:
+            return "MFP: {}".format("⧺".join([name[:25] for name in names]))
+    if "Waste treatment" in process.blocks:
+        names = [edge['name'] for edge in process.blocks["Waste treatment"].parsed]
+        if len(names) == 1:
+            return names[0]
+        else:
+            return "MFP: {}".format("⧺".join([name[:25] for name in names]))
+
+
 def lci_to_brightway(spcsv: SimaProCSV, missing_string: str = "(unknown)") -> dict:
     """Turn an extracted SimaPro CSV extract into metadata that can be imported into Brightway.
 
@@ -119,8 +137,7 @@ def lci_to_brightway(spcsv: SimaProCSV, missing_string: str = "(unknown)") -> di
             "code": code,
             "exchanges": [],
             "type": "multifunctional" if multifunctional else "process",
-            "name": substitute_unspecified(process.parsed["metadata"].get("Process name"))
-            or missing_string,
+            "name": name_for_process(process),
             "location": substitute_unspecified(process.parsed["metadata"].get("Geography")),
             "publication_date": process.parsed["metadata"].get("Date") or datetime.date.today(),
             "tags": {},
