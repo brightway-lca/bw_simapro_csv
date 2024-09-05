@@ -65,7 +65,7 @@ def allocation_as_manual_property(exc: dict) -> dict:
     return exc
 
 
-def name_for_process(process: Process) -> str:
+def name_for_process(process: Process, missing_string: str) -> str:
     """Try several ways to generate a sensible name."""
     if given_name := substitute_unspecified(process.parsed["metadata"].get("Process name")):
         return given_name
@@ -81,6 +81,7 @@ def name_for_process(process: Process) -> str:
             return names[0]
         else:
             return "MFP: {}".format("⧺".join([name[:25] for name in names]))
+    return missing_string
 
 
 def lci_to_brightway(spcsv: SimaProCSV, missing_string: str = "(unknown)") -> dict:
@@ -137,7 +138,7 @@ def lci_to_brightway(spcsv: SimaProCSV, missing_string: str = "(unknown)") -> di
             "code": code,
             "exchanges": [],
             "type": "multifunctional" if multifunctional else "process",
-            "name": name_for_process(process),
+            "name": name_for_process(process, missing_string),
             "location": substitute_unspecified(process.parsed["metadata"].get("Geography")),
             "publication_date": process.parsed["metadata"].get("Date") or datetime.date.today(),
             "tags": {},
