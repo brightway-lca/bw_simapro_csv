@@ -120,9 +120,6 @@ def parse_header(data: List[str]) -> (SimaProCSVHeader, int):
         line = nobraces(line)
         kind = TYPE_TRANSLATIONS.get(line.lower(), line.lower())
 
-        print(line.lower())
-        print(any(line.lower().startswith(key) for key in STRING_LABELS))
-
         if line.startswith("SimaPro") and ":" not in line:
             parsed["simapro_version"] = line[8:]
         elif kind in iter(SimaProCSVType):
