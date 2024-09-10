@@ -1,7 +1,7 @@
 from numbers import Number
-import numpy as np
 from typing import Any, Optional
 
+import numpy as np
 from loguru import logger
 
 

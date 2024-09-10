@@ -34,6 +34,7 @@ def noquotes(s: str) -> str:
         s = s[1:-1]
     return s
 
+
 YES_STRINGS = {"yes", "y", "true", "t", "1", "ja", "oui", "tá", "si", "sim", "sì", "kyllä"}
 NO_STRINGS = {"no", "n", "false", "f", "0", "nein", "non", "nee", "níl", "não", "nej", "nei", "ei"}
 

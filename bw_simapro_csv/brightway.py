@@ -70,13 +70,13 @@ def name_for_process(process: Process, missing_string: str) -> str:
     if given_name := substitute_unspecified(process.parsed["metadata"].get("Process name")):
         return given_name
     if "Products" in process.blocks:
-        names = [edge['name'] for edge in process.blocks["Products"].parsed]
+        names = [edge["name"] for edge in process.blocks["Products"].parsed]
         if len(names) == 1:
             return names[0]
         else:
             return "MFP: {}".format("⧺".join([name[:25] for name in names]))
     if "Waste treatment" in process.blocks:
-        names = [edge['name'] for edge in process.blocks["Waste treatment"].parsed]
+        names = [edge["name"] for edge in process.blocks["Waste treatment"].parsed]
         if len(names) == 1:
             return names[0]
         else:

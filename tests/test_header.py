@@ -248,7 +248,7 @@ def test_header_extraction_translation(fixtures_dir):
         "selection": "Selection (18557)",
         "open_project": None,
         "exclude_library_processes": None,
-        "open_library": 'AGRIBALYSE - Unit',
+        "open_library": "AGRIBALYSE - Unit",
         "date_separator": "/",
         "export_platform_ids": False,
         "skip_empty_fields": False,

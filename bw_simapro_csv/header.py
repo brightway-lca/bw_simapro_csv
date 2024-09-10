@@ -26,7 +26,6 @@ STRING_LABELS = {
     "decimal separator:": "decimal_separator",
     "open project:": "open_project",
     "selection:": "selection",
-
     # These labels can be translated; who knows why these and not others!?
     "project": "project",
     "projet": "project",
@@ -36,7 +35,6 @@ STRING_LABELS = {
     "projeto": "project",
     "progetto": "project",
     "projekt": "project",
-
     "open library": "open_library",
     "ouvrir bibliothèque": "open_library",  # This doesn't feel correct but it's in the files
     "ouvrir projet": "open_project",  # I made this one up
