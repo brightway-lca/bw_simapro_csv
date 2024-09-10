@@ -1,5 +1,9 @@
 # `bw_simapro_csv` Changelog
 
+### [0.2.6] - 2024-09-10
+
+* Packaging fix
+
 ### [0.2.5] - 2024-09-10
 
 * Some header labels and values can be translated
