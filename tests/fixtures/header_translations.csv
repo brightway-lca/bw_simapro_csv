@@ -1,0 +1,18 @@
+{SimaPro 9.5.0.0}
+{processus}
+{Date: 05/05/2023}
+{Time: 11:10:18}
+{Projet: AGRIBALYSE - Unit}
+{CSV Format version: 9.0.0}
+{CSV separator: Semicolon}
+{Decimal separator: ,}
+{Date separator: /}
+{Short date format: dd/MM/yyyy}
+{Export platform IDs: No}
+{Skip empty fields: Non}
+{Convert expressions to constants: Oui}
+{Selection: Selection (18557)}
+{Related objects (system descriptions, substances, units, etc.): Oui}
+{Include sub product stages and processes: Non}
+{Skip unused parameters: Oui}
+{Ouvrir bibliothèque : 'AGRIBALYSE - Unit'}

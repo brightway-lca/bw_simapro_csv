@@ -21,14 +21,42 @@ BOOLEAN_LABELS = {
     "Skip unused parameters:": "skip_unused_parameters",
 }
 STRING_LABELS = {
-    "CSV Format version:": "csv_version",
-    "Date separator:": "date_separator",
-    "Decimal separator:": "decimal_separator",
-    "Open library:": "open_library",
-    "Open project:": "open_project",
-    "Project:": "project",
-    "Projet:": "project",  # French for extra flavor!?
-    "Selection:": "selection",
+    "csv format version:": "csv_version",
+    "date separator:": "date_separator",
+    "decimal separator:": "decimal_separator",
+    "open project:": "open_project",
+    "selection:": "selection",
+
+    # These labels can be translated; who knows why these and not others!?
+    "project": "project",
+    "projet": "project",
+    "heijastaa": "project",
+    "tionscadal": "project",
+    "proyecto": "project",
+    "projeto": "project",
+    "progetto": "project",
+    "projekt": "project",
+
+    "open library": "open_library",
+    "ouvrir bibliothèque": "open_library",  # This doesn't feel correct but it's in the files
+    "ouvrir projet": "open_project",  # I made this one up
+}
+
+
+TYPE_TRANSLATIONS = {
+    # All these are guesses, we don't have enough examples
+    "étapes du produit": "product stages",
+    "méthodes": "methods",
+    "processus": "processes",
+    "productfasen": "product stages",
+    "methoden": "methods",
+    "processen": "processes",
+    "fasi del prodotto": "product stages",
+    "metodi": "methods",
+    "processi": "processes",
+    "produktphasen": "product stages",
+    "methoden": "methods",
+    "prozesse": "processes",
 }
 
 
@@ -92,11 +120,15 @@ def parse_header(data: List[str]) -> (SimaProCSVHeader, int):
             break
 
         line = nobraces(line)
+        kind = TYPE_TRANSLATIONS.get(line.lower(), line.lower())
+
+        print(line.lower())
+        print(any(line.lower().startswith(key) for key in STRING_LABELS))
 
         if line.startswith("SimaPro") and ":" not in line:
             parsed["simapro_version"] = line[8:]
-        elif line in iter(SimaProCSVType):
-            parsed["kind"] = line
+        elif kind in iter(SimaProCSVType):
+            parsed["kind"] = kind
         elif line.startswith("CSV separator:"):
             char = line[len("CSV separator:") :].strip()
             parsed["delimiter"] = DELIMITER_MAP.get(char.lower(), char)
@@ -108,7 +140,7 @@ def parse_header(data: List[str]) -> (SimaProCSVHeader, int):
             time = line[len("Time:") :].strip()
         elif any(line.startswith(found_key := key) for key in BOOLEAN_LABELS):
             parsed[BOOLEAN_LABELS[found_key]] = asboolean(line[len(found_key) :].strip())
-        elif any(line.startswith(found_key := key) for key in STRING_LABELS):
+        elif any(line.lower().startswith(found_key := key) for key in STRING_LABELS):
             parsed[STRING_LABELS[found_key]] = noquotes(line[len(found_key) :].strip())
         elif line.startswith("Library '"):
             parsed["libraries"].append(noquotes(line[len("Library") :].strip()))

@@ -26,17 +26,23 @@ def nobraces(s: str) -> str:
 
 
 def noquotes(s: str) -> str:
-    """Remove string start/end characters"""
+    """Remove string start/end characters and colons"""
+    s = s.strip()
+    if s.startswith(":"):
+        s = s[1:].strip()
     if (s.startswith('"') and s.endswith('"')) or (s.startswith("'") and s.endswith("'")):
-        return s[1:-1]
+        s = s[1:-1]
     return s
+
+YES_STRINGS = {"yes", "y", "true", "t", "1", "ja", "oui", "tá", "si", "sim", "sì", "kyllä"}
+NO_STRINGS = {"no", "n", "false", "f", "0", "nein", "non", "nee", "níl", "não", "nej", "nei", "ei"}
 
 
 def asboolean(s: str, allow_nonboolean: bool = False) -> bool:
     """Convert SimaPro strings to actual booleans"""
-    if s.lower() in {"yes", "y", "true", "t", "1"}:
+    if s.lower() in YES_STRINGS:
         return True
-    if s.lower() in {"no", "n", "false", "f", "0"}:
+    if s.lower() in NO_STRINGS:
         return False
     if allow_nonboolean:
         return s

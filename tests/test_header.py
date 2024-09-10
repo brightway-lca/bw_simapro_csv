@@ -233,3 +233,28 @@ def test_header_without_date():
     for k, v in expected.items():
         assert result[k] == expected[k]
     assert result["created"].year >= 2024
+
+
+def test_header_extraction_translation(fixtures_dir):
+    obj = SimaProCSV(fixtures_dir / "header_translations.csv")
+    assert obj.header == {
+        "simapro_version": "9.5.0.0",
+        "kind": SimaProCSVType.processes,
+        "delimiter": ";",
+        "project": "AGRIBALYSE - Unit",
+        "csv_version": "9.0.0",
+        "libraries": [],
+        "dayfirst": True,
+        "selection": "Selection (18557)",
+        "open_project": None,
+        "exclude_library_processes": None,
+        "open_library": 'AGRIBALYSE - Unit',
+        "date_separator": "/",
+        "export_platform_ids": False,
+        "skip_empty_fields": False,
+        "convert_expressions": True,
+        "related_objects": True,
+        "include_stages": False,
+        "decimal_separator": ",",
+        "created": datetime(2023, 5, 5, 11, 10, 18),
+    }
