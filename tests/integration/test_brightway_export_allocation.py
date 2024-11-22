@@ -34,6 +34,8 @@ def test_basic_header_extraction(fixtures_dir):
         "database": "Bobs_burgers",
         "location": None,
         "mf_strategy_label": "property allocation by 'manual_allocation'",
+        "mf_was_once_allocated": True,
+        "mf_allocation_run_uuid": allocated["mf_allocation_run_uuid"],
         "name": "MFP: Rice, at farm (WFLDB 3.0)⧺Rice straw, at farm (WFLD",
         "publication_date": datetime.date(2015, 6, 8),
         "references": [],
