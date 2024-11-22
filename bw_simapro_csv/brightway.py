@@ -67,6 +67,14 @@ def allocation_as_manual_property(exc: dict) -> dict:
 
 def name_for_process(process: Process, missing_string: str) -> str:
     """Try several ways to generate a sensible name."""
+
+    def clean_name(name: str) -> str:
+        """Cleanup awkward name endings if needed."""
+        name = name.strip()
+        if name.endswith(","):
+            name = name[:-1]
+        return name
+
     if given_name := substitute_unspecified(process.parsed["metadata"].get("Process name")):
         return given_name
     if "Products" in process.blocks:
@@ -74,13 +82,13 @@ def name_for_process(process: Process, missing_string: str) -> str:
         if len(names) == 1:
             return names[0]
         else:
-            return "MFP: {}".format("⧺".join([name[:25] for name in names]))
+            return clean_name("MFP: {}".format("⧺".join([name[:25] for name in names])))
     if "Waste treatment" in process.blocks:
         names = [edge["name"] for edge in process.blocks["Waste treatment"].parsed]
         if len(names) == 1:
             return names[0]
         else:
-            return "MFP: {}".format("⧺".join([name[:25] for name in names]))
+            return clean_name("MFP: {}".format("⧺".join([name[:25] for name in names])))
     return missing_string
 
 
