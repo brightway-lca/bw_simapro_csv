@@ -4,7 +4,7 @@ from bw_simapro_csv import SimaProCSV
 
 
 def test_basic_header_extraction(fixtures_dir):
-    given = SimaProCSV(fixtures_dir / "allocation.csv").to_brightway()
+    given = SimaProCSV(fixtures_dir / "allocation.csv").to_brightway(separate_products=False)
     expected = {
         "created": "2016-10-12T22:54:47",
         "name": "Bobs_burgers",

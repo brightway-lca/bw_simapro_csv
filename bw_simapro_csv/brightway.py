@@ -1,4 +1,5 @@
 import datetime
+import itertools
 from copy import deepcopy
 from typing import Union
 from uuid import uuid4
@@ -92,7 +93,39 @@ def name_for_process(process: Process, missing_string: str) -> str:
     return missing_string
 
 
-def lci_to_brightway(spcsv: SimaProCSV, missing_string: str = "(unknown)") -> dict:
+def as_product_dct(edge: dict, node: dict) -> dict:
+    """Take an edge on a node and generate a new product node."""
+    NODE_ATTRS = ("name", "unit", "simapro_project", "location", "tags", "database", "comment")
+    EDGE_ATTRS = (
+        "name",
+        "unit",
+        "line_no",
+        "category",
+        "waste_type",
+        "comment",
+        "properties",
+        "simapro_category",
+    )
+    return (
+        {
+            "type": "product",
+            "code": uuid4().hex,
+            "reference process": (node["database"], node["code"]),
+        }
+        | {key: node[key] for key in NODE_ATTRS if node.get(key)}
+        | {key: edge[key] for key in EDGE_ATTRS if edge.get(key)}
+    )
+
+
+def reference_to_product(process_edge: dict, product: dict) -> dict:
+    """Add explicit link from process edge to new product node"""
+    process_edge["input"] = (product["database"], product["code"])
+    return process_edge
+
+
+def lci_to_brightway(
+    spcsv: SimaProCSV, missing_string: str = "(unknown)", separate_products: bool = False
+) -> dict:
     """Turn an extracted SimaPro CSV extract into metadata that can be imported into Brightway.
 
     Doesn't do any normalization or other data changes, just reorganizes the existing data."""
@@ -110,6 +143,7 @@ def lci_to_brightway(spcsv: SimaProCSV, missing_string: str = "(unknown)") -> di
         # Note reversing of database and project terms here
         # In SimaPro, the project is lower priority than the database
         # but in Brightway it's the opposite.
+        "products": [],
         "project_parameters": [
             param
             for block in spcsv.blocks
@@ -214,14 +248,26 @@ def lci_to_brightway(spcsv: SimaProCSV, missing_string: str = "(unknown)") -> di
                     process_dataset["exchanges"].append(edge | {"type": "biosphere"})
         if "Products" in process.blocks:
             for edge in process.blocks["Products"].parsed:
-                process_dataset["exchanges"].append(
-                    allocation_as_manual_property(edge | {"type": "production", "functional": True})
+                production_dct = allocation_as_manual_property(
+                    edge | {"type": "production", "functional": True}
                 )
+                if separate_products:
+                    product_dct = as_product_dct(production_dct, process_dataset)
+                    data["products"].append(product_dct)
+                    process_dataset["exchanges"].append(
+                        reference_to_product(production_dct, product_dct)
+                    )
+                else:
+                    process_dataset["exchanges"].append(production_dct)
         elif "Waste treatment" in process.blocks:
             for edge in process.blocks["Waste treatment"].parsed:
-                process_dataset["exchanges"].append(
-                    edge | {"type": "technosphere", "functional": True}
-                )
+                waste_edge = edge | {"type": "technosphere", "functional": True}
+                if separate_products:
+                    waste_dct = as_product_dct(waste_edge, process_dataset)
+                    data["products"].append(waste_dct)
+                    process_dataset["exchanges"].append(reference_to_product(waste_edge, waste_dct))
+                else:
+                    process_dataset["exchanges"].append(waste_edge)
                 if not any(e for e in process_dataset["exchanges"] if e["type"] == "production"):
                     dummy = deepcopy(edge)
                     dummy.update(
@@ -240,8 +286,9 @@ def lci_to_brightway(spcsv: SimaProCSV, missing_string: str = "(unknown)") -> di
         sum(1 for exc in ds.get("exchanges") if exc.get("functional")) > 1
         for ds in data["processes"]
     ):
-        formatted = {(spcsv.database_name, ds["code"]): ds for ds in data["processes"]}
-        as_dict = allocation_before_writing(formatted, "manual_allocation")
+        as_dict = allocation_before_writing(
+            {(spcsv.database_name, ds["code"]): ds for ds in data["processes"]}, "manual_allocation"
+        )
         for (database, code), ds in as_dict.items():
             ds["code"] = code
             ds["database"] = database
