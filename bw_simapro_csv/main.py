@@ -182,11 +182,13 @@ class SimaProCSV:
     def __iter__(self):
         return iter(self.blocks)
 
-    def to_brightway(self, filepath: Optional[Path] = None) -> Union[dict, Path]:
+    def to_brightway(
+        self, filepath: Optional[Path] = None, separate_products: bool = True
+    ) -> Union[dict, Path]:
         if self.header["kind"] == SimaProCSVType.processes:
             from .brightway import lci_to_brightway
 
-            data = lci_to_brightway(self)
+            data = lci_to_brightway(self, separate_products=separate_products)
             if filepath is not None:
                 with open(filepath, "w") as f:
                     json.dump(data, f, indent=2, ensure_ascii=False, default=json_serializer)

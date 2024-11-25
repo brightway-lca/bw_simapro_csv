@@ -1,5 +1,10 @@
 # `bw_simapro_csv` Changelog
 
+### [DEV]
+
+* Add ability to separate products as separate nodes when exporting to Brightway
+* BREAKING CHANGE: Default is now to separate products as separate nodes when exporting to Brightway
+
 ### [0.2.6] - 2024-09-10
 
 * Packaging fix
