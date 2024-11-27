@@ -1,5 +1,9 @@
 # `bw_simapro_csv` Changelog
 
+## [0.3.1] - 2024-11-27
+
+* Add some additional header fields to Brightway export
+
 ## [0.3] - 2024-11-25
 
 * Add ability to separate products as separate nodes when exporting to Brightway
