@@ -28,6 +28,7 @@ def test_basic_header_extraction(fixtures_dir):
     allocated = given["processes"][1]
     expected = {
         "code": "ReCenter000033915302504",
+        "collection_method": "Stuff stuff stuff",
         "comment": "Stuff happened, and then we enjoyed life outside the office",
         "data_entry": "Some people and stuff like that",
         "data_generator": "Somebody",
@@ -46,6 +47,7 @@ def test_basic_header_extraction(fixtures_dir):
             "system_description": "ECOSPOLD IMPORT",
         },
         "type": "multifunctional",
+        "verification": "Was really good - Joe",
     }
     for key, value in expected.items():
         assert allocated[key] == value

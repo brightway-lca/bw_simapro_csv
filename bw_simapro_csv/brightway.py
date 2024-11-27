@@ -48,6 +48,9 @@ OPTIONAL_PROCESS_FIELDS = [
     ("Generator", "data_generator"),
     ("Record", "data_entry"),
     ("External documents", "data_links"),
+    ("Collection method", "collection_method"),
+    ("Verification", "verification"),
+    ("Allocation rules", "allocation_rules"),
 ]
 
 
