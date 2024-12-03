@@ -38,7 +38,7 @@ def test_basic_header_extraction(fixtures_dir):
         "mf_was_once_allocated": True,
         "mf_allocation_run_uuid": allocated["mf_allocation_run_uuid"],
         "name": "MFP: Rice, at farm (WFLDB 3.0)⧺Rice straw, at farm (WFLD",
-        "publication_date": datetime.date(2015, 6, 8),
+        "publication_date": '2015-06-08',
         "references": [],
         "simapro_project": "Bobs_burgers",
         "tags": {

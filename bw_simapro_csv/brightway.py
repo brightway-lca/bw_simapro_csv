@@ -185,7 +185,9 @@ def lci_to_brightway(
             "type": "multifunctional" if multifunctional else "process",
             "name": name_for_process(process, missing_string),
             "location": substitute_unspecified(process.parsed["metadata"].get("Geography")),
-            "publication_date": process.parsed["metadata"].get("Date") or datetime.date.today(),
+            "publication_date": (
+                process.parsed["metadata"].get("Date") or datetime.date.today()
+            ).isoformat()[:19],
             "tags": {},
         }
 
