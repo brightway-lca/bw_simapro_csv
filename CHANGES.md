@@ -1,5 +1,9 @@
 # `bw_simapro_csv` Changelog
 
+## [0.3.3] - 2024-12-05
+
+* Making name shortening in MFP name generation configurable
+
 ## [0.3.2] - 2024-12-03
 
 * Change `publication_date` type from `datetime.date` to `str` when exporting to Brightway
