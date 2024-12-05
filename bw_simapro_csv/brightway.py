@@ -69,7 +69,7 @@ def allocation_as_manual_property(exc: dict) -> dict:
     return exc
 
 
-def name_for_process(process: Process, missing_string: str) -> str:
+def name_for_process(process: Process, missing_string: str, shorten_names: bool = True) -> str:
     """Try several ways to generate a sensible name."""
 
     def clean_name(name: str) -> str:
@@ -86,13 +86,21 @@ def name_for_process(process: Process, missing_string: str) -> str:
         if len(names) == 1:
             return names[0]
         else:
-            return clean_name("MFP: {}".format("⧺".join([name[:25] for name in names])))
+            return clean_name(
+                "MFP: {}".format(
+                    "⧺".join([(name[:25] if shorten_names else name) for name in names])
+                )
+            )
     if "Waste treatment" in process.blocks:
         names = [edge["name"] for edge in process.blocks["Waste treatment"].parsed]
         if len(names) == 1:
             return names[0]
         else:
-            return clean_name("MFP: {}".format("⧺".join([name[:25] for name in names])))
+            return clean_name(
+                "MFP: {}".format(
+                    "⧺".join([(name[:25] if shorten_names else name) for name in names])
+                )
+            )
     return missing_string
 
 
@@ -127,7 +135,10 @@ def reference_to_product(process_edge: dict, product: dict) -> dict:
 
 
 def lci_to_brightway(
-    spcsv: SimaProCSV, missing_string: str = "(unknown)", separate_products: bool = False
+    spcsv: SimaProCSV,
+    missing_string: str = "(unknown)",
+    separate_products: bool = False,
+    shorten_names: bool = True,
 ) -> dict:
     """Turn an extracted SimaPro CSV extract into metadata that can be imported into Brightway.
 
@@ -183,7 +194,7 @@ def lci_to_brightway(
             "code": code,
             "exchanges": [],
             "type": "multifunctional" if multifunctional else "process",
-            "name": name_for_process(process, missing_string),
+            "name": name_for_process(process, missing_string, shorten_names),
             "location": substitute_unspecified(process.parsed["metadata"].get("Geography")),
             "publication_date": (
                 process.parsed["metadata"].get("Date") or datetime.date.today()

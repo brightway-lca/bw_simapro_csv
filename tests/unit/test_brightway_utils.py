@@ -66,6 +66,30 @@ def test_name_for_process_products_clean_name():
     assert name_for_process(p, "no") == "MFP: Albacore, fillet, raw, at⧺Albacore, residues, raw"
 
 
+def test_name_for_process_products_shorten_name():
+    class Dummy:
+        pass
+
+    class P(Process):
+        def __init__(self):
+            pass
+
+    o = Dummy()
+    o.parsed = [
+        {"name": r"Albacore, fillet, raw, at processing {FR} U"},
+        {"name": r"Albacore, residues, raw, at processing {FR} U"},
+    ]
+
+    p = P()
+    p.blocks = {"Waste treatment": o}
+    p.parsed = {"metadata": {}}
+
+    assert (
+        name_for_process(p, "no", shorten_names=False)
+        == r"MFP: Albacore, fillet, raw, at processing {FR} U⧺Albacore, residues, raw, at processing {FR} U"
+    )
+
+
 def test_name_for_waste_treatment_products():
     class Dummy:
         pass
