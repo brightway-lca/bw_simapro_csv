@@ -1,5 +1,9 @@
 # `bw_simapro_csv` Changelog
 
+## [0.3.4] - 2024-12-05
+
+* Fix missing input argument for name shortening in `SimaProCSV` class method
+
 ## [0.3.3] - 2024-12-05
 
 * Making name shortening in MFP name generation configurable
