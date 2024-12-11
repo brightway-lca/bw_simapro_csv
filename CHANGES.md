@@ -1,5 +1,9 @@
 # `bw_simapro_csv` Changelog
 
+## [0.3.5] - 2024-12-11
+
+* [#15 - More robust CAS validation to handle broken inputs](https://github.com/brightway-lca/bw_simapro_csv/pull/15)
+
 ## [0.3.4] - 2024-12-05
 
 * Fix missing input argument for name shortening in `SimaProCSV` class method
