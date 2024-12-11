@@ -1,6 +1,6 @@
 from typing import Any, List
 
-from ..cas import validate_cas
+from ..cas import validate_cas_string
 from ..utils import add_amount_or_formula, skip_empty
 from .base import SimaProCSVBlock
 
@@ -44,7 +44,7 @@ class GenericBiosphere(SimaProCSVBlock):
                 {
                     "name": line[0],
                     "unit": line[1],
-                    "cas_number": validate_cas(line[2]),
+                    "cas_number": validate_cas_string(line[2]),
                     "comment": line[3],
                     "line_no": line_no,
                 }
