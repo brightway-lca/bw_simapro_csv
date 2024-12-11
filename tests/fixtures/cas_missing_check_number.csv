@@ -247,8 +247,8 @@ End
 
 
 Emissions to soil
-Prothioconazole,kg,178928-70-5,Formula: C14H15Cl2N3OS
-Pydiflumetofen,kg,1228284-64-,Formula: C16H16Cl3F2N3O2
+Prothioconazole;kg;178928-70-5;Formula: C14H15Cl2N3OS
+Pydiflumetofen;kg;1228284-64-;Formula: C16H16Cl3F2N3O2
 
 
 End

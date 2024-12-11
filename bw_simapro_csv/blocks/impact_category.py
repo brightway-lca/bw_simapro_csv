@@ -1,6 +1,6 @@
 from typing import List
 
-from ..cas import validate_cas
+from ..cas import validate_cas_string
 from ..utils import asnumber, jump_to_nonempty, skip_empty
 from .base import SimaProCSVBlock
 
@@ -43,7 +43,7 @@ class ImpactCategory(SimaProCSVBlock):
                 {
                     "context": (line[0], line[1]),
                     "name": line[2],
-                    "cas_number": validate_cas(line[3]),
+                    "cas_number": validate_cas_string(line[3]),
                     "factor": asnumber(line[4]),
                     "unit": line[5],
                     "line_no": line_no,
