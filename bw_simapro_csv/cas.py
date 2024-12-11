@@ -1,3 +1,4 @@
+import string
 from numbers import Number
 from typing import Any, Optional
 
@@ -14,6 +15,13 @@ def validate_cas(s: Any) -> Optional[str]:
         return None
     elif isinstance(s, Number) and np.isnan(s):
         return None
+
+    if s[-1] not in string.digits:
+        check_digit = None
+        cas = s.replace("-", "")
+    else:
+        check_digit = s[-1]
+        cas = s[:-1].replace('-', '')
 
     total = sum((a + 1) * int(b) for a, b in zip(range(9), s.replace("-", "")[-2::-1]))
     if not total % 10 == int(s[-1]):
