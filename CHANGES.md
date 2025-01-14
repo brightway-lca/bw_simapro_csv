@@ -1,5 +1,9 @@
 # `bw_simapro_csv` Changelog
 
+## [0.3.6] - 2024-12-11
+
+* Fix [#16 - Lognormal exchanges with sigma values <= 0](https://github.com/brightway-lca/bw_simapro_csv/issues/16)
+
 ## [0.3.5] - 2024-12-11
 
 * [#15 - More robust CAS validation to handle broken inputs](https://github.com/brightway-lca/bw_simapro_csv/pull/15)
