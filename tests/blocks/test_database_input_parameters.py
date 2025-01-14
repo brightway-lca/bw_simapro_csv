@@ -1,3 +1,4 @@
+import math
 from bw_simapro_csv import SimaProCSV
 from bw_simapro_csv.blocks import DatabaseInputParameters
 
@@ -16,7 +17,7 @@ def test_db_input_params(fixtures_dir):
             "uncertainty type": 2,
             "amount": 1.0,
             "loc": 0.0,
-            "scale": 0.0,
+            "scale": math.log(2),
             "line_no": 274,
             "negative": False,
             "hidden": False,

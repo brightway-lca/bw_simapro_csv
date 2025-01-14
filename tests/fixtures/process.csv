@@ -271,7 +271,7 @@ End
 
 
 Database Input parameters
-db_input_param;1;Lognormal;1;0;0;No;database parameter
+db_input_param;1;Lognormal;4;0;0;No;database parameter
 
 End
 

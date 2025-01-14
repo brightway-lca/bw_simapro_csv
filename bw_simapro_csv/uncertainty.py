@@ -64,12 +64,18 @@ Line number: {line_no}
     if kind == "Undefined":
         return undefined_distribution(amount)
     if kind == "Lognormal":
-        if not amount or field1 <= 0:
-            logger.debug(f"Invalid lognormal distribution on line {line_no}: {amount}|{field1}")
+        if not amount:
+            logger.debug(
+                f"Invalid lognormal distribution (geom. mean = 0) on line {line_no}: {amount}"
+            )
+            return undefined_distribution(amount)
+        sigma = math.log(math.sqrt(field1))
+        if sigma <= 0:
+            logger.debug(f"Invalid lognormal distribution (sigma <= 0) on line {line_no}: {field1}")
             return undefined_distribution(amount)
         return {
             "uncertainty type": LognormalUncertainty.id,
-            "scale": math.log(math.sqrt(field1)),
+            "scale": sigma,
             "loc": math.log(abs(amount)),
             "negative": amount < 0,
             "amount": amount,
