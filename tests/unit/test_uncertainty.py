@@ -225,7 +225,7 @@ def test_distribution_triangular_valid():
     assert distribution(**given) == expected
 
 
-def test_distribution_triangular_invalid():
+def test_distribution_triangular_invalid_bounds_flipped():
     expected = {
         "uncertainty type": UndefinedUncertainty.id,
         "loc": 2.,
@@ -237,6 +237,42 @@ def test_distribution_triangular_invalid():
         "field1": "0",
         "field2": "3",
         "field3": "1",
+        "decimal_separator": ".",
+        "line_no": 7,
+    }
+    assert distribution(**given) == expected
+
+
+def test_distribution_triangular_invalid_all_same():
+    expected = {
+        "uncertainty type": UndefinedUncertainty.id,
+        "loc": 1.,
+        "amount": 1.,
+    }
+    given = {
+        "amount": "1",
+        "kind": "Triangle",
+        "field1": "0",
+        "field2": "1",
+        "field3": "1",
+        "decimal_separator": ".",
+        "line_no": 7,
+    }
+    assert distribution(**given) == expected
+
+
+def test_distribution_triangular_invalid_mean_outside_bounds():
+    expected = {
+        "uncertainty type": UndefinedUncertainty.id,
+        "loc": 2.,
+        "amount": 2.,
+    }
+    given = {
+        "amount": "2",
+        "kind": "Triangle",
+        "field1": "0",
+        "field2": "10",
+        "field3": "30",
         "decimal_separator": ".",
         "line_no": 7,
     }
@@ -264,7 +300,7 @@ def test_distribution_uniform_valid():
     assert distribution(**given) == expected
 
 
-def test_distribution_uniform_invalid():
+def test_distribution_uniform_invalid_bounds_flipped():
     expected = {
         "uncertainty type": UndefinedUncertainty.id,
         "loc": 2.,
@@ -276,6 +312,42 @@ def test_distribution_uniform_invalid():
         "field1": "0",
         "field2": "3",
         "field3": "1",
+        "decimal_separator": ".",
+        "line_no": 7,
+    }
+    assert distribution(**given) == expected
+
+
+def test_distribution_uniform_invalid_all_same():
+    expected = {
+        "uncertainty type": UndefinedUncertainty.id,
+        "loc": 1.,
+        "amount": 1.,
+    }
+    given = {
+        "amount": "1",
+        "kind": "Uniform",
+        "field1": "0",
+        "field2": "1",
+        "field3": "1",
+        "decimal_separator": ".",
+        "line_no": 7,
+    }
+    assert distribution(**given) == expected
+
+
+def test_distribution_uniform_invalid_mean_outside_bounds():
+    expected = {
+        "uncertainty type": UndefinedUncertainty.id,
+        "loc": 2.,
+        "amount": 2.,
+    }
+    given = {
+        "amount": "2",
+        "kind": "Uniform",
+        "field1": "0",
+        "field2": "10",
+        "field3": "30",
         "decimal_separator": ".",
         "line_no": 7,
     }

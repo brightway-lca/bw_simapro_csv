@@ -92,7 +92,7 @@ Line number: {line_no}
             "amount": amount,
         }
     if kind == "Triangle":
-        if not field2 <= amount <= field3:
+        if not (field2 <= amount <= field3) or field2 == field3:
             logger.debug(
                 f"Invalid triangular distribution on line {line_no}: {amount}|{field2}|{field3}"
             )
@@ -106,7 +106,7 @@ Line number: {line_no}
             "amount": amount,
         }
     if kind == "Uniform":
-        if not field2 <= amount <= field3:
+        if not (field2 <= amount <= field3) or field2 == field3:
             logger.debug(
                 f"Invalid uniform distribution on line {line_no}: {amount}|{field2}|{field3}"
             )
