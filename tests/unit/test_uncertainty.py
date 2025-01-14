@@ -1,14 +1,15 @@
-import pytest
 import math
-from bw_simapro_csv.uncertainty import distribution, clean_simapro_uncertainty_fields
+
+import pytest
 from stats_arrays import (
     LognormalUncertainty,
     NormalUncertainty,
-    NoUncertainty,
     TriangularUncertainty,
     UndefinedUncertainty,
     UniformUncertainty,
 )
+
+from bw_simapro_csv.uncertainty import distribution, clean_simapro_uncertainty_fields
 
 
 def test_clean_simapro_uncertainty_fields():
