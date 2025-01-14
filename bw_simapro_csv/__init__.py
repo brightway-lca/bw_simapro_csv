@@ -4,7 +4,7 @@ __all__ = (
     "SimaProCSVType",
 )
 
-__version__ = "0.3.6"
+__version__ = "0.3.7"
 
 # Makes `sloppy-windows-1252` encoding available
 import ftfy

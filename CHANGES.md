@@ -1,6 +1,10 @@
 # `bw_simapro_csv` Changelog
 
-## [0.3.6] - 2024-12-11
+## [0.3.7] - 2025-01-14
+
+* Fix [#17 - Code allow triangular and uniform distributions where mode = minimum = maximum](https://github.com/brightway-lca/bw_simapro_csv/issues/17)
+
+## [0.3.6] - 2025-01-14
 
 * Fix [#16 - Lognormal exchanges with sigma values <= 0](https://github.com/brightway-lca/bw_simapro_csv/issues/16)
 
