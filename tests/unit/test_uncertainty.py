@@ -9,15 +9,11 @@ from stats_arrays import (
     UniformUncertainty,
 )
 
-from bw_simapro_csv.uncertainty import distribution, clean_simapro_uncertainty_fields
+from bw_simapro_csv.uncertainty import clean_simapro_uncertainty_fields, distribution
 
 
 def test_clean_simapro_uncertainty_fields():
-    given = {
-        "field1": "foo",
-        "kind": "bar",
-        "uncertainty type": LognormalUncertainty.id
-    }
+    given = {"field1": "foo", "kind": "bar", "uncertainty type": LognormalUncertainty.id}
     assert clean_simapro_uncertainty_fields(given) == {"uncertainty type": LognormalUncertainty.id}
 
 
@@ -33,7 +29,7 @@ def test_distribution_nonnumbers():
     }
     with pytest.raises(ValueError):
         distribution(**given)
-    given['amount'] = "zero"
+    given["amount"] = "zero"
     with pytest.raises(ValueError):
         distribution(**given)
 
@@ -45,9 +41,9 @@ def test_distribution_lognormal_valid():
     expected = {
         "uncertainty type": LognormalUncertainty.id,
         "scale": math.log(2),
-        "loc": 0.,
-        "amount": 1.,
-        "negative": False
+        "loc": 0.0,
+        "amount": 1.0,
+        "negative": False,
     }
     given = {
         "amount": "1",
@@ -65,9 +61,9 @@ def test_distribution_lognormal_valid_negative():
     expected = {
         "uncertainty type": LognormalUncertainty.id,
         "scale": math.log(2),
-        "loc": 0.,
-        "amount": -1.,
-        "negative": True
+        "loc": 0.0,
+        "amount": -1.0,
+        "negative": True,
     }
     given = {
         "amount": "-1",
@@ -84,8 +80,8 @@ def test_distribution_lognormal_valid_negative():
 def test_distribution_lognormal_invalid_0_mu():
     expected = {
         "uncertainty type": UndefinedUncertainty.id,
-        "loc": 0.,
-        "amount": 0.,
+        "loc": 0.0,
+        "amount": 0.0,
     }
     given = {
         "amount": "0",
@@ -102,8 +98,8 @@ def test_distribution_lognormal_invalid_0_mu():
 def test_distribution_lognormal_invalid_0_sigma():
     expected = {
         "uncertainty type": UndefinedUncertainty.id,
-        "loc": 1.,
-        "amount": 1.,
+        "loc": 1.0,
+        "amount": 1.0,
     }
     given = {
         "amount": "1",
@@ -123,10 +119,10 @@ def test_distribution_normal_valid():
     # field1 - sigma ^ 2
     expected = {
         "uncertainty type": NormalUncertainty.id,
-        "scale": 2.,
-        "loc": 1.,
-        "amount": 1.,
-        "negative": False
+        "scale": 2.0,
+        "loc": 1.0,
+        "amount": 1.0,
+        "negative": False,
     }
     given = {
         "amount": "1",
@@ -146,10 +142,10 @@ def test_distribution_normal_valid_negative():
     # field1 - sigma ^ 2
     expected = {
         "uncertainty type": NormalUncertainty.id,
-        "scale": 2.,
-        "loc": -1.,
-        "amount": -1.,
-        "negative": True
+        "scale": 2.0,
+        "loc": -1.0,
+        "amount": -1.0,
+        "negative": True,
     }
     given = {
         "amount": "-1",
@@ -169,10 +165,10 @@ def test_distribution_normal_valid_zero():
     # field1 - sigma ^ 2
     expected = {
         "uncertainty type": NormalUncertainty.id,
-        "scale": 2.,
-        "loc": 0.,
-        "amount": 0.,
-        "negative": False
+        "scale": 2.0,
+        "loc": 0.0,
+        "amount": 0.0,
+        "negative": False,
     }
     given = {
         "amount": "0",
@@ -189,8 +185,8 @@ def test_distribution_normal_valid_zero():
 def test_distribution_normal_invalid_0_sigma():
     expected = {
         "uncertainty type": UndefinedUncertainty.id,
-        "loc": 0.,
-        "amount": 0.,
+        "loc": 0.0,
+        "amount": 0.0,
     }
     given = {
         "amount": "0",
@@ -207,11 +203,11 @@ def test_distribution_normal_invalid_0_sigma():
 def test_distribution_triangular_valid():
     expected = {
         "uncertainty type": TriangularUncertainty.id,
-        "minimum": 1.,
-        "maximum": 3.,
-        "loc": 2.,
-        "amount": 2.,
-        "negative": False
+        "minimum": 1.0,
+        "maximum": 3.0,
+        "loc": 2.0,
+        "amount": 2.0,
+        "negative": False,
     }
     given = {
         "amount": "2",
@@ -228,8 +224,8 @@ def test_distribution_triangular_valid():
 def test_distribution_triangular_invalid_bounds_flipped():
     expected = {
         "uncertainty type": UndefinedUncertainty.id,
-        "loc": 2.,
-        "amount": 2.,
+        "loc": 2.0,
+        "amount": 2.0,
     }
     given = {
         "amount": "2",
@@ -246,8 +242,8 @@ def test_distribution_triangular_invalid_bounds_flipped():
 def test_distribution_triangular_invalid_all_same():
     expected = {
         "uncertainty type": UndefinedUncertainty.id,
-        "loc": 1.,
-        "amount": 1.,
+        "loc": 1.0,
+        "amount": 1.0,
     }
     given = {
         "amount": "1",
@@ -264,8 +260,8 @@ def test_distribution_triangular_invalid_all_same():
 def test_distribution_triangular_invalid_mean_outside_bounds():
     expected = {
         "uncertainty type": UndefinedUncertainty.id,
-        "loc": 2.,
-        "amount": 2.,
+        "loc": 2.0,
+        "amount": 2.0,
     }
     given = {
         "amount": "2",
@@ -282,11 +278,11 @@ def test_distribution_triangular_invalid_mean_outside_bounds():
 def test_distribution_uniform_valid():
     expected = {
         "uncertainty type": UniformUncertainty.id,
-        "minimum": 1.,
-        "maximum": 3.,
-        "loc": 2.,
-        "amount": 2.,
-        "negative": False
+        "minimum": 1.0,
+        "maximum": 3.0,
+        "loc": 2.0,
+        "amount": 2.0,
+        "negative": False,
     }
     given = {
         "amount": "2",
@@ -303,8 +299,8 @@ def test_distribution_uniform_valid():
 def test_distribution_uniform_invalid_bounds_flipped():
     expected = {
         "uncertainty type": UndefinedUncertainty.id,
-        "loc": 2.,
-        "amount": 2.,
+        "loc": 2.0,
+        "amount": 2.0,
     }
     given = {
         "amount": "2",
@@ -321,8 +317,8 @@ def test_distribution_uniform_invalid_bounds_flipped():
 def test_distribution_uniform_invalid_all_same():
     expected = {
         "uncertainty type": UndefinedUncertainty.id,
-        "loc": 1.,
-        "amount": 1.,
+        "loc": 1.0,
+        "amount": 1.0,
     }
     given = {
         "amount": "1",
@@ -339,8 +335,8 @@ def test_distribution_uniform_invalid_all_same():
 def test_distribution_uniform_invalid_mean_outside_bounds():
     expected = {
         "uncertainty type": UndefinedUncertainty.id,
-        "loc": 2.,
-        "amount": 2.,
+        "loc": 2.0,
+        "amount": 2.0,
     }
     given = {
         "amount": "2",
