@@ -1,5 +1,9 @@
 # `bw_simapro_csv` Changelog
 
+## [0.4] - 2025-02-19
+
+* Fix [#18 - Improper termination of CSV file parsing](https://github.com/brightway-lca/bw_simapro_csv/issues/18)
+
 ## [0.3.7] - 2025-01-14
 
 * Fix [#17 - Code allow triangular and uniform distributions where mode = minimum = maximum](https://github.com/brightway-lca/bw_simapro_csv/issues/17)
