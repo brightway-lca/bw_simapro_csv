@@ -4,31 +4,31 @@
 
 * Fix [#18 - Improper termination of CSV file parsing](https://github.com/brightway-lca/bw_simapro_csv/issues/18)
 
-## [0.3.7] - 2025-01-14
+### [0.3.7] - 2025-01-14
 
 * Fix [#17 - Code allow triangular and uniform distributions where mode = minimum = maximum](https://github.com/brightway-lca/bw_simapro_csv/issues/17)
 
-## [0.3.6] - 2025-01-14
+### [0.3.6] - 2025-01-14
 
 * Fix [#16 - Lognormal exchanges with sigma values <= 0](https://github.com/brightway-lca/bw_simapro_csv/issues/16)
 
-## [0.3.5] - 2024-12-11
+### [0.3.5] - 2024-12-11
 
 * [#15 - More robust CAS validation to handle broken inputs](https://github.com/brightway-lca/bw_simapro_csv/pull/15)
 
-## [0.3.4] - 2024-12-05
+### [0.3.4] - 2024-12-05
 
 * Fix missing input argument for name shortening in `SimaProCSV` class method
 
-## [0.3.3] - 2024-12-05
+### [0.3.3] - 2024-12-05
 
 * Making name shortening in MFP name generation configurable
 
-## [0.3.2] - 2024-12-03
+### [0.3.2] - 2024-12-03
 
 * Change `publication_date` type from `datetime.date` to `str` when exporting to Brightway
 
-## [0.3.1] - 2024-11-27
+### [0.3.1] - 2024-11-27
 
 * Add some additional header fields to Brightway export
 
