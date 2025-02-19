@@ -220,6 +220,9 @@ class SimaProCSV:
             raise ValueError(f"`base_dir` must be an existing directory; got {type(base_dir)}")
         return shutil.copytree(self.logs_dir, base_dir / self.logs_dir.stem)
 
+    def data_list_not_empty(self, lst: list) -> bool:
+        return any(line[1] for line in lst)
+
     def get_next_block(
         self, rewindable_csv_reader: BeKindRewind, header: dict
     ) -> Optional[SimaProCSVBlock]:
@@ -252,14 +255,14 @@ class SimaProCSV:
         for line in rewindable_csv_reader:
             if line and line[0] == "End":
                 self.uses_end_text = True
-                return block_class(data, header) if data else None
+                return block_class(data, header) if self.data_list_not_empty(data) else EmptyBlock
             if line and line[0] in CONTROL_BLOCK_MAPPING:
                 rewindable_csv_reader.rewind()
-                return block_class(data, header) if data else None
+                return block_class(data, header) if self.data_list_not_empty(data) else EmptyBlock
             data.append((rewindable_csv_reader.line_no, line))
 
         # EOF
-        return block_class(data, header) if data else None
+        return block_class(data, header) if self.data_list_not_empty(data) else None
 
     def resolve_parameters(self) -> None:
         """Read in input parameters, and resolve formulas."""

@@ -1,0 +1,228 @@
+{SimaPro 9.6.0.1}
+{processes}
+{Date: 1/1/2025}
+{Time: 12:34:56 PM}
+{Project: project-parameter-test-fixture}
+{CSV Format version: 9.0.0}
+{CSV separator: Comma}
+{Decimal separator: .}
+{Date separator: /}
+{Short date format: M/d/yyyy}
+{Export platform IDs: No}
+{Skip empty fields: Yes}
+{Convert expressions to constants: No}
+{Selection: Selection (123)}
+"{Related objects (system descriptions, substances, units, etc.): Yes}"
+{Include sub product stages and processes: No}
+{Skip unused parameters: Yes}
+{Open project: 'project-parameter-test-fixture'}
+
+Process
+
+Category type
+processing
+
+Process identifier
+abc123
+
+Type
+
+
+Status
+
+
+Time period
+Unspecified
+
+Geography
+Unspecified
+
+Technology
+Unspecified
+
+Representativeness
+Unspecified
+
+Multiple output allocation
+Unspecified
+
+Substitution allocation
+Unspecified
+
+Cut off rules
+Unspecified
+
+Capital goods
+Unspecified
+
+Boundary with nature
+Unspecified
+
+Infrastructure
+No
+
+Date
+1/1/2024
+
+Products
+Watermelon,p,1,100,not defined,foo\bar,
+
+Avoided products
+
+Resources
+
+Materials/fuels
+
+Electricity/heat
+
+Emissions to air
+
+Emissions to water
+
+Emissions to soil
+
+Final waste flows
+
+Non material emissions
+
+Social issues
+
+Economic issues
+
+Waste to treatment
+
+End
+
+Process
+
+Category type
+processing
+
+Process identifier
+abc456
+
+Type
+System
+
+Process name
+food
+
+Status
+
+
+Time period
+Unspecified
+
+Geography
+Unspecified
+
+Technology
+Unspecified
+
+Representativeness
+Unspecified
+
+Multiple output allocation
+Unspecified
+
+Substitution allocation
+Unspecified
+
+Cut off rules
+Unspecified
+
+Capital goods
+Unspecified
+
+Boundary with nature
+Unspecified
+
+Infrastructure
+No
+
+Date
+1/1/2025
+
+Products
+Squash,p,1,100,not defined,foo\bar,
+
+Avoided products
+
+Resources
+
+Materials/fuels
+Watermelon,p,4.8*variable_name/((7*0.9)-3),Undefined,0,0,0,
+
+Electricity/heat
+
+Emissions to air
+
+Emissions to water
+
+Emissions to soil
+
+Final waste flows
+
+Non material emissions
+
+Social issues
+
+Economic issues
+
+Waste to treatment
+
+End
+
+Quantities
+Amount,Yes
+
+End
+
+
+Units
+p,Amount,1,p
+
+End
+
+
+Raw materials
+
+End
+
+
+Airborne emissions
+
+End
+
+
+Waterborne emissions
+
+End
+
+
+Final waste flows
+
+End
+
+
+Emissions to soil
+
+End
+
+
+Database Input parameters
+
+End
+
+Database Calculated parameters
+
+End
+
+Project Input parameters
+variable_name,1,Undefined,1,0,0,No,"Used for sensitivity"
+
+End
+
+Project Calculated parameters
+
+End
