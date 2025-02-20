@@ -1,5 +1,6 @@
 import ast
 import re
+from copy import deepcopy
 from typing import Iterable, Pattern, Type
 
 from asteval.astutils import NameFinder
@@ -111,6 +112,46 @@ def fix_iff_formula(formula: str, pattern: Pattern) -> str:
     return formula
 
 
+# Compile a regular expression for numbers which start with `0` (not allowed in Python).
+LEADING_ZERO_RE = re.compile(
+    r"(?P<prefix>^"  # Start searching at beginning of line
+    + r"|[\s"  # Or preceded by white space
+    + r"\+\-\*\/]"  # Or mathematical operators
+    + r"|(\d[eE]))"  # Or 'e|E' for exponent (when in a number)
+    + r"(?P<number>0\d)"  # The number with leading zero
+)
+
+
+def fix_leading_zero_formula(formula: str, pattern: Pattern = LEADING_ZERO_RE) -> str:
+    """
+    Replace leading zeros in numbers, as these cause Python syntax errors.
+
+    https://github.com/brightway-lca/bw_simapro_csv/issues/19
+
+    Parameters
+    ----------
+    formula : str
+        A string, possibly containing leading zeros.
+    pattern : compiled regular expression
+
+    Returns
+    -------
+    string : str
+        A string with leading zeros removed.
+
+    Examples
+    --------
+    >>> string = "01.23 foo +0123 1.02 john012 123e023 123**023 123*0123 123/0123 clive012"
+    >>> fix_leading_zero_formula(string)
+    "1.23 foo +123 1.02 john012 123e23 123**23 123*123 123/123 clive012"
+    """
+    while pattern.findall(formula):
+        match = next(pattern.finditer(formula))
+        fixed = match.groupdict()["prefix"] + match.groupdict()["number"][1:]
+        formula = formula[: match.start()] + fixed + formula[match.end() :]
+    return formula
+
+
 def prepare_formulas(block: list[dict], header: dict, formula_field: str = "formula") -> list[dict]:
     """Make necessary conversions so formulas can be parsed by Python.
 
@@ -123,35 +164,45 @@ def prepare_formulas(block: list[dict], header: dict, formula_field: str = "form
     iff_re = compile_iff_re(header)
 
     for obj in block:
+        # TBD: Would be better to abstract out each modification to a function and loop them
         if formula_field in obj:
-            if "^" in obj[formula_field]:
-                new_formula = obj[formula_field].replace("^", "**")
-                logger.debug(
-                    f"""Replacing `^` in formula on line {obj['line_no']}:
-        {obj[formula_field]} >>> {new_formula}"""
-                )
-                if f"original_{formula_field}" not in obj:
-                    obj[f"original_{formula_field}"] = obj[formula_field]
-                obj[formula_field] = new_formula
+            original, working = deepcopy(obj[formula_field]), obj[formula_field]
+            if "^" in working:
+                working = working.replace("^", "**")
+                if working != original:
+                    logger.debug(
+                        f"""Replacing `^` in formula on line {obj['line_no']}:
+            {original} >>> {working}"""
+                    )
 
-            new_formula = fix_iff_formula(obj[formula_field], iff_re)
-            if new_formula != obj[formula_field]:
-                logger.debug(
-                    f"""Replacing `Iff` expression in formula on line {obj['line_no']}:
-        {obj[formula_field]} >>> {new_formula}"""
-                )
-                if f"original_{formula_field}" not in obj:
-                    obj[f"original_{formula_field}"] = obj[formula_field]
-                obj[formula_field] = new_formula
-            if "yield" in obj[formula_field]:
-                new_formula = obj[formula_field].replace("yield", "YIELD")
+            if "yield" in working:
+                fixed = working.replace("yield", "YIELD")
                 logger.debug(
                     f"""Replacing `yield` statement with `YIELD` in formula on line {obj['line_no']}:
-        {obj[formula_field]} >>> {new_formula}"""
+        {working} >>> {fixed}"""
                 )
+                working = fixed
+
+            fixed = fix_leading_zero_formula(working)
+            if fixed != working:
+                logger.debug(
+                    f"""Replacing leading zeros in formula on line {obj['line_no']}:
+        {working} >>> {fixed}"""
+                )
+                working = fixed
+
+            fixed = fix_iff_formula(working, iff_re)
+            if fixed != working:
+                logger.debug(
+                    f"""Replacing `Iff` expression in formula on line {obj['line_no']}:
+        {working} >>> {fixed}"""
+                )
+                working = fixed
+
+            if working != original:
                 if f"original_{formula_field}" not in obj:
-                    obj[f"original_{formula_field}"] = obj[formula_field]
-                obj[formula_field] = new_formula
+                    obj[f"original_{formula_field}"] = original
+            obj[formula_field] = working
 
     return block
 
