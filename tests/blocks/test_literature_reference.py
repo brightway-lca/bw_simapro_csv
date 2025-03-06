@@ -8,7 +8,7 @@ def test_literature_references_missing(fixtures_dir):
     assert pip == []
 
 
-def test_literature_references_missing(fixtures_dir):
+def test_literature_references(fixtures_dir):
     obj = SimaProCSV(fixtures_dir / "external_documents_and_literature_references.csv")
     pip = [elem.parsed for elem in obj.blocks if isinstance(elem, LiteratureReference)]
     assert pip == [

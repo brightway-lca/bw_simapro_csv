@@ -1,4 +1,4 @@
-from ..utils import asnumber, skip_empty
+from ..utils import add_amount_or_formula, asnumber, skip_empty
 from .base import SimaProCSVBlock
 
 
@@ -24,18 +24,22 @@ class WasteTreatment(SimaProCSVBlock):
 
         """
         self.parsed = []
+        self.has_formula = True
 
         for line_no, line in skip_empty(block):
             self.parsed.append(
-                {
-                    "name": line[0],
-                    "unit": line[1],
-                    "amount": asnumber(line[2], decimal_separator=header["decimal_separator"]),
-                    "waste_type": line[3],
-                    "category": line[4],
-                    "comment": line[5] if len(line) > 5 else None,
-                    "line_no": line_no,
-                }
+                add_amount_or_formula(
+                    {
+                        "name": line[0],
+                        "unit": line[1],
+                        "waste_type": line[3],
+                        "category": line[4],
+                        "comment": line[5] if len(line) > 5 else None,
+                        "line_no": line_no,
+                    },
+                    line[2],
+                    header["decimal_separator"],
+                )
             )
 
 
