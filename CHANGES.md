@@ -1,5 +1,9 @@
 # `bw_simapro_csv` Changelog
 
+## [0.4.1] - 2025-03-09
+
+* Fix [#20 - Waste treatment block amounts can be parametrized](https://github.com/brightway-lca/bw_simapro_csv/issues/20)
+
 ## [0.4] - 2025-02-19
 
 * Fix [#18 - Improper termination of CSV file parsing](https://github.com/brightway-lca/bw_simapro_csv/issues/18)
