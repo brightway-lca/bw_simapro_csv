@@ -1,5 +1,9 @@
 # `bw_simapro_csv` Changelog
 
+## [0.4.2] - 2025-03-09
+
+* Don't issue some duplicate warning messages
+
 ## [0.4.1] - 2025-03-09
 
 * Fix [#20 - Waste treatment block amounts can be parametrized](https://github.com/brightway-lca/bw_simapro_csv/issues/20)
