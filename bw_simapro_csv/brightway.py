@@ -143,6 +143,8 @@ def lci_to_brightway(
     """Turn an extracted SimaPro CSV extract into metadata that can be imported into Brightway.
 
     Doesn't do any normalization or other data changes, just reorganizes the existing data."""
+    issued_warnings = set()
+
     data = {
         "database": {
             "name": spcsv.database_name,
@@ -242,7 +244,9 @@ def lci_to_brightway(
                 process_dataset["tags"][tag_out] = process.parsed["metadata"][tag_in]
 
         if "Avoided products" in process.blocks:
-            logger.info(AVOIDED_PRODUCTS_WARNING)
+            if AVOIDED_PRODUCTS_WARNING not in issued_warnings:
+                logger.info(AVOIDED_PRODUCTS_WARNING)
+                issued_warnings.add(AVOIDED_PRODUCTS_WARNING)
             for edge in process.blocks["Avoided products"].parsed:
                 process_dataset["exchanges"].append(
                     edge | {"type": "substitution", "functional": False}
