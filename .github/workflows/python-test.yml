@@ -34,6 +34,11 @@ jobs:
       matrix:
         os: [ubuntu-latest, windows-latest, macos-latest]
         py-version: ["3.9", "3.10", "3.11", "3.12", "3.13"]
+        exclude:
+          # Numpy built with MINGW-W64 on Windows 64 bits is experimental, and only available for
+          # testing. You are advised not to use it for production.
+          - os: windows-latest
+            py-version: "3.13"
 
     steps:
       - uses: actions/checkout@v4
