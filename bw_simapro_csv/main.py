@@ -43,7 +43,7 @@ from .parameters import (
     substitute_in_formulas,
 )
 from .units import normalize_units
-from .utils import json_serializer, parameter_set_evaluate_each_formula
+from .utils import json_serializer, parameter_set_evaluate_each_formula, get_true_length
 
 
 def dummy(data, *args):
@@ -232,7 +232,7 @@ class SimaProCSV:
             if not any(line):
                 # Skip empty lines at beginning of block
                 continue
-            if len(line) == 1 and line[0] == "End":
+            if get_true_length(line) == 1 and line[0] == "End":
                 # Empty block
                 self.uses_end_text = True
                 return EmptyBlock

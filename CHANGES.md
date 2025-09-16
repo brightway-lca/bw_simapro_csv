@@ -1,5 +1,9 @@
 # `bw_simapro_csv` Changelog
 
+## [0.4.3] - 2025-09-16
+
+* Allow for block headers with one key followed by empty strings
+
 ## [0.4.2] - 2025-03-09
 
 * Don't issue some duplicate warning messages

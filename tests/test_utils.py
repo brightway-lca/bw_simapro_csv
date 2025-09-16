@@ -10,7 +10,17 @@ from bw_simapro_csv.utils import (
     jump_to_nonempty,
     normalize_number_in_formula,
     skip_empty,
+    get_true_length
 )
+
+
+def test_get_true_length():
+    assert get_true_length(["a", "", ""]) == 1
+    assert get_true_length(["a", "", "b"]) == 3
+    assert get_true_length(["a", "b", ""]) == 2
+    assert get_true_length([]) == 0
+    assert get_true_length([""]) == 0
+    assert get_true_length(["header"]) == 1
 
 
 def test_asnumber():
