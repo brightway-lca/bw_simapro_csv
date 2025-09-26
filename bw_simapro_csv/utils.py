@@ -179,6 +179,17 @@ def jump_to_nonempty(data: list) -> list:
     return data[i:]
 
 
+def get_true_length(line: list) -> int:
+    """Computes line length, not accounting for trailing empty elements"""
+    n_trailing_empty = 0
+    for elt in reversed(line):
+        if elt == "":
+            n_trailing_empty += 1
+        else:
+            break
+    return len(line) - n_trailing_empty
+
+
 def get_key_multiline_values(block: list[tuple], stop_terms: Iterable) -> tuple[str, list]:
     """Pull off the first non-empty line, then optional empty lines, and then each data line until
     an empty line"""
@@ -186,16 +197,16 @@ def get_key_multiline_values(block: list[tuple], stop_terms: Iterable) -> tuple[
         block = jump_to_nonempty(block)
         if not any(data for _, data in block):
             return
-        _, key = block.pop(0)
-        if len(key) != 1:
-            raise ValueError(f"Block header should have one element; found {len(key)}: {key}")
-        key = key[0]
+        _, line = block.pop(0)
+        if get_true_length(line) != 1:
+            raise ValueError(f"Block header should have one element; found {len(line)}: {line}")
+        key = line[0]
         block = jump_to_nonempty(block)
 
         data = []
         while block:
             line_no, line = block.pop(0)
-            if len(line) == 1 and line[0] in stop_terms:
+            if get_true_length(line) == 1 and line[0] in stop_terms:
                 block.insert(0, (line_no, line))
                 break
             elif not line or not any(line):
@@ -246,3 +257,4 @@ def parameter_set_evaluate_each_formula(ps: ParameterSet) -> dict[str, float]:
     for key, value in ps.params.items():
         value["amount"] = result[key]
     return result
+
