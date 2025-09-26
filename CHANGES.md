@@ -2,7 +2,7 @@
 
 ## [0.4.3] - 2025-09-16
 
-* Allow for block headers with one key followed by empty strings
+* [#24 - Allow for block headers with one key followed by empty strings](https://github.com/brightway-lca/bw_simapro_csv/pull/24)
 
 ## [0.4.2] - 2025-03-09
 
