@@ -199,7 +199,7 @@ def get_key_multiline_values(block: list[tuple], stop_terms: Iterable) -> tuple[
             return
         _, line = block.pop(0)
         if get_true_length(line) != 1:
-            raise ValueError(f"Block header should have one element; found {len(key)}: {key}")
+            raise ValueError(f"Block header should have one element; found {len(line)}: {line}")
         key = line[0]
         block = jump_to_nonempty(block)
 
