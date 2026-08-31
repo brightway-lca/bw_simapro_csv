@@ -30,6 +30,7 @@ BLOCK_MAPPING = {
     "Final waste flows": GenericUncertainBiosphere,
     "Input parameters": DatasetInputParameters,
     "Materials/fuels": TechnosphereEdges,
+    "Non material emission": GenericUncertainBiosphere,
     "Non material emissions": GenericUncertainBiosphere,
     "Products": Products,
     "Remaining waste": RemainingWaste,
