@@ -6,16 +6,19 @@ from .blocks import (
     GenericUncertainBiosphere,
     Process,
     Products,
+    ProductStage,
     SimaProCSVBlock,
     TechnosphereEdges,
     Units,
     WasteTreatment,
 )
+from .blocks.product_stage import ProductStageReference
 from .uncertainty import recalculate_uncertainty_distribution
 
 HAS_UNITS = (
     GenericUncertainBiosphere,
     Products,
+    ProductStageReference,
     TechnosphereEdges,
     WasteTreatment,
 )
@@ -80,7 +83,7 @@ def normalize_units(blocks: list[SimaProCSVBlock]) -> None:
                 d=mapping["line_no"],
             )
 
-    for process_block in filter(lambda x: isinstance(x, Process), blocks):
+    for process_block in filter(lambda x: isinstance(x, (Process, ProductStage)), blocks):
         for block in filter(lambda x: isinstance(x, HAS_UNITS), process_block.blocks.values()):
             for obj in block.parsed:
                 try:

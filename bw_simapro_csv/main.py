@@ -25,6 +25,7 @@ from .blocks import (
     Method,
     NormalizationWeightingSet,
     Process,
+    ProductStage,
     ProjectCalculatedParameters,
     ProjectInputParameters,
     Quantities,
@@ -43,12 +44,7 @@ from .parameters import (
     substitute_in_formulas,
 )
 from .units import normalize_units
-from .utils import json_serializer, parameter_set_evaluate_each_formula, get_true_length
-
-
-def dummy(data, *args):
-    return data
-
+from .utils import get_true_length, json_serializer, parameter_set_evaluate_each_formula
 
 CONTROL_BLOCK_MAPPING = {
     "Database Calculated parameters": DatabaseCalculatedParameters,
@@ -57,7 +53,7 @@ CONTROL_BLOCK_MAPPING = {
     "Project Input parameters": ProjectInputParameters,
     "Project Calculated parameters": ProjectCalculatedParameters,
     "Quantities": Quantities,
-    "Product stage": dummy,
+    "Product stage": ProductStage,
     "Units": Units,
     "Process": Process,
     "Method": Method,

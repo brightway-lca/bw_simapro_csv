@@ -1,5 +1,9 @@
 # `bw_simapro_csv` Changelog
 
+## [Unreleased]
+
+* Parse `Product stage` blocks (assemblies and life cycles) into a `ProductStage` block, instead of routing them to a no-op that discarded their content. `{product stages}` exports now retain all of their blocks, and a `ProductStage` carries its reference output and component sections (`Materials/assemblies`, `Processes`, ...) the same way a `Process` carries its sub-blocks.
+
 ## [0.4.3] - 2025-09-16
 
 * [#24 - Allow for block headers with one key followed by empty strings](https://github.com/brightway-lca/bw_simapro_csv/pull/24)
