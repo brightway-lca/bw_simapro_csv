@@ -10,3 +10,9 @@ class IndeterminateBlockEnd(Exception):
 
 class FormulaReservedWord(Exception):
     pass
+
+
+class UnparsableLine(Exception):
+    """A data line has fewer fields than its block requires"""
+
+    pass
