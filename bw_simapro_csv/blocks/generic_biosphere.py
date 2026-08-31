@@ -1,8 +1,25 @@
 from typing import Any, List
 
 from ..cas import validate_cas_string
+from ..errors import UnparsableLine
 from ..utils import add_amount_or_formula, skip_empty
 from .base import SimaProCSVBlock
+
+
+def check_line_length(line: list, expected: int, category: str, line_no: int) -> None:
+    """Raise a helpful error if `line` is too short to be a data row.
+
+    A short row is normally an unrecognized block heading which was given to the previous
+    block as data, so say so instead of raising a bare `IndexError`."""
+    if len(line) < expected:
+        raise UnparsableLine(
+            f"""
+    Line {line_no} in block '{category}' has {len(line)} fields, but at least {expected} are
+    needed. This is usually an unrecognized block heading being read as a data row.
+    Line content:
+    	{line}
+        """
+        )
 
 
 class GenericBiosphere(SimaProCSVBlock):
@@ -40,6 +57,7 @@ class GenericBiosphere(SimaProCSVBlock):
         self.parsed = []
 
         for line_no, line in skip_empty(block):
+            check_line_length(line, 4, category, line_no)
             self.parsed.append(
                 {
                     "name": line[0],
@@ -102,6 +120,7 @@ class GenericUncertainBiosphere(GenericBiosphere):
         self.has_formula = True
 
         for line_no, line in skip_empty(block):
+            check_line_length(line, 8, category, line_no)
             self.parsed.append(
                 add_amount_or_formula(
                     {
