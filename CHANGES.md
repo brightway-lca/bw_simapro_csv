@@ -1,5 +1,9 @@
 # `bw_simapro_csv` Changelog
 
+## [Unreleased]
+
+* Fix [#32 - CSV format 7.0.0 exports have no {SimaPro x.y.z} header line, so cannot be read](https://github.com/brightway-lca/bw_simapro_csv/issues/32)
+
 ## [0.4.3] - 2025-09-16
 
 * [#24 - Allow for block headers with one key followed by empty strings](https://github.com/brightway-lca/bw_simapro_csv/pull/24)
