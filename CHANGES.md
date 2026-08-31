@@ -4,6 +4,7 @@
 
 * Fix [#32 - CSV format 7.0.0 exports have no {SimaPro x.y.z} header line, so cannot be read](https://github.com/brightway-lca/bw_simapro_csv/issues/32)
 * Fix [#33 - 'Non material emission' (singular) is not in `BLOCK_MAPPING`](https://github.com/brightway-lca/bw_simapro_csv/issues/33)
+* Fix [#34 - Allocation written as '100%' is parsed as a formula and raises `SyntaxError`](https://github.com/brightway-lca/bw_simapro_csv/issues/34)
 
 ## [0.4.3] - 2025-09-16
 

@@ -147,6 +147,18 @@ def get_numbers_re(separator: str) -> Pattern:
     return re.compile(f"^\\s*[-+]?[\\d]+{separator}?[\\d]*([Ee][+-]*[0-9]+)?\\s*$")
 
 
+def remove_trailing_percentage(value: str) -> str:
+    """Remove a trailing percent sign from a field which is already a percentage.
+
+    The allocation column is a percentage by definition, but some exports restate this with a
+    `%` suffix, e.g. `100%` instead of `100`. Without this the value looks like a formula, and
+    `100%` is not valid Python."""
+    stripped = value.strip()
+    if stripped.endswith("%"):
+        return stripped[:-1].strip()
+    return value
+
+
 def add_amount_or_formula(
     data: dict,
     value: str,
