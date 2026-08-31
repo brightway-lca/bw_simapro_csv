@@ -1,4 +1,12 @@
-from bw_simapro_csv.parameters import compile_iff_re, fix_iff_formula, fix_leading_zero_formula
+import pytest
+
+from bw_simapro_csv.parameters import (
+    FormulaSubstitutor,
+    compile_iff_re,
+    fix_iff_formula,
+    fix_leading_zero_formula,
+    substitute_in_formulas,
+)
 from bw_simapro_csv.utils import normalize_number_in_formula
 
 
@@ -85,3 +93,16 @@ def test_leading_zero_formula():
         assert fix_leading_zero_formula(g) == e
     for g, e in zip(given, expected):
         assert fix_leading_zero_formula("foo " + g) == "foo " + e
+
+
+def test_substitute_in_formulas_syntax_error_has_detail():
+    given = {"name": "some product", "allocation_formula": "100%"}
+
+    with pytest.raises(SyntaxError) as excinfo:
+        substitute_in_formulas(given, FormulaSubstitutor({}), "allocation_formula")
+
+    message = str(excinfo.value)
+    assert "allocation_formula" in message
+    assert "100%" in message
+    assert "some product" in message
+    assert isinstance(excinfo.value.__cause__, SyntaxError)

@@ -257,7 +257,9 @@ def substitute_in_formulas(obj: dict, visitor: Type, formula_field: str = "formu
             obj[formula_field] = visitor(obj[formula_field])
         except SyntaxError as exc:
             logger.critical("Syntax error in field {ff} in object {o}", ff=formula_field, o=obj)
-            raise SyntaxError from exc
+            raise SyntaxError(
+                f"Can't parse `{formula_field}` value `{obj[formula_field]}` in object {obj}"
+            ) from exc
 
         if obj[f"original_{formula_field}"] == obj[formula_field]:
             del obj[f"original_{formula_field}"]
