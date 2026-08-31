@@ -1,0 +1,87 @@
+{CSV separator: Semicolon}
+{CSV Format version: 7.0.0}
+{Decimal separator: .}
+{Date separator: /}
+{Short date format: dd/MM/yyyy}
+
+Process
+
+Category type
+Material
+
+Time Period
+Unspecified
+
+Geography
+Unspecified
+
+Technology
+Unspecified
+
+Representativeness
+Unspecified
+
+Multiple output allocation
+Unspecified
+
+Substitution allocation
+Unspecified
+
+Cut off rules
+Unspecified
+
+Capital goods
+Unspecified
+
+Boundary with nature
+Unspecified
+
+
+Record
+
+
+Generator
+
+
+Literature references
+
+
+Collection method
+
+
+Data treatment
+
+
+Verification
+
+
+Comment
+
+
+System description;
+
+Products
+"Test product";p;1;100;not defined;\Cat;
+
+Materials/fuels
+
+Resources
+
+Emissions to air
+Ammonia;;kg;1;Undefined;0;0;0;
+
+Emissions to water
+
+Emissions to soil
+
+Final waste flows
+
+Non material emissions
+
+Social issues
+
+Economic issues
+
+Waste to treatment
+
+End

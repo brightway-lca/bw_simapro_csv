@@ -65,7 +65,7 @@ class SimaProCSVType(str, Enum):
 
 
 class SimaProCSVHeader(BaseModel):
-    simapro_version: str
+    simapro_version: Optional[str] = None
     kind: SimaProCSVType
     delimiter: str
     project: Optional[str] = None
@@ -141,6 +141,14 @@ def parse_header(data: List[str]) -> (SimaProCSVHeader, int):
             parsed["libraries"].append(noquotes(line[len("Library") :].strip()))
         else:
             logger.warning(f"Can't understand header line (skipping):\n\t{line}")
+
+    if "simapro_version" not in parsed:
+        logger.warning(
+            """
+    Export is missing the SimaPro version line (e.g. `{SimaPro 9.5.0.2}`).
+    Using default value of `None`
+        """
+        )
 
     if "kind" not in parsed:
         logger.warning(

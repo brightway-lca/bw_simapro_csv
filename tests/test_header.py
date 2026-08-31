@@ -258,3 +258,24 @@ def test_header_extraction_translation(fixtures_dir):
         "decimal_separator": ",",
         "created": datetime(2023, 5, 5, 11, 10, 18),
     }
+
+
+def test_header_without_simapro_version():
+    given = [
+        "{CSV separator: Semicolon}",
+        "{CSV Format version: 7.0.0}",
+        "{Decimal separator: .}",
+        "{Date separator: /}",
+        "{Short date format: dd/MM/yyyy}",
+    ]
+    result = parse_header(given)[0].model_dump()
+    assert result["simapro_version"] is None
+    assert result["kind"] == SimaProCSVType.processes
+    assert result["csv_version"] == "7.0.0"
+
+
+def test_csv_without_simapro_version(fixtures_dir):
+    obj = SimaProCSV(fixtures_dir / "no_simapro_version.csv", database_name="test")
+    assert obj.header["simapro_version"] is None
+    assert obj.header["csv_version"] == "7.0.0"
+    assert obj.header["kind"] == SimaProCSVType.processes
