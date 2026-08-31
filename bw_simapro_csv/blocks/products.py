@@ -1,4 +1,4 @@
-from ..utils import add_amount_or_formula, skip_empty
+from ..utils import add_amount_or_formula, remove_trailing_percentage, skip_empty
 from .base import SimaProCSVBlock
 
 
@@ -19,7 +19,7 @@ class Products(SimaProCSVBlock):
         0. name
         1. unit
         2. amount
-        3. allocation
+        3. allocation (a percentage; a trailing `%` is ignored)
         4. waste type
         5. category
         6. comment
@@ -43,7 +43,7 @@ class Products(SimaProCSVBlock):
             )
             ds = add_amount_or_formula(
                 data=ds,
-                value=line[3],
+                value=remove_trailing_percentage(line[3]),
                 decimal_separator=header["decimal_separator"],
                 amount_key="allocation",
                 formula_key="allocation_formula",
