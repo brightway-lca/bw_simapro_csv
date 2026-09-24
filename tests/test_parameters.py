@@ -5,6 +5,7 @@ from bw_simapro_csv.parameters import (
     compile_iff_re,
     fix_iff_formula,
     fix_leading_zero_formula,
+    prepare_formulas,
     substitute_in_formulas,
 )
 from bw_simapro_csv.utils import normalize_number_in_formula
@@ -106,3 +107,18 @@ def test_substitute_in_formulas_syntax_error_has_detail():
     assert "100%" in message
     assert "some product" in message
     assert isinstance(excinfo.value.__cause__, SyntaxError)
+
+
+def test_substitute_in_formulas_keeps_the_formula_as_written():
+    """`original_formula` is the formula before `prepare_formulas` too, not the
+    Python it was turned into."""
+    given = [{"formula": "Iff(a = 1, b^2, 0)", "line_no": 1}]
+    (prepared,) = prepare_formulas(given, {"decimal_separator": "."})
+    result = substitute_in_formulas(prepared, FormulaSubstitutor({"A": "SP_A", "B": "SP_B"}))
+    assert result["original_formula"] == "Iff(a = 1, b^2, 0)"
+    assert "SP_B ** 2" in result["formula"]
+
+
+def test_substitute_in_formulas_keeps_the_formula_when_only_names_change():
+    result = substitute_in_formulas({"formula": "a * 2"}, FormulaSubstitutor({"A": "SP_A"}))
+    assert (result["formula"], result["original_formula"]) == ("(SP_A * 2)", "a * 2")

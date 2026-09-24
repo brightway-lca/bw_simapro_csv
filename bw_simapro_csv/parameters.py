@@ -239,7 +239,10 @@ class FormulaSubstitutor:
 def substitute_in_formulas(obj: dict, visitor: Type, formula_field: str = "formula") -> dict:
     """Substitute variable names in `obj[formula_field]` based on `substitutions`.
 
-    Keeps `original_formula`.
+    Keeps `original_formula`: the formula as it was before any change, including
+    the ones `prepare_formulas` already made (`^` to `**`, `Iff()` to a
+    conditional expression, and so on). It is only present when the formula
+    was changed.
 
     Example usage:
 
@@ -252,7 +255,8 @@ def substitute_in_formulas(obj: dict, visitor: Type, formula_field: str = "formu
 
     """
     if formula_field in obj:
-        obj[f"original_{formula_field}"] = obj[formula_field]
+        original_field = f"original_{formula_field}"
+        original = obj.get(original_field, obj[formula_field])
         try:
             obj[formula_field] = visitor(obj[formula_field])
         except SyntaxError as exc:
@@ -261,7 +265,9 @@ def substitute_in_formulas(obj: dict, visitor: Type, formula_field: str = "formu
                 f"Can't parse `{formula_field}` value `{obj[formula_field]}` in object {obj}"
             ) from exc
 
-        if obj[f"original_{formula_field}"] == obj[formula_field]:
-            del obj[f"original_{formula_field}"]
+        if obj[formula_field] != original:
+            obj[original_field] = original
+        else:
+            obj.pop(original_field, None)
 
     return obj

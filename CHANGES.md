@@ -1,5 +1,9 @@
 # `bw_simapro_csv` Changelog
 
+## Unreleased
+
+* [#44 - `original_formula` keeps the formula as written, not the Python `prepare_formulas` made of it](https://github.com/brightway-lca/bw_simapro_csv/pull/44)
+
 ## [0.5] - 2026-08-31
 
 * Fix [#32 - CSV format 7.0.0 exports have no {SimaPro x.y.z} header line, so cannot be read](https://github.com/brightway-lca/bw_simapro_csv/issues/32)
